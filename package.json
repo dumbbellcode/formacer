@@ -60,7 +60,7 @@
     "vite-plugin-html": "^3.2.2",
     "vite-plugin-vue-devtools": "^7.7.1",
     "vite-plugin-zip-pack": "^1.2.4",
-    "vue-tsc": "^2.2.0",
+    "vue-tsc": "^2.2.2",
     "vuefire": "^3.2.1",
     "web-ext": "^8.4.0",
     "webext-bridge": "^6.0.1"
