@@ -1,12 +1,11 @@
 // This import scss file is used to style the iframe that is injected into the page
 import "./index.scss"
-
 import { InputBag } from "./types"
 
 const src = chrome.runtime.getURL("src/ui/content-script-iframe/index.html")
 
 const iframe = new DOMParser().parseFromString(
-  `<iframe class="crx-iframe" src="${src}"></iframe>`,
+  `<iframe id="fx-iframe" class="crx-iframe" src="${src}"></iframe>`,
   "text/html",
 ).body.firstElementChild
 
@@ -26,21 +25,18 @@ console.info("hello world from content-script")
 
 const allowedTypes = ["text"]
 
-const isNameInput = (e: HTMLInputElement) => {
+const isNameInput = ({name, placeholder, firstLabel}: InputBag) => {
   const format = (text: string) => {
     return text.split(" ").join("_").toLowerCase();
   }
-  const data = [
-    e.name,
-    e.placeholder
-  ]
+  const data = [name, placeholder, firstLabel]
   const nameText = ["name","full_name"]
   return data.some((text) => {
     return nameText.includes(format(text))
   })
 }
 
-const calculateInputs = () => {
+const calculateInputs = (populate = false) => {
   const inputs = document.querySelectorAll("input")
   const bag: InputBag[] = []
   inputs.forEach((input) => {
@@ -53,18 +49,18 @@ const calculateInputs = () => {
     const value = input.value
     const placeholder = input.placeholder
 
-    if(isNameInput(input)) {
-      input.value = "Sudheer Tripathi"
-    }
-
-    bag.push({
+    const item = {
       type,
       firstLabel,
       name,
       value,
       placeholder,
       visible: input.checkVisibility(),
-    })
+    }
+    if(populate && isNameInput(item)) {
+      input.value = "Sudheer Tripathi"
+    }
+    bag.push(item);
   })
   const table = document.createElement("table")
   const headerRow = document.createElement("tr")
@@ -74,7 +70,6 @@ const calculateInputs = () => {
   table.style.zIndex = "10"
   table.id = "formace-table"
 
-  
 
   ;["Type", "First Label", "Name", "Value", "Placeholder", "Visible"].forEach(
     (text) => {
@@ -97,19 +92,32 @@ const calculateInputs = () => {
 
     table.appendChild(row)
   })
-  console.log(bag)
+
   const existingTable = document.getElementById("formace-table")
   if (existingTable) {
     existingTable.remove()
+  } else { 
+    document.body.appendChild(table)
   }
-  document.body.appendChild(table)
 }
-
-calculateInputs()
 
 document.addEventListener("keydown", (event) => {
   if ((event.ctrlKey || event.metaKey) && event.key === "b") {
-    event.preventDefault()
-    calculateInputs()
+    calculateInputs();
   }
+});
+
+const iframeEl = document.getElementById("fx-iframe");
+
+const logo = `
+<div class='logo-action'> 
+<div> </div>
+</div>
+`
+const template = document.createElement('div');
+template.innerHTML = logo;
+document.body.appendChild(template)
+template.addEventListener('click', () => {
+  console.log("Clicked");
+  calculateInputs(true)
 })

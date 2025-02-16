@@ -47,7 +47,7 @@ export default {
   web_accessible_resources: [
     {
       resources: [
-        "src/assets/logo.png",
+        "src/assets/logo.svg",
         "src/content-script/index.ts",
         "src/ui/content-script-iframe/index.html",
       ],

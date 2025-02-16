@@ -2,7 +2,7 @@
 import { Notivue, Notification } from "notivue"
 </script>
 
-<template>
+<!-- <template>
   <div>
     <AppHeader />
 
@@ -15,6 +15,15 @@ import { Notivue, Notification } from "notivue"
     <Notivue v-slot="item">
       <Notification :item="item" />
     </Notivue>
+  </div>
+</template> -->
+
+<template>
+  <div>
+    <img
+      class="w-3 h-3"
+      src="src/assets/logo.png"
+    />
   </div>
 </template>
 

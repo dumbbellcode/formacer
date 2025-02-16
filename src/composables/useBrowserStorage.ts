@@ -59,7 +59,8 @@ function useBrowserStorage<T>(
     chrome.storage[storageType].get(key, async (result) => {
       if (result?.[key] !== undefined) {
         if (defaultIsObject && isObject(result[key])) {
-          data.value = mergeDeep(defaultValue, result[key])
+          // data.value = mergeDeep(defaultValue, result[key])
+          data.value = result[key];
         } else if (checkType(defaultValue, result[key])) {
           data.value = result[key]
         }
