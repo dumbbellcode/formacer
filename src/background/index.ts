@@ -35,6 +35,15 @@ self.onerror = function (message, source, lineno, colno, error) {
   console.info("Error object: " + error)
 }
 
+chrome.runtime.onMessage.addListener((msg, _, sendResponse) => {
+  console.info("message", msg);
+  if (msg.action === "openOptionsPage") { 
+    chrome.runtime.openOptionsPage(); 
+    // sendResponse({status: "Options page opened"}); 
+  } 
+  return true;
+})
+
 console.info("hello world from background")
 
 export {}

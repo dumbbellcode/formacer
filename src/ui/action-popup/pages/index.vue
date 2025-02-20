@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { useBrowserSyncStorage } from '@/composables/useBrowserStorage';
+import plusCircle from '@/assets/icons/plus-circle.svg';
+import NewField from '../../options-page/components.vue/NewField.vue';
+
 interface BasicDetail {
   name?: string,
   phone?: string, 
@@ -22,16 +25,18 @@ function saveDetails(){
   detail.value.email = email.value;
   console.info(detail.value);
 }
-console.info("HERE", toRaw(detail.value));
+
 promise.then(() => {
-  console.info("After resolve");
   name.value = detail.value.name;
   phone.value = detail.value.phone;
   email.value = detail.value.email;
-  console.info("Stage2", name.value, phone.value, email.value);
 }).catch((error) => {
   console.error("Error resolving promise:", error);
 });
+
+function openOptionsPage() {
+  chrome.runtime.sendMessage({ action: "openOptionsPage"})
+}
 
 </script>
 
@@ -41,48 +46,12 @@ promise.then(() => {
       <div class="hero-content text-center">
         <div class="max-w-md">          
           <div class="flex flex-col text-left gap-y-2 mb-2">
-            <div> 
-              <div class="label">
-                <span class="label-text">Full Name</span>
-              </div>
-              <input
-                v-model="name"
-                type="text"
-                placeholder="Name"
-                class="input w-full max-w-xs"
-              />
-            </div>
-
-            <div> 
-              <div class="label">
-                <span class="label-text">Phone</span>
-              </div>
-              <input
-                v-model="phone"
-                type="tel"
-                placeholder="Phone No"
-                class="input w-full max-w-xs"
-              />
-            </div>
-            
-            <div>
-              <div class="label">
-                <span class="label-text">Email</span>
-              </div>
-              <input
-                v-model="email"
-                type="email"
-                placeholder="Email"
-                class="input w-full max-w-xs"
-              />
-            </div>
-
-            <div>
+            <div class="mt-2">
               <button
-                class="btn btn-outline btn-primary"
-                @click="saveDetails"
+                class="btn btn-outline"
+                @click="openOptionsPage"
               >
-                Save
+                Edit details
               </button>
             </div>
           </div>
