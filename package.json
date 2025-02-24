@@ -31,7 +31,7 @@
     "@vue/compiler-sfc": "^3.5.13",
     "@vueuse/core": "^12.5.0",
     "chalk": "^5.4.1",
-    "chrome-types": "^0.1.337",
+    "chrome-types": "^0.1.343",
     "commander": "^13.1.0",
     "concurrently": "^9.1.2",
     "cross-env": "^7.0.3",
