@@ -1,5 +1,8 @@
 // This import scss file is used to style the iframe that is injected into the page
+import { extractContextFromAllInputs } from "./extracter/text-input-extracter"
 import "./index.scss"
+import svg from './bot.svg';
+import { TextInputContext, TextInputContextProps } from "./types"
 
 export type InputBag = {
   type: string
@@ -31,68 +34,31 @@ self.onerror = function (message, source, lineno, colno, error) {
 
 console.info("hello world from content-script")
 
-const allowedTypes = ["text"]
-
-const isNameInput = ({ name, placeholder, firstLabel }: InputBag) => {
-  const format = (text: string) => {
-    return text.split(" ").join("_").toLowerCase()
-  }
-  const data = [name, placeholder, firstLabel]
-  const nameText = ["name", "full_name"]
-  return data.some((text) => {
-    return nameText.includes(format(text))
-  })
-}
 
 const calculateInputs = (populate = false) => {
-  const inputs = document.querySelectorAll("input")
-  const bag: InputBag[] = []
-  inputs.forEach((input) => {
-    const type = input.type
-    if (!allowedTypes.includes(type) || input.offsetParent === null) {
-      return
-    }
-    const firstLabel = input.labels?.[0]?.innerText || "No label"
-    const name = input.name
-    const value = input.value
-    const placeholder = input.placeholder
-
-    const item = {
-      type,
-      firstLabel,
-      name,
-      value,
-      placeholder,
-      visible: input.checkVisibility(),
-    }
-    if (populate && isNameInput(item)) {
-      input.value = "Sudheer Tripathi"
-    }
-    bag.push(item)
-  })
+  const extractedInputData: TextInputContext[] =
+    extractContextFromAllInputs(document)
   const table = document.createElement("table")
   const headerRow = document.createElement("tr")
   table.style.position = "absolute"
   table.style.right = "0"
   table.style.top = "50vh"
-  table.style.zIndex = "10"
+  table.style.zIndex = "999"
   table.id = "formace-table"
-  ;["Type", "First Label", "Name", "Value", "Placeholder", "Visible"].forEach(
-    (text) => {
-      const th = document.createElement("th")
-      th.textContent = text
-      headerRow.appendChild(th)
-    },
-  )
+
+  TextInputContextProps.forEach((text) => {
+    const th = document.createElement("th")
+    th.textContent = text
+    headerRow.appendChild(th)
+  })
 
   table.appendChild(headerRow)
 
-  bag.forEach((item) => {
+  extractedInputData.forEach((inputContext) => {
     const row = document.createElement("tr")
-
-    Object.values(item).forEach((text) => {
+    TextInputContextProps.forEach((key) => {
       const td = document.createElement("td")
-      td.textContent = text ?? ""
+      td.textContent = inputContext[key] ?? ""
       row.appendChild(td)
     })
 
@@ -115,15 +81,34 @@ document.addEventListener("keydown", (event) => {
 
 const iframeEl = document.getElementById("fx-iframe")
 
+
+let isLoadingData = false;
+
 const logo = `
-<div class='logo-action'> 
-<div> </div>
+<div class='logo-position'> 
+<div id='logo-action'> <div> </div></div>
+<div id='formacer-loading' style='display:none'>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-dasharray="16" stroke-dashoffset="16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3c4.97 0 9 4.03 9 9"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.2s" values="16;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></svg>
+</div>
 </div>
 `
-const template = document.createElement("div")
+
+const template = document.createElement("formacer")
 template.innerHTML = logo
-document.body.appendChild(template)
+document.body.appendChild(template);
+
 template.addEventListener("click", () => {
-  console.log("Clicked")
+
+  const actionComp = document.getElementById('logo-action');
+  const loaderComp = document.getElementById('formacer-loading');
+
+  if(loaderComp) {
+    loaderComp.style.display = 'block';
+  }
+
+  if(actionComp) {
+    actionComp.style.display  = 'none';
+  }
+
   calculateInputs(true)
 })

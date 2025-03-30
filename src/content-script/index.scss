@@ -15,15 +15,18 @@
   padding: auto;
 }
 
-.logo-action {
+.logo-position {
   position: fixed;
   bottom: 60px;
   right: 10px;
+  z-index: 9999; // Ensures the element stays on top of any modal
+}
+
+#logo-action {
   width: 20px;
   height: 20px;
   border-radius: 10px;
   border-width: 2px;
   border-color: lightblue;
   background: greenyellow;
-  z-index: 9999; // Ensures the element stays on top of any modal
 }

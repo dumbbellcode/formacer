@@ -18,10 +18,10 @@ chrome.runtime.onInstalled.addListener(async (opt) => {
 
   if (opt.reason === "update") {
     // Opens new tab on update
-    chrome.tabs.create({
-      active: true,
-      url: chrome.runtime.getURL("src/ui/options-page/index.html"),
-    })
+    // chrome.tabs.create({
+    //   active: true,
+    //   url: chrome.runtime.getURL("src/ui/options-page/index.html"),
+    // })
 
     return
   }
@@ -41,6 +41,14 @@ chrome.runtime.onMessage.addListener((msg, _, sendResponse) => {
     chrome.runtime.openOptionsPage()
     // sendResponse({status: "Options page opened"});
   }
+
+  if(msg.action === "extractInputData") {
+    // Extract data
+    // Post to API
+    // Post response to content script
+    
+  }
+
   return true
 })
 

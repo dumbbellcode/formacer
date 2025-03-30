@@ -77,16 +77,10 @@ defineExpose({
 
     <div class="flex gap-x-2 mt-4">
       <button>
-        <i-ph-x-circle
-          @click="$emit('cancel')"
-        />
+        <i-ph-x-circle @click="$emit('cancel')" />
       </button>
 
-      <i-ph-check-circle
-        @click="$emit('done')"
-      >
-        Done
-      </i-ph-check-circle>
+      <i-ph-check-circle @click="$emit('done')">Done</i-ph-check-circle>
     </div>
   </div>
 </template>

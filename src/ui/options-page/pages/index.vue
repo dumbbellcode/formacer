@@ -112,8 +112,8 @@ function handleDone() {
   }
   const { label, value, section } = newFieldRef.value
 
-  if(!label || !value) {
-    return;
+  if (!label || !value) {
+    return
   }
 
   detail.value.basic?.push({
@@ -157,9 +157,7 @@ function handleDone() {
     </div>
 
     <div v-if="!newFieldActive">
-      <i-ph-plus-circle 
-        @click="newFieldActive = !newFieldActive"
-      />
+      <i-ph-plus-circle @click="newFieldActive = !newFieldActive" />
     </div>
 
     <NewField
@@ -192,7 +190,6 @@ function handleDone() {
       <label>Change Language</label>
       <LocaleSwitch />
     </div>
-
 
     <h3>Others</h3>
     <p>Some other settings related to extension usage.</p>
