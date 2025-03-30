@@ -1,6 +1,14 @@
 // This import scss file is used to style the iframe that is injected into the page
 import "./index.scss"
-import { InputBag } from "./types"
+
+export type InputBag = {
+  type: string
+  firstLabel: any
+  name: string
+  value: any
+  placeholder: string
+  visible: any
+}
 
 const src = chrome.runtime.getURL("src/ui/content-script-iframe/index.html")
 
@@ -25,12 +33,12 @@ console.info("hello world from content-script")
 
 const allowedTypes = ["text"]
 
-const isNameInput = ({name, placeholder, firstLabel}: InputBag) => {
+const isNameInput = ({ name, placeholder, firstLabel }: InputBag) => {
   const format = (text: string) => {
-    return text.split(" ").join("_").toLowerCase();
+    return text.split(" ").join("_").toLowerCase()
   }
   const data = [name, placeholder, firstLabel]
-  const nameText = ["name","full_name"]
+  const nameText = ["name", "full_name"]
   return data.some((text) => {
     return nameText.includes(format(text))
   })
@@ -57,10 +65,10 @@ const calculateInputs = (populate = false) => {
       placeholder,
       visible: input.checkVisibility(),
     }
-    if(populate && isNameInput(item)) {
+    if (populate && isNameInput(item)) {
       input.value = "Sudheer Tripathi"
     }
-    bag.push(item);
+    bag.push(item)
   })
   const table = document.createElement("table")
   const headerRow = document.createElement("tr")
@@ -69,8 +77,6 @@ const calculateInputs = (populate = false) => {
   table.style.top = "50vh"
   table.style.zIndex = "10"
   table.id = "formace-table"
-
-
   ;["Type", "First Label", "Name", "Value", "Placeholder", "Visible"].forEach(
     (text) => {
       const th = document.createElement("th")
@@ -96,28 +102,28 @@ const calculateInputs = (populate = false) => {
   const existingTable = document.getElementById("formace-table")
   if (existingTable) {
     existingTable.remove()
-  } else { 
+  } else {
     document.body.appendChild(table)
   }
 }
 
 document.addEventListener("keydown", (event) => {
   if ((event.ctrlKey || event.metaKey) && event.key === "b") {
-    calculateInputs();
+    calculateInputs()
   }
-});
+})
 
-const iframeEl = document.getElementById("fx-iframe");
+const iframeEl = document.getElementById("fx-iframe")
 
 const logo = `
 <div class='logo-action'> 
 <div> </div>
 </div>
 `
-const template = document.createElement('div');
-template.innerHTML = logo;
+const template = document.createElement("div")
+template.innerHTML = logo
 document.body.appendChild(template)
-template.addEventListener('click', () => {
-  console.log("Clicked");
+template.addEventListener("click", () => {
+  console.log("Clicked")
   calculateInputs(true)
 })

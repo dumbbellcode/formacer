@@ -7,7 +7,7 @@
     "lib": ["ES6", "DOM"],
     "useDefineForClassFields": true,
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "node",
     "paths": {
       "@/*": ["./src/*"],
       "~/*": ["./src/*"],
@@ -33,11 +33,7 @@
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "src/content-script/**/*.ts"
   ]
-  // "references": [
-  //   {
-  //     "path": "./tsconfig.node.json"
-  //   }
-  // ]
 }

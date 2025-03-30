@@ -5,7 +5,7 @@
     "incremental": true,
     "composite": true,
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "node",
     "paths": {
       "@/*": ["./src/*"],
       "~/*": ["./src/*"],

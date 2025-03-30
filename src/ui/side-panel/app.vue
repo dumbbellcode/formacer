@@ -1,6 +1,4 @@
-<script setup lang="ts">
-import { Notivue, Notification } from "notivue"
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div>

@@ -59,8 +59,8 @@ function useBrowserStorage<T>(
     chrome.storage[storageType].get(key, async (result) => {
       if (result?.[key] !== undefined) {
         if (defaultIsObject && isObject(result[key])) {
-          // data.value = mergeDeep(defaultValue, result[key])
-          data.value = result[key];
+          data.value = mergeDeep(defaultValue, result[key])
+          // data.value = result[key];
         } else if (checkType(defaultValue, result[key])) {
           data.value = result[key]
         }
@@ -77,6 +77,7 @@ function useBrowserStorage<T>(
     (newValue) => {
       if (!isUpdatingFromStorage) {
         if (checkType(defaultValue, newValue)) {
+          console.log("updating " + key, newValue)
           chrome.storage[storageType].set({ [key]: toRaw(newValue) })
         } else {
           console.error("not updating " + key + ": type mismatch")

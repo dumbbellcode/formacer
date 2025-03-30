@@ -1,47 +1,128 @@
 <script setup lang="ts">
+import NewField from "../components/NewField.vue"
+
 const optionsStore = useOptionsStore()
-// const { toggleDark } = optionsStore
+const { toggleDark } = optionsStore
 const { isDark, profile, others } = storeToRefs(optionsStore)
+const newFieldActive = ref(false)
+const newFieldRef = ref<InstanceType<typeof NewField> | null>(null)
 
-import { useBrowserSyncStorage } from '@/composables/useBrowserStorage';
-import plusCircle from '@/assets/icons/plus-circle.svg';
-import NewField from '../components/NewField.vue'
-
-interface BasicDetail {
-  name?: string,
-  firstName?: string, 
-  lastName?: string,
-  phone?: string, 
-  email?: string
+interface DetailItem {
+  label: string
+  value: string
+  slug: string
+  placeholder?: string
+  section?: string
+  autocomplete?: string
 }
 
-const { data: detail, promise } = useBrowserSyncStorage<BasicDetail>(
-  'basic-details',
-  {},
+interface Details {
+  basic?: DetailItem[]
+}
+
+const initialFields = [
+  {
+    label: "First Name",
+    slug: "firstName",
+    value: "",
+    section: "Name",
+    autocomplete: "given-name",
+  },
+  {
+    label: "Last Name",
+    value: "",
+    slug: "lastName",
+    section: "Name",
+    autocomplete: "family-name",
+  },
+  {
+    label: "Email",
+    slug: "email",
+    section: "Contact",
+    autocomplete: "email",
+    value: "",
+  },
+  {
+    label: "Phone No.",
+    slug: "phone",
+    section: "Contact",
+    autocomplete: "tel-national",
+    value: "",
+  },
+  {
+    label: "Country",
+    slug: "country",
+    section: "Contact",
+    autocomplete: "country",
+    value: "",
+  },
+  {
+    label: "Company",
+    slug: "company",
+    section: "Work",
+    autocomplete: "organization",
+    value: "",
+  },
+]
+
+const { data: detail, promise } = useBrowserSyncStorage<Details>(
+  "basic-details",
+  {
+    basic: initialFields,
+  },
 )
 
-let name = ref(detail.value.name);
-let phone = ref(detail.value.phone);
-let email = ref(detail.value.email);
-let firstName = ref(detail.value.firstName);
-let lastName = ref(detail.value.lastName);
+const basicDetails = computed(() => {
+  return (detail.value.basic ?? []).reduce(
+    (prev, curr) => {
+      const key = curr.section ?? curr.slug
+      prev[key] ??= []
+      prev[key].push(curr)
+      return prev
+    },
+    {} as Record<string, DetailItem[]>,
+  )
+})
 
-function saveDetails(){
-  detail.value.name = name.value;
-  detail.value.phone = phone.value;
-  detail.value.email = email.value;
-  detail.value.firstName = firstName.value;
-  detail.value.lastName = lastName.value
+function saveField(event: Event, slug: string) {
+  const input = event.target as HTMLInputElement
+  const field = detail.value.basic?.find((field) => field.slug === slug)
+  if (!field) return
+  field.value = input.value
+  // detail.value.basic = basicDetails.value
 }
 
-promise.then(() => {
-  name.value = detail.value.name;
-  phone.value = detail.value.phone;
-  email.value = detail.value.email;
-}).catch((error) => {
-  console.error("Error resolving promise:", error);
-});
+// promise
+//   .then(() => {})
+//   .catch((error) => {
+//     console.error("Error resolving promise:", error)
+//   })
 
+function handleCancel() {
+  if (!newFieldRef.value) {
+    return
+  }
+  const { resetValues } = newFieldRef.value
+  resetValues()
+}
+
+function handleDone() {
+  if (!newFieldRef.value) {
+    return
+  }
+  const { label, value, section } = newFieldRef.value
+
+  if(!label || !value) {
+    return;
+  }
+
+  detail.value.basic?.push({
+    label,
+    value,
+    section: section ? section : label,
+    slug: label,
+  })
+}
 </script>
 
 <template>
@@ -52,81 +133,42 @@ promise.then(() => {
 
     <h1>Options</h1>
 
-    <div class="flex flex-col text-left gap-y-1 mb-2">
-      <div class="flex justify-between gap-x-1">
-        <div class="w-1/2"> 
-          <fieldset class="fieldset">
-            <legend class="fieldset-legend text-xs pb-0">First Name</legend>
-            <input
-              v-model="firstName"
-              type="text"
-              class="input input-sm"
-              placeholder="Type here"
-              autocomplete="given-name"
-            />
-          </fieldset>
-        </div>
-        <div class="w-1/2">
-          <fieldset class="fieldset">
-            <legend class="fieldset-legend text-xs pb-0">Last Name</legend>
-            <input
-              v-model="lastName"
-              type="text"
-              class="input input-sm"
-              placeholder="Type here"
-              autocomplete="family-name"
-            />
-          </fieldset>
-        </div>
-      </div>
-
-      <div class="flex gap-x-1"> 
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend text-xs pb-0">Phone</legend>
-          <input
-            v-model="phone"
-            type="text"
-            class="input input-sm"
-            placeholder="Type here"
-            autocomplete="tel"
-          />
-        </fieldset>
-
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend text-xs pb-0">Email</legend>
-          <input
-            v-model="email"
-            type="email"
-            class="input input-sm"
-            placeholder="Type here"
-            autocomplete="off"
-          />
-        </fieldset>
-      </div>
-
-      <div>
-        <NewField />
-      </div>
-
-      <div>
-        <img
-          class="w-5 h-5 inline"
-          :src="plusCircle"
-          alt="Plus Circle"
-        > 
-        <span> Add new field </span>
-      </div>
-
-      <div class="mt-2">
-        <button
-          class="btn btn-primary btn-outline"
-          @click="saveDetails"
+    <div
+      v-for="(detailItems, section) in basicDetails"
+      :key="section"
+    >
+      <div class="grid grid-cols-2 gap-2">
+        <fieldset
+          v-for="field in detailItems"
+          :key="field.slug"
+          class="fieldset"
         >
-          Save
-        </button>
+          <legend class="fieldset-legend pb-0">{{ field.label }}</legend>
+          <input
+            :id="field.slug"
+            type="text"
+            class="input"
+            :value="field.value"
+            :autocomplete="field.autocomplete"
+            @input="saveField($event, field.slug)"
+          />
+        </fieldset>
       </div>
     </div>
 
+    <div v-if="!newFieldActive">
+      <i-ph-plus-circle 
+        @click="newFieldActive = !newFieldActive"
+      />
+    </div>
+
+    <NewField
+      v-if="newFieldActive"
+      ref="newFieldRef"
+      :groups="Object.keys(basicDetails)"
+      @cancel="handleCancel"
+      @done="handleDone"
+    />
 
     <p>
       You can configure various options related to this extension here. These
@@ -151,24 +193,6 @@ promise.then(() => {
       <LocaleSwitch />
     </div>
 
-    <h3>Profile</h3>
-    <p>Change your name and age.</p>
-
-    <div class="form-control">
-      <label>Name</label>
-      <input
-        v-model="profile.name"
-        type="text"
-      />
-    </div>
-
-    <div class="form-control">
-      <label>Age</label>
-      <input
-        v-model="profile.age"
-        type="number"
-      />
-    </div>
 
     <h3>Others</h3>
     <p>Some other settings related to extension usage.</p>

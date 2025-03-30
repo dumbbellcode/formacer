@@ -12,7 +12,7 @@
   right: 0;
   width: 30px;
   height: 30px;
-  padding: auto;  
+  padding: auto;
 }
 
 .logo-action {
@@ -25,4 +25,5 @@
   border-width: 2px;
   border-color: lightblue;
   background: greenyellow;
+  z-index: 9999; // Ensures the element stays on top of any modal
 }

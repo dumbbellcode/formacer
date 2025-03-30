@@ -45,14 +45,14 @@ export default {
   host_permissions: ["<all_urls>"],
   permissions: ["storage", "tabs", "background", "sidePanel"],
   web_accessible_resources: [
-    {
-      resources: [
-        "src/assets/logo.svg",
-        "src/content-script/index.ts",
-        "src/ui/content-script-iframe/index.html",
-      ],
-      matches: ["*://*/*"],
-    },
+    // {
+    //   resources: [
+    //     "src/assets/logo.svg",
+    //     "src/content-script/index.ts",
+    //     "src/ui/content-script-iframe/index.html",
+    //   ],
+    //   matches: ["*://*/*"],
+    // },
   ],
   icons: {
     16: "src/assets/logo.png",

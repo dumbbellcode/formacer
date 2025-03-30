@@ -18,10 +18,10 @@ chrome.runtime.onInstalled.addListener(async (opt) => {
 
   if (opt.reason === "update") {
     // Opens new tab on update
-    // chrome.tabs.create({
-    //   active: true,
-    //   url: chrome.runtime.getURL("src/ui/setup/index.html#/setup/update"),
-    // })
+    chrome.tabs.create({
+      active: true,
+      url: chrome.runtime.getURL("src/ui/options-page/index.html"),
+    })
 
     return
   }
@@ -36,12 +36,12 @@ self.onerror = function (message, source, lineno, colno, error) {
 }
 
 chrome.runtime.onMessage.addListener((msg, _, sendResponse) => {
-  console.info("message", msg);
-  if (msg.action === "openOptionsPage") { 
-    chrome.runtime.openOptionsPage(); 
-    // sendResponse({status: "Options page opened"}); 
-  } 
-  return true;
+  console.info("message", msg)
+  if (msg.action === "openOptionsPage") {
+    chrome.runtime.openOptionsPage()
+    // sendResponse({status: "Options page opened"});
+  }
+  return true
 })
 
 console.info("hello world from background")
