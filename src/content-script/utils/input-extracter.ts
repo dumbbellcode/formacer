@@ -6,7 +6,7 @@ import {
   trimText,
 } from "./common"
 
-const allowedInputTypes = ["number", "text"]
+const allowedInputTypes = ["number", "text", "email", "tel", "date", "week", "month"]
 
 export function extractContextFromAllInputs(
   node: Element | Document,

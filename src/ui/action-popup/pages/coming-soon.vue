@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1> Coming up soon !</h1>
+    <h1>Coming up soon !</h1>
     <ul>
       <li>Radio button autofill</li>
       <li>checkbox autofill</li>

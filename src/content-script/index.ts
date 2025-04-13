@@ -105,8 +105,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       const element = document.querySelector(
         `[data-formacer-id="${item.dataId}"]`,
       )
-      if (element instanceof HTMLInputElement) {
+      if (element instanceof HTMLInputElement && typeof item.value === 'string') {
         simulateTyping(element, item.value as string)
+      }
+      if (element instanceof HTMLInputElement && typeof item.value === 'number') {
+        element.value = (item.value as number).toString();
       }
     })
 
