@@ -29,6 +29,7 @@ export interface ExtractInputDataResponseItem {
 export interface TextInputContext {
   dataId?: string
   tagName?: string
+  type?: string
   placeholder?: string
   title?: string
   value?: string

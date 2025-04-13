@@ -6,22 +6,24 @@ import {
   trimText,
 } from "./common"
 
+const allowedInputTypes = ["number", "text"]
+
 export function extractContextFromAllInputs(
   node: Element | Document,
 ): TextInputContext[] {
-  let textInputs = findInputs(node, "text")
+  let textInputs = findInputs(node)
 
   console.info("Extracting context from inputs count:", textInputs.length)
 
-  textInputs = textInputs
-    .filter((i) => (i.value ?? "") === "") // Only consider empty inputs
-    .filter((i) =>
-      i.checkVisibility({
-        contentVisibilityAuto: true,
-        opacityProperty: true,
-        visibilityProperty: true,
-      }),
-    ) // Only consider visible inputs
+  textInputs = textInputs.filter((i) => {
+    if (!allowedInputTypes.includes(i.type)) return false
+    if (i.value) return false
+    return i.checkVisibility({
+      contentVisibilityAuto: true,
+      opacityProperty: true,
+      visibilityProperty: true,
+    })
+  })
 
   console.info("Extracting context from inputs count:", textInputs.length)
 
@@ -60,9 +62,10 @@ export function extractContextFromInput(
     closestText = trimText(closestText)
   }
 
-  const { tagName, placeholder, title, value } = input
+  const { tagName, placeholder, title, value, type } = input
   const data = {
     tagName,
+    type,
     placeholder,
     title,
     value,

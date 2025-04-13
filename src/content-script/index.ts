@@ -2,6 +2,7 @@ import { extractContextFromAllInputs } from "./utils/text-input-extracter"
 import { ActionEvents } from "@/types/common"
 import { exit } from "process"
 import ctaHtml from "./cta-container.html?raw"
+import { simulateTyping } from "./utils/type"
 
 self.onerror = function (message, source, lineno, colno, error) {
   console.info("Error: " + message)
@@ -90,7 +91,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const data: {
       dataId: string
       value: unknown
-    }[] = message.data.data
+    }[] = message.data.data ?? []
 
     if (!isSuccessful) {
       setCTAState(CTA_STATE.ERROR)
@@ -105,20 +106,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         `[data-formacer-id="${item.dataId}"]`,
       )
       if (element instanceof HTMLInputElement) {
-        element.value = item.value as string
-        element.dispatchEvent(new Event("input", { bubbles: true }))
-        element.dispatchEvent(new Event("change", { bubbles: true }))
-
-        // 3. Simulate pressing Enter
-        const enterEvent = new KeyboardEvent("keydown", {
-          bubbles: true,
-          cancelable: true,
-          key: "Enter",
-          code: "Enter",
-          keyCode: 13, // Deprecated, but still needed in some cases
-          which: 13, // Same here
-        })
-        element.dispatchEvent(enterEvent)
+        simulateTyping(element, item.value as string)
       }
     })
 

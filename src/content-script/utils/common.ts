@@ -22,13 +22,8 @@ export function createElementFromHTML(htmlString: string) {
   return div
 }
 
-export function findInputs(
-  node: Element | Document,
-  type: string,
-): HTMLInputElement[] {
-  return Array.from(
-    node.querySelectorAll(`input[type="${type}"]`),
-  ) as HTMLInputElement[]
+export function findInputs(node: Element | Document): HTMLInputElement[] {
+  return Array.from(node.querySelectorAll(`input`)) as HTMLInputElement[]
 }
 
 // Searches label in parent tree such that only single label is found
