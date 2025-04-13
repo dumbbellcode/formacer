@@ -1,8 +1,8 @@
-import { extractContextFromAllInputs } from "./utils/text-input-extracter"
+import { extractContextFromAllInputs } from "./utils/input-extracter"
 import { ActionEvents } from "@/types/common"
 import { exit } from "process"
 import ctaHtml from "./cta-container.html?raw"
-import { simulateTyping } from "./utils/type"
+import { simulateTyping } from "./utils/typing"
 
 self.onerror = function (message, source, lineno, colno, error) {
   console.info("Error: " + message)
