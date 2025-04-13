@@ -1,6 +1,8 @@
 // Sample code if using extensionpay.com
 // import { extPay } from '@/utils/payment/extPay'
 // extPay.startBackground()
+import { ActionEvents, TextInputContext } from "@/types/common"
+import { getAccurateFillData } from "./service"
 
 chrome.runtime.onInstalled.addListener(async (opt) => {
   // Check if reason is install or update. Eg: opt.reason === 'install' // If extension is installed.
@@ -35,23 +37,33 @@ self.onerror = function (message, source, lineno, colno, error) {
   console.info("Error object: " + error)
 }
 
-chrome.runtime.onMessage.addListener((msg, _, sendResponse) => {
-  console.info("message", msg)
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  const tabId = sender.tab?.id
   if (msg.action === "openOptionsPage") {
     chrome.runtime.openOptionsPage()
     // sendResponse({status: "Options page opened"});
   }
 
-  if(msg.action === "extractInputData") {
-    // Extract data
-    // Post to API
-    // Post response to content script
-    
+  if (msg.action === ActionEvents.EXTRACT_INPUT_DATA) {
+    const inputContext: TextInputContext[] = msg.data
+    getAccurateFillData(inputContext).then((response) => {
+      chrome.tabs.sendMessage(
+        tabId as number,
+        {
+          action: ActionEvents.EXTRACT_INPUT_DATA_RESPONSE,
+          data: response,
+        },
+        {},
+        (response) => {
+          // eslint-disable-next-line no-console
+          console.log(response)
+        },
+      )
+    })
   }
 
+  sendResponse()
   return true
 })
-
-console.info("hello world from background")
 
 export {}

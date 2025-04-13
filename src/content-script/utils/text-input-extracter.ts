@@ -1,24 +1,39 @@
-import { TextInputContext } from "../types"
+import { TextInputContext } from "@/types/common"
 import {
   findClosestLabelInParentTreeWithSingleInputUnderIt,
   findClosestTextInParentTreeWithSingleInputUnderIt,
   findInputs,
   trimText,
-} from "../utils/common"
+} from "./common"
 
 export function extractContextFromAllInputs(
   node: Element | Document,
 ): TextInputContext[] {
-  const textInputs = findInputs(node, "text")
-  return textInputs.map((ti) =>  { 
-    const context = extractContextFromInput(ti);
+  let textInputs = findInputs(node, "text")
+
+  console.info("Extracting context from inputs count:", textInputs.length)
+
+  textInputs = textInputs
+    .filter((i) => (i.value ?? "") === "") // Only consider empty inputs
+    .filter((i) =>
+      i.checkVisibility({
+        contentVisibilityAuto: true,
+        opacityProperty: true,
+        visibilityProperty: true,
+      }),
+    ) // Only consider visible inputs
+
+  console.info("Extracting context from inputs count:", textInputs.length)
+
+  return textInputs.map((ti) => {
+    const context = extractContextFromInput(ti)
 
     // Add a unique data-formacer-id attribute to the input element
     const uniqueId = `formacer-${crypto.randomUUID()}`
-    context.dataId = uniqueId;
+    context.dataId = uniqueId
     ti.setAttribute("data-formacer-id", uniqueId)
-    
-    return context;
+
+    return context
   })
 }
 

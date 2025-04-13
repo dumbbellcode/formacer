@@ -1,20 +1,12 @@
 <script setup lang="ts">
-import { ref, defineEmits, defineProps } from "vue"
-
-const props = defineProps({
-  groups: {
-    type: Array<string>,
-    required: true,
-  },
-})
+import { ref, defineEmits } from "vue"
 
 const label = ref("")
 const value = ref("")
-const section = ref("")
+
 const resetValues = () => {
   label.value = ""
   value.value = ""
-  section.value = ""
 }
 
 const emit = defineEmits(["cancel", "done"])
@@ -22,8 +14,6 @@ const emit = defineEmits(["cancel", "done"])
 defineExpose({
   label,
   value,
-  section,
-  resetValues,
 })
 
 function handleDone() {
@@ -36,45 +26,21 @@ function handleDone() {
 
 <template>
   <div class="p-1 border-1 rounded-lg bg-base-200">
-    <div class="flex gap-x-1">
+    <div>
       <fieldset class="fieldset">
         <legend class="fieldset-legend">Label</legend>
         <input
           v-model="label"
           type="text"
-          class="input"
-          placeholder="Eg: Passport No"
+          class="input w-full"
+          placeholder="Eg: About Me"
         />
-      </fieldset>
-      <fieldset class="fieldset">
-        <legend class="fieldset-legend">Value</legend>
-        <input
+        <legend class="fieldset-legend">Description</legend>
+        <textarea
           v-model="value"
-          type="text"
-          class="input"
-          placeholder="Eg: V18XXXX"
-        />
-      </fieldset>
-      <fieldset class="fieldset">
-        <legend class="fieldset-legend">Related To</legend>
-        <select
-          v-model="section"
-          class="select select-bordered"
-        >
-          <option
-            disabled
-            selected
-          >
-            Pick one
-          </option>
-          <option
-            v-for="group in props.groups"
-            :key="group"
-            :value="group"
-          >
-            {{ group }}
-          </option>
-        </select>
+          class="textarea w-full! textarea-neutral rounded-lg p-2"
+          rows="5"
+        ></textarea>
       </fieldset>
     </div>
 

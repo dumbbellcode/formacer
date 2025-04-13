@@ -13,9 +13,9 @@
   --color-base-200: oklch(98% 0 0);
   --color-base-300: oklch(95% 0 0);
   --color-base-content: oklch(21% 0.006 285.885);
-  --color-primary: oklch(50% 0.118 165.612);
+  --color-primary: oklch(0.71 0.1032 172.27);
   --color-primary-content: oklch(93% 0.034 272.788);
-  --color-secondary: oklch(50% 0.134 242.749);
+  --color-secondary: oklch(0.65 0.0954 198.65);
   --color-secondary-content: oklch(94% 0.028 342.258);
   --color-accent: oklch(77% 0.152 181.912);
   --color-accent-content: oklch(38% 0.063 188.416);
@@ -54,8 +54,23 @@ label {
 //   @apply input input-primary;
 // }
 
-textarea {
-  @apply input input-primary;
+// textarea {
+//   @apply input input-primary;
+// }
+
+.input:focus {
+  outline: none;
+  @apply input-primary;
+}
+
+.textarea:focus {
+  outline: none;
+  @apply textarea-primary;
+}
+
+select:focus {
+  outline: none;
+  @apply select-primary;
 }
 
 input[type="radio"] {
@@ -70,9 +85,9 @@ input[type="range"] {
   @apply range range-primary;
 }
 
-select {
-  @apply select select-primary;
-}
+// select {
+//   @apply select select-primary;
+// }
 
 .prose {
   @apply max-w-full;

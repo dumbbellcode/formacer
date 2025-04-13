@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="navbar bg-primary text-primary-content p-2">
+  <div class="navbar p-2">
     <div class="flex-1 pl-2">
       <RouterLink
         to="/"
@@ -23,7 +23,9 @@
           </RouterLink>
         </li>
         <li>
-          <LocaleSwitch />
+          <RouterLink to="/options-page">
+            <i-carbon-logo-github />
+          </RouterLink>
         </li>
         <li>
           <div class="dropdown dropdown-bottom dropdown-end">

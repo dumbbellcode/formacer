@@ -37,6 +37,17 @@ function isObject(value: any): boolean {
   return value !== null && value instanceof Object && !Array.isArray(value)
 }
 
+export function getValueFromStorage<T>(
+  key: string,
+  storageType: "local" | "sync",
+): Promise<T> {
+  return new Promise((resolve, reject) => {
+    chrome.storage[storageType].get(key, async (result) => {
+      resolve(result?.[key] ?? null)
+    })
+  })
+}
+
 export function useBrowserSyncStorage<T>(key: string, defaultValue: T) {
   return useBrowserStorage(key, defaultValue, "sync")
 }

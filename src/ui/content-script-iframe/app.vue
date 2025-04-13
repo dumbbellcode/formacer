@@ -24,6 +24,7 @@ import { Notivue, Notification } from "notivue"
       class="w-3 h-3"
       src="src/assets/logo.png"
     />
+    I am here
   </div>
 </template>
 

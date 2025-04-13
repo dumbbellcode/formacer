@@ -1,28 +1,7 @@
-// This import scss file is used to style the iframe that is injected into the page
-import { extractContextFromAllInputs } from "./extracter/text-input-extracter"
-import "./index.scss"
-import svg from './bot.svg';
-import { TextInputContext, TextInputContextProps } from "./types"
-
-export type InputBag = {
-  type: string
-  firstLabel: any
-  name: string
-  value: any
-  placeholder: string
-  visible: any
-}
-
-const src = chrome.runtime.getURL("src/ui/content-script-iframe/index.html")
-
-const iframe = new DOMParser().parseFromString(
-  `<iframe id="fx-iframe" class="crx-iframe" src="${src}"></iframe>`,
-  "text/html",
-).body.firstElementChild
-
-if (iframe) {
-  // document.body?.append(iframe)
-}
+import { extractContextFromAllInputs } from "./utils/text-input-extracter"
+import { ActionEvents } from "@/types/common"
+import { exit } from "process"
+import ctaHtml from "./cta-container.html?raw"
 
 self.onerror = function (message, source, lineno, colno, error) {
   console.info("Error: " + message)
@@ -34,81 +13,118 @@ self.onerror = function (message, source, lineno, colno, error) {
 
 console.info("hello world from content-script")
 
-
-const calculateInputs = (populate = false) => {
-  const extractedInputData: TextInputContext[] =
-    extractContextFromAllInputs(document)
-  const table = document.createElement("table")
-  const headerRow = document.createElement("tr")
-  table.style.position = "absolute"
-  table.style.right = "0"
-  table.style.top = "50vh"
-  table.style.zIndex = "999"
-  table.id = "formace-table"
-
-  TextInputContextProps.forEach((text) => {
-    const th = document.createElement("th")
-    th.textContent = text
-    headerRow.appendChild(th)
-  })
-
-  table.appendChild(headerRow)
-
-  extractedInputData.forEach((inputContext) => {
-    const row = document.createElement("tr")
-    TextInputContextProps.forEach((key) => {
-      const td = document.createElement("td")
-      td.textContent = inputContext[key] ?? ""
-      row.appendChild(td)
-    })
-
-    table.appendChild(row)
-  })
-
-  const existingTable = document.getElementById("formace-table")
-  if (existingTable) {
-    existingTable.remove()
-  } else {
-    document.body.appendChild(table)
-  }
+enum CTA_STATE {
+  DEFAULT = "default",
+  LOADING = "loading",
+  SUCCESS = "success",
+  ERROR = "error",
 }
 
-document.addEventListener("keydown", (event) => {
-  if ((event.ctrlKey || event.metaKey) && event.key === "b") {
-    calculateInputs()
+const container = document.createElement("div")
+container.style = "position: fixed; bottom: 80px; right: 20px; z-index: 9999"
+const shadowRoot = container.attachShadow({ mode: "open" })
+shadowRoot.innerHTML = ctaHtml
+document.body.appendChild(container)
+
+const logoElement = shadowRoot.getElementById("formacer-cta-container")
+const ctaElement = shadowRoot.getElementById("formacer-cta")
+const loadingElement = shadowRoot.getElementById("formacer-cta-loading")
+const successElement = shadowRoot.getElementById("formacer-cta-success")
+const errorElement = shadowRoot.getElementById("formacer-cta-error")
+
+if (!logoElement) {
+  console.info("Logo element not found")
+  exit(1)
+}
+if (!ctaElement || !loadingElement || !successElement || !errorElement) {
+  console.info("CTA elements not found")
+  exit(1)
+}
+
+let ctaState: CTA_STATE = CTA_STATE.DEFAULT
+function setCTAState(state: CTA_STATE) {
+  ctaState = state
+  const elementMap = {
+    [CTA_STATE.DEFAULT]: ctaElement,
+    [CTA_STATE.LOADING]: loadingElement,
+    [CTA_STATE.ERROR]: errorElement,
+    [CTA_STATE.SUCCESS]: successElement,
   }
+
+  Object.entries(elementMap).forEach(([key, el]) => {
+    if (!el) return
+    if (key === state) {
+      el.classList.remove("hidden")
+    } else {
+      el.classList.add("hidden")
+    }
+  })
+}
+
+logoElement.addEventListener("click", async () => {
+  if (ctaState === CTA_STATE.LOADING) {
+    return
+  }
+  setCTAState(CTA_STATE.LOADING)
+
+  const extractedInputData = extractContextFromAllInputs(document)
+  if (!extractedInputData || extractedInputData.length < 1) {
+    console.error("No input data found")
+    setCTAState(CTA_STATE.ERROR)
+    return
+  }
+
+  chrome.runtime.sendMessage({
+    action: ActionEvents.EXTRACT_INPUT_DATA,
+    data: extractedInputData,
+  })
 })
 
-const iframeEl = document.getElementById("fx-iframe")
+// In content script
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  // console.log("Received message:", request.message);
 
+  // You can send a response back if needed
+  if (message.action === ActionEvents.EXTRACT_INPUT_DATA_RESPONSE) {
+    const isSuccessful = message.data.success
+    const data: {
+      dataId: string
+      value: unknown
+    }[] = message.data.data
 
-let isLoadingData = false;
+    if (!isSuccessful) {
+      setCTAState(CTA_STATE.ERROR)
+      return
+    }
 
-const logo = `
-<div class='logo-position'> 
-<div id='logo-action'> <div> </div></div>
-<div id='formacer-loading' style='display:none'>
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-dasharray="16" stroke-dashoffset="16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3c4.97 0 9 4.03 9 9"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.2s" values="16;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></svg>
-</div>
-</div>
-`
+    data.forEach((item) => {
+      if ((item.value ?? null) === null) {
+        return
+      }
+      const element = document.querySelector(
+        `[data-formacer-id="${item.dataId}"]`,
+      )
+      if (element instanceof HTMLInputElement) {
+        element.value = item.value as string
+        element.dispatchEvent(new Event("input", { bubbles: true }))
+        element.dispatchEvent(new Event("change", { bubbles: true }))
 
-const template = document.createElement("formacer")
-template.innerHTML = logo
-document.body.appendChild(template);
+        // 3. Simulate pressing Enter
+        const enterEvent = new KeyboardEvent("keydown", {
+          bubbles: true,
+          cancelable: true,
+          key: "Enter",
+          code: "Enter",
+          keyCode: 13, // Deprecated, but still needed in some cases
+          which: 13, // Same here
+        })
+        element.dispatchEvent(enterEvent)
+      }
+    })
 
-template.addEventListener("click", () => {
-
-  const actionComp = document.getElementById('logo-action');
-  const loaderComp = document.getElementById('formacer-loading');
-
-  if(loaderComp) {
-    loaderComp.style.display = 'block';
+    setCTAState(CTA_STATE.SUCCESS)
   }
 
-  if(actionComp) {
-    actionComp.style.display  = 'none';
-  }
-
-  calculateInputs(true)
+  sendResponse()
+  return true
 })

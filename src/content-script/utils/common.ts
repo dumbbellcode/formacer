@@ -1,3 +1,15 @@
+export function changeVisibility(
+  visibleElements: Element[],
+  invisibleElements: Element[],
+) {
+  visibleElements.forEach((el) => {
+    el.classList.remove("hidden")
+  })
+  invisibleElements.forEach((el) => {
+    el.classList.add("hidden")
+  })
+}
+
 export function trimText(text: string | null) {
   if (!text) return ""
   return text.replace(/\s+/g, " ").trim()
