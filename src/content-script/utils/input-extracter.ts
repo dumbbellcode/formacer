@@ -3,6 +3,7 @@ import {
   findClosestLabelInParentTreeWithSingleInputUnderIt,
   findClosestTextInParentTreeWithSingleInputUnderIt,
   findInputs,
+  isNodeVisible,
   trimText,
 } from "./common"
 
@@ -24,11 +25,7 @@ export function extractContextFromAllInputs(
   textInputs = textInputs.filter((i) => {
     if (!allowedInputTypes.includes(i.type)) return false
     if (i.value) return false
-    return i.checkVisibility({
-      contentVisibilityAuto: true,
-      opacityProperty: true,
-      visibilityProperty: true,
-    })
+    return isNodeVisible(i)
   })
 
   console.info("Inputs found:", textInputs.length)

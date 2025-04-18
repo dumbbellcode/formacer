@@ -10,6 +10,14 @@ export function changeVisibility(
   })
 }
 
+export function isNodeVisible(e: Element): boolean {
+  return e.checkVisibility({
+    contentVisibilityAuto: true,
+    opacityProperty: true,
+    visibilityProperty: true,
+  })
+}
+
 export function trimText(text: string | null) {
   if (!text) return ""
   return text.replace(/\s+/g, " ").trim()
@@ -59,11 +67,32 @@ export function findClosestTextInParentTreeWithSingleInputUnderIt(
     return null
   }
   const text = (node.textContent ?? "").replace(/\s+/g, " ").trim()
-  if (text.length > 5) {
+  // TODO: add memoization optimization, max search limit
+  // The first if check is to save some iterations
+  if (text.length > 5 && getVisibleText(node).length > 5) {
     return text
   }
   return findClosestTextInParentTreeWithSingleInputUnderIt(node.parentElement)
 }
+
+function getVisibleText(node: Element): string {
+  if (!isNodeVisible(node)) return '';
+
+  let text = '';
+  // Handle text nodes directly under this element
+  for (const childNode of Array.from(node.childNodes)) {
+    if (childNode.nodeType === Node.TEXT_NODE) {
+      text += childNode.textContent ?? '';
+    } else if (childNode.nodeType === Node.ELEMENT_NODE) {
+      // Recursively get text from visible child elements
+      text += getVisibleText(childNode as Element);
+    }
+  }
+  
+  return text.replace(/\s+/g, ' ').trim();
+}
+
+
 
 export function displayForSeconds(
   element: HTMLElement,
