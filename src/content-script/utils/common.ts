@@ -64,3 +64,28 @@ export function findClosestTextInParentTreeWithSingleInputUnderIt(
   }
   return findClosestTextInParentTreeWithSingleInputUnderIt(node.parentElement)
 }
+
+export function displayForSeconds(
+  element: HTMLElement,
+  duration: number,
+  onMount?: () => void,
+  onClear?: () => void,
+): void {
+  // Show the element
+  element.classList.remove("hidden")
+
+  // Run onMount callback if provided
+  if (onMount) {
+    onMount()
+  }
+
+  // Set timeout to hide the element
+  setTimeout(() => {
+    element.classList.add("hidden")
+
+    // Run onClear callback if provided
+    if (onClear) {
+      onClear()
+    }
+  }, duration * 1000)
+}

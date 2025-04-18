@@ -3,6 +3,8 @@ import { ActionEvents } from "@/types/common"
 import { exit } from "process"
 import ctaHtml from "./cta-container.html?raw"
 import { simulateTyping } from "./utils/typing"
+import { makeElementDraggable } from "./utils/draggable"
+import { displayForSeconds } from "./utils/common"
 
 self.onerror = function (message, source, lineno, colno, error) {
   console.info("Error: " + message)
@@ -22,25 +24,45 @@ enum CTA_STATE {
 }
 
 const container = document.createElement("div")
-container.style = "position: fixed; bottom: 80px; right: 20px; z-index: 9999"
+container.style = "position: absolute; top: 0; left: 0"
 const shadowRoot = container.attachShadow({ mode: "open" })
 shadowRoot.innerHTML = ctaHtml
 document.body.appendChild(container)
 
-const logoElement = shadowRoot.getElementById("formacer-cta-container")
-const ctaElement = shadowRoot.getElementById("formacer-cta")
-const loadingElement = shadowRoot.getElementById("formacer-cta-loading")
-const successElement = shadowRoot.getElementById("formacer-cta-success")
-const errorElement = shadowRoot.getElementById("formacer-cta-error")
+const contentElement = shadowRoot.getElementById("formacer-cta-container")
+const logoElement = shadowRoot.getElementById("formacer-icons-section")
+const ctaElement = shadowRoot.getElementById("icon-default")
+const loadingElement = shadowRoot.getElementById("icon-loading")
+const successElement = shadowRoot.getElementById("icon-success")
+const errorElement = shadowRoot.getElementById("icon-error")
 
-if (!logoElement) {
-  console.info("Logo element not found")
+function displayMessageForSeconds(message: string) {
+  const boxSection = shadowRoot.getElementById("box-section")
+  const messageSection = shadowRoot.getElementById("message-section")
+  if (!messageSection || !boxSection || message == null) {
+    return
+  }
+  displayForSeconds(
+    boxSection,
+    2,
+    () => (messageSection.innerText = message),
+    () => (messageSection.innerText = ""),
+  )
+}
+
+if (!contentElement) {
+  console.info("Content element not found")
   exit(1)
 }
-if (!ctaElement || !loadingElement || !successElement || !errorElement) {
+if (!ctaElement || !loadingElement || !successElement || !errorElement || !logoElement) {
   console.info("CTA elements not found")
   exit(1)
 }
+
+makeElementDraggable(
+  contentElement as HTMLElement,
+  shadowRoot.getElementById("formacer-cta-container-drag"),
+)
 
 let ctaState: CTA_STATE = CTA_STATE.DEFAULT
 function setCTAState(state: CTA_STATE) {
@@ -70,7 +92,7 @@ logoElement.addEventListener("click", async () => {
 
   const extractedInputData = extractContextFromAllInputs(document)
   if (!extractedInputData || extractedInputData.length < 1) {
-    console.error("No input data found")
+    displayMessageForSeconds("No empty inputs found to fill!")
     setCTAState(CTA_STATE.ERROR)
     return
   }
@@ -84,16 +106,20 @@ logoElement.addEventListener("click", async () => {
 // In content script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   // console.log("Received message:", request.message);
+  const { action, payload } = message;
 
   // You can send a response back if needed
-  if (message.action === ActionEvents.EXTRACT_INPUT_DATA_RESPONSE) {
-    const isSuccessful = message.data.success
+  if (action === ActionEvents.EXTRACT_INPUT_DATA_RESPONSE) {
+    const isSuccessful = message.payload.success
     const data: {
       dataId: string
       value: unknown
-    }[] = message.data.data ?? []
+      message?: string
+      error?: unknown
+    }[] = payload.data ?? []
 
     if (!isSuccessful) {
+      displayMessageForSeconds(payload.message)
       setCTAState(CTA_STATE.ERROR)
       return
     }
@@ -105,11 +131,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       const element = document.querySelector(
         `[data-formacer-id="${item.dataId}"]`,
       )
-      if (element instanceof HTMLInputElement && typeof item.value === 'string') {
+      if (
+        element instanceof HTMLInputElement &&
+        typeof item.value === "string"
+      ) {
         simulateTyping(element, item.value as string)
       }
-      if (element instanceof HTMLInputElement && typeof item.value === 'number') {
-        element.value = (item.value as number).toString();
+      if (
+        element instanceof HTMLInputElement &&
+        typeof item.value === "number"
+      ) {
+        element.value = (item.value as number).toString()
       }
     })
 

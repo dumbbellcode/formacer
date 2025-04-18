@@ -4,5 +4,5 @@ import ManifestConfig from "./manifest.config"
 // @ts-expect-error ManifestConfig provides all required fields
 export default defineManifest((env) => ({
   ...ManifestConfig,
-  key: env["CHROME_ADDON_KEY"],
+  key: process.env.CHROME_ADDON_KEY,
 }))

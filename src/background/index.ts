@@ -51,7 +51,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         tabId as number,
         {
           action: ActionEvents.EXTRACT_INPUT_DATA_RESPONSE,
-          data: response,
+          payload: response,
         },
         {},
         (response) => {

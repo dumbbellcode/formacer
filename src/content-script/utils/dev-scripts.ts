@@ -1,4 +1,4 @@
-import { TextInputContext, TextInputContextProps } from "./types"
+import { TextInputContext, TextInputContextProps } from "../types"
 
 export const viewExtractedInputs = (extractedInputData: TextInputContext[]) => {
   const table = document.createElement("table")

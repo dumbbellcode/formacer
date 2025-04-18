@@ -6,7 +6,7 @@ import {
   CreativeDetails,
 } from "@/types/common"
 
-const API_URL = "http://localhost:3333"
+const API_URL = process.env.API_URL ?? 'http://localhost:3333'
 const FILL_ACCURATE = `${API_URL}/fill/accurate`
 
 export async function getAccurateFillData(
@@ -33,7 +33,9 @@ export async function getAccurateFillData(
       })
       .filter((d) => d.value) ?? []
 
-  const userTotalContext = userContextAccurateFill.concat(userContextCreativeFill)
+  const userTotalContext = userContextAccurateFill.concat(
+    userContextCreativeFill,
+  )
 
   console.info("User context", userTotalContext)
   console.info("Input context", textInputContext)
@@ -41,7 +43,7 @@ export async function getAccurateFillData(
   if (!userTotalContext.length) {
     return {
       success: false,
-      message: "No user context found",
+      message: "Please fill the form inside the extension for autofill to work",
     }
   }
 
@@ -60,7 +62,8 @@ export async function getAccurateFillData(
     if (!response.ok) {
       return {
         success: false,
-        message: "Network response was not ok",
+        message: "Something went wrong with the connection!",
+        error: "Network response was not ok",
       }
     }
 
@@ -75,7 +78,7 @@ export async function getAccurateFillData(
     console.error("Error:", error)
     return {
       success: false,
-      message: "Something went wrong",
+      message: "Something went wrong !",
       error,
     }
   }
