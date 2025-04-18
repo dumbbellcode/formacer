@@ -21,8 +21,6 @@ export function extractContextFromAllInputs(
 ): TextInputContext[] {
   let textInputs = findInputs(node)
 
-  console.info("Extracting context from inputs count:", textInputs.length)
-
   textInputs = textInputs.filter((i) => {
     if (!allowedInputTypes.includes(i.type)) return false
     if (i.value) return false
@@ -33,7 +31,7 @@ export function extractContextFromAllInputs(
     })
   })
 
-  console.info("Extracting context from inputs count:", textInputs.length)
+  console.info("Inputs found:", textInputs.length)
 
   return textInputs.map((ti) => {
     const context = extractContextFromInput(ti)
