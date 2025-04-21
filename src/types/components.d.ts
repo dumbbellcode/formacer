@@ -17,6 +17,7 @@ declare module 'vue' {
     IPhClockCountdown: typeof import('~icons/ph/clock-countdown')['default']
     IPhDotsThreeVertical: typeof import('~icons/ph/dots-three-vertical')['default']
     IPhGear: typeof import('~icons/ph/gear')['default']
+    IPhInfo: typeof import('~icons/ph/info')['default']
     IPhMinus: typeof import('~icons/ph/minus')['default']
     IPhMoon: typeof import('~icons/ph/moon')['default']
     IPhPlus: typeof import('~icons/ph/plus')['default']

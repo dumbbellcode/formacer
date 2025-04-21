@@ -6,9 +6,9 @@
       <p>Copyright © {{ new Date().getFullYear() }} - All right reserved</p>
     </aside>
     <nav class="flex gap-2">
-      <RouterLink to="https://github.com/dumbbellcode/formacer">
+      <a href="https://github.com/dumbbellcode/formacer">
         <i-carbon-logo-github />
-      </RouterLink>
+      </a>
       <a href="https://youtu.be/171wM23qsjk">
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="h-screen">
     <RouterLinkUp />
 
     <h1>About Us</h1>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="h-screen">
     <h1>Coming up soon !</h1>
     <ul>
       <li>Radio button autofill</li>

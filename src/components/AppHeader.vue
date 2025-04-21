@@ -23,11 +23,6 @@
           </RouterLink>
         </li>
         <li>
-          <RouterLink to="/options-page">
-            <i-carbon-logo-github />
-          </RouterLink>
-        </li>
-        <li>
           <div class="dropdown dropdown-bottom dropdown-end">
             <div
               tabindex="0"
@@ -53,7 +48,7 @@
               <li>
                 <RouterLink
                   to="/action-popup/coming-soon"
-                  class="btn btn-link"
+                  class="text-primary"
                 >
                   <i-ph-clock-countdown />
                   New !

@@ -72,21 +72,6 @@ function handleDone() {
             {{ group }}
           </option>
         </datalist>
-        <!-- <select
-          v-model="section"
-          class="select select-bordered"
-        >
-          <option selected>
-            Other Details
-          </option>
-          <option
-            v-for="group in props.groups"
-            :key="group"
-            :value="group"
-          >
-            {{ group }}
-          </option>
-        </select> -->
       </fieldset>
     </div>
 
