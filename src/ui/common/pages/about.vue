@@ -5,31 +5,37 @@
     <h1>About Us</h1>
 
     <p>
-      Formacer is an Open Source project that helps you fill forms automatically
-      with the help of AI.
+      Formacer is an AI-assisted Chrome autofill extension that helps you fill
+      forms instantly with a single button click. You can save all your
+      information in the extension once, and the extension takes care of filling
+      it back in any kind of websites.
     </p>
 
-    <div class="flex gap-2">
-      <RouterLink
-        to="/common/privacy-policy"
-        class="btn btn-primary"
-      >
-        Privacy Policy
-      </RouterLink>
+    <p>
+      <b>Developer</b>
+      : Sudheer Tripathi
+      <br />
+      <b>Contact Email</b>
+      : tripathisudheer604@gmail.com
+    </p>
 
-      <RouterLink
-        to="/common/terms-of-service"
-        class="btn btn-primary"
-      >
-        Terms
-      </RouterLink>
-
-      <RouterLink
-        to="/common/change-log"
-        class="btn btn-primary"
-      >
-        Change Log
-      </RouterLink>
-    </div>
+    <ul class="list-disc pl-5">
+      <li>
+        <RouterLink
+          to="/common/privacy-policy"
+          class="text-blue-500 hover:underline"
+        >
+          Privacy Policy
+        </RouterLink>
+      </li>
+      <li>
+        <RouterLink
+          to="/common/terms-of-service"
+          class="text-blue-500 hover:underline"
+        >
+          Terms
+        </RouterLink>
+      </li>
+    </ul>
   </div>
 </template>

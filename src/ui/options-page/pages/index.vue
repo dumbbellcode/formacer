@@ -92,7 +92,14 @@ function addNewTextareaField() {
   >
     <RouterLinkUp />
 
-    <h2 class="mb-1">Accurate Fill Details</h2>
+    <p>
+      Enter any detail you want to get autofilled here. Details entered here 
+      will be used to autofill your forms 
+    </p>
+    
+    <div class="mb-2">
+      <h2>Autofill Details</h2>
+    </div>
 
     <div
       v-for="(detailItems, section) in basicDetails"
@@ -138,7 +145,7 @@ function addNewTextareaField() {
       @done="addNewField"
     />
 
-    <h2 class="mt-4 mb-1">Creative Fill Details</h2>
+    <h2 class="mt-4 mb-1">Long Details</h2>
 
     <div
       v-for="detailItem in creativeDetails.fields"

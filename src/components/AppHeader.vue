@@ -41,7 +41,6 @@
               class="dropdown-content menu bg-white rounded-box z-[1] shadow-lg"
             >
               <li><ThemeSwitch /></li>
-              <li></li>
               <li>
                 <RouterLink
                   to="/common/about"
@@ -49,6 +48,15 @@
                 >
                   <i-ph-question />
                   About
+                </RouterLink>
+              </li>
+              <li>
+                <RouterLink
+                  to="/action-popup/coming-soon"
+                  class="btn btn-link"
+                >
+                  <i-ph-clock-countdown />
+                  New !
                 </RouterLink>
               </li>
             </ul>
