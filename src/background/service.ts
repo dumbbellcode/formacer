@@ -6,7 +6,7 @@ import {
   CreativeDetails,
 } from "@/types/common"
 
-const API_URL = process.env.API_URL ?? 'http://localhost:3333'
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3333"
 const FILL_ACCURATE = `${API_URL}/fill/accurate`
 
 export async function getAccurateFillData(

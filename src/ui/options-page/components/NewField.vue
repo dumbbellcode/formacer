@@ -57,15 +57,27 @@ function handleDone() {
       </fieldset>
       <fieldset class="fieldset">
         <legend class="fieldset-legend">Related To</legend>
-        <select
+        <input
+          v-model="section"
+          class="input"
+          type="text"
+          list="options"
+        />
+        <datalist id="options">
+          <option
+            v-for="group in props.groups"
+            :key="group"
+            :value="group"
+          >
+            {{ group }}
+          </option>
+        </datalist>
+        <!-- <select
           v-model="section"
           class="select select-bordered"
         >
-          <option
-            disabled
-            selected
-          >
-            Pick one
+          <option selected>
+            Other Details
           </option>
           <option
             v-for="group in props.groups"
@@ -74,7 +86,7 @@ function handleDone() {
           >
             {{ group }}
           </option>
-        </select>
+        </select> -->
       </fieldset>
     </div>
 

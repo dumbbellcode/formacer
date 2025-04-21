@@ -2,8 +2,7 @@ import { TextInputContext } from "@/types/common"
 import {
   findClosestLabelInParentTreeWithSingleInputUnderIt,
   findClosestTextInParentTreeWithSingleInputUnderIt,
-  findInputs,
-  isNodeVisible,
+  findElements,
   trimText,
 } from "./common"
 
@@ -20,13 +19,9 @@ const allowedInputTypes = [
 export function extractContextFromAllInputs(
   node: Element | Document,
 ): TextInputContext[] {
-  let textInputs = findInputs(node)
-
-  textInputs = textInputs.filter((i) => {
-    if (!allowedInputTypes.includes(i.type)) return false
-    if (i.value) return false
-    return isNodeVisible(i)
-  })
+  const textInputs = findElements(node, "input", (i: HTMLInputElement) =>
+    allowedInputTypes.includes(i.type),
+  ) as HTMLInputElement[]
 
   console.info("Inputs found:", textInputs.length)
 
@@ -43,7 +38,8 @@ export function extractContextFromAllInputs(
 }
 
 export function extractContextFromInput(
-  input: HTMLInputElement,
+  input: HTMLInputElement | HTMLTextAreaElement,
+  elementType: "input" | "textarea" = "input",
 ): TextInputContext {
   const allLabels = input.labels
   let label = allLabels?.length ? allLabels[0].textContent : ""
@@ -61,7 +57,10 @@ export function extractContextFromInput(
 
   // If closest label not found, search closest text
   if (!closestLabel) {
-    closestText = findClosestTextInParentTreeWithSingleInputUnderIt(input)
+    closestText = findClosestTextInParentTreeWithSingleInputUnderIt(
+      input,
+      elementType,
+    )
     closestText = trimText(closestText)
   }
 

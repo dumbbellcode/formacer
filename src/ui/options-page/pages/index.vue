@@ -92,13 +92,14 @@ function addNewTextareaField() {
   >
     <RouterLinkUp />
 
-    <h2>Accurate Fill Details</h2>
+    <h2 class="mb-1">Accurate Fill Details</h2>
 
     <div
       v-for="(detailItems, section) in basicDetails"
       :key="section"
     >
-      <div class="grid grid-cols-2 gap-2">
+      <div class="mt-2 text-xs font-semibold text-secondary">{{ section }}</div>
+      <div class="grid grid-cols-2 gap-1">
         <fieldset
           v-for="field in detailItems"
           :key="field.id"
@@ -137,7 +138,7 @@ function addNewTextareaField() {
       @done="addNewField"
     />
 
-    <h2 class="mt-4">Creative Fill Details</h2>
+    <h2 class="mt-4 mb-1">Creative Fill Details</h2>
 
     <div
       v-for="detailItem in creativeDetails.fields"

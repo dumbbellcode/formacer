@@ -5,6 +5,7 @@ import ctaHtml from "./cta-container.html?raw"
 import { simulateTyping } from "./utils/typing"
 import { makeElementDraggable } from "./utils/draggable"
 import { displayForSeconds } from "./utils/common"
+import { extractContextFromAllTextarea } from "./utils/textarea-extracter"
 
 self.onerror = function (message, source, lineno, colno, error) {
   console.info("Error: " + message)
@@ -54,7 +55,13 @@ if (!contentElement) {
   console.info("Content element not found")
   exit(1)
 }
-if (!ctaElement || !loadingElement || !successElement || !errorElement || !logoElement) {
+if (
+  !ctaElement ||
+  !loadingElement ||
+  !successElement ||
+  !errorElement ||
+  !logoElement
+) {
   console.info("CTA elements not found")
   exit(1)
 }
@@ -90,7 +97,9 @@ logoElement.addEventListener("click", async () => {
   }
   setCTAState(CTA_STATE.LOADING)
 
-  const extractedInputData = extractContextFromAllInputs(document)
+  const extractedInputData = extractContextFromAllInputs(document).concat(
+    extractContextFromAllTextarea(document),
+  )
   if (!extractedInputData || extractedInputData.length < 1) {
     displayMessageForSeconds("No empty inputs found to fill!")
     setCTAState(CTA_STATE.ERROR)
@@ -106,7 +115,7 @@ logoElement.addEventListener("click", async () => {
 // In content script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   // console.log("Received message:", request.message);
-  const { action, payload } = message;
+  const { action, payload } = message
 
   // You can send a response back if needed
   if (action === ActionEvents.EXTRACT_INPUT_DATA_RESPONSE) {
@@ -124,30 +133,37 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       return
     }
 
-    data.forEach((item) => {
-      if ((item.value ?? null) === null) {
-        return
-      }
-      const element = document.querySelector(
-        `[data-formacer-id="${item.dataId}"]`,
-      )
-      if (
-        element instanceof HTMLInputElement &&
-        typeof item.value === "string"
-      ) {
-        simulateTyping(element, item.value as string)
-      }
-      if (
-        element instanceof HTMLInputElement &&
-        typeof item.value === "number"
-      ) {
-        element.value = (item.value as number).toString()
-      }
-    })
-
-    setCTAState(CTA_STATE.SUCCESS)
+    fillInputInForm(data).then(() => setCTAState(CTA_STATE.SUCCESS))
   }
 
   sendResponse()
   return true
 })
+
+async function fillInputInForm(
+  data: {
+    dataId: string
+    value: unknown
+    message?: string
+    error?: unknown
+  }[],
+) {
+  for (const item of data) {
+    if ((item.value ?? null) === null) {
+      return
+    }
+    const element = document.querySelector(
+      `[data-formacer-id="${item.dataId}"]`,
+    )
+    if (element instanceof HTMLInputElement && typeof item.value === "string") {
+      await simulateTyping(element, item.value as string)
+    } else if (
+      element instanceof HTMLInputElement &&
+      typeof item.value === "number"
+    ) {
+      element.value = (item.value as number).toString()
+    } else if (element instanceof HTMLTextAreaElement) {
+      await simulateTyping(element, item.value as string)
+    }
+  }
+}

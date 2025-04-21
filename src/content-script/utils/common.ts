@@ -1,3 +1,15 @@
+function isEmpty(value: unknown) {
+  return (
+    value === null ||
+    value === undefined ||
+    (typeof value === "string" && value.trim() === "") ||
+    (Array.isArray(value) && value.length === 0) ||
+    (typeof value === "object" &&
+      !Array.isArray(value) &&
+      Object.keys(value).length === 0)
+  )
+}
+
 export function changeVisibility(
   visibleElements: Element[],
   invisibleElements: Element[],
@@ -30,8 +42,26 @@ export function createElementFromHTML(htmlString: string) {
   return div
 }
 
-export function findInputs(node: Element | Document): HTMLInputElement[] {
-  return Array.from(node.querySelectorAll(`input`)) as HTMLInputElement[]
+export function findElements<T>(
+  node: Element | Document,
+  type: "input" | "textarea",
+  filterCallback: ((e: T) => boolean) | null = null,
+  onlyVisible: boolean = true,
+  onlyEmpty: boolean = true,
+): T[] {
+  let elements = Array.from(node.querySelectorAll(type)) as T[]
+  if (filterCallback) {
+    elements = elements.filter((e) => filterCallback(e))
+  }
+  if (onlyVisible) {
+    elements = elements.filter((e) => e instanceof Element && isNodeVisible(e))
+  }
+  if (onlyEmpty) {
+    const hasValueProp = (e: unknown) =>
+      e instanceof HTMLTextAreaElement || e instanceof HTMLInputElement
+    elements = elements.filter((e) => hasValueProp(e) && isEmpty(e.value))
+  }
+  return elements as T[]
 }
 
 // Searches label in parent tree such that only single label is found
@@ -58,11 +88,12 @@ export function findClosestLabelInParentTreeWithSingleInputUnderIt(
 
 export function findClosestTextInParentTreeWithSingleInputUnderIt(
   node: HTMLElement | null,
+  elementType: "input" | "textarea" = "input",
 ) {
   if (!node) {
     return null
   }
-  const inputCount = node.querySelectorAll('input[type="text"]').length
+  const inputCount = node.querySelectorAll(elementType).length
   if (inputCount > 1) {
     return null
   }
@@ -76,23 +107,21 @@ export function findClosestTextInParentTreeWithSingleInputUnderIt(
 }
 
 function getVisibleText(node: Element): string {
-  if (!isNodeVisible(node)) return '';
+  if (!isNodeVisible(node)) return ""
 
-  let text = '';
+  let text = ""
   // Handle text nodes directly under this element
   for (const childNode of Array.from(node.childNodes)) {
     if (childNode.nodeType === Node.TEXT_NODE) {
-      text += childNode.textContent ?? '';
+      text += childNode.textContent ?? ""
     } else if (childNode.nodeType === Node.ELEMENT_NODE) {
       // Recursively get text from visible child elements
-      text += getVisibleText(childNode as Element);
+      text += getVisibleText(childNode as Element)
     }
   }
-  
-  return text.replace(/\s+/g, ' ').trim();
+
+  return text.replace(/\s+/g, " ").trim()
 }
-
-
 
 export function displayForSeconds(
   element: HTMLElement,

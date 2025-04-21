@@ -1,6 +1,6 @@
 // Simulate typing function
 export function simulateTyping(
-  inputElement: HTMLInputElement,
+  inputElement: HTMLInputElement | HTMLTextAreaElement,
   text: string,
   delay = 10,
 ) {
