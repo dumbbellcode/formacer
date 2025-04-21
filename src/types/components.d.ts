@@ -14,6 +14,7 @@ declare module 'vue' {
     ICarbonLogoGithub: typeof import('~icons/carbon/logo-github')['default']
     IPhArrowLeft: typeof import('~icons/ph/arrow-left')['default']
     IPhCheckCircle: typeof import('~icons/ph/check-circle')['default']
+    IPhClockCountdown: typeof import('~icons/ph/clock-countdown')['default']
     IPhDotsThreeVertical: typeof import('~icons/ph/dots-three-vertical')['default']
     IPhGear: typeof import('~icons/ph/gear')['default']
     IPhMinus: typeof import('~icons/ph/minus')['default']
