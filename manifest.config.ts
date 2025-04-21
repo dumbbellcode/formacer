@@ -43,12 +43,11 @@ export default {
   options_page: "src/ui/options-page/index.html",
   offline_enabled: true,
   host_permissions: ["<all_urls>"],
-  permissions: ["storage", "tabs", "background", "sidePanel"],
+  permissions: ["storage", "tabs", "background"],
   web_accessible_resources: [
     {
       resources: [
-        // "src/assets/logo.svg",
-        "src/ui/content-script-iframe/index.html",
+        "src/ui/setup/index.html",
       ],
       matches: ["*://*/*"],
     },
