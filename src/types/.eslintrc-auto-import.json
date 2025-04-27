@@ -363,6 +363,9 @@
     "useSSRWidth": true,
     "onElementRemoval": true,
     "useCountdown": true,
-    "getValueFromStorage": true
+    "getValueFromStorage": true,
+    "useDetailsStore": true,
+    "useFormProfilesStore": true,
+    "useSettingsStore": true
   }
 }

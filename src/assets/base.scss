@@ -15,6 +15,7 @@
   --color-base-content: oklch(21% 0.006 285.885);
   --color-primary: oklch(0.71 0.1032 172.27);
   --color-primary-content: oklch(93% 0.034 272.788);
+  --custom-primary-light: oklch(0.88 0.0444 176.71);
   --color-secondary: oklch(0.65 0.0954 198.65);
   --color-secondary-content: oklch(94% 0.028 342.258);
   --color-accent: oklch(77% 0.152 181.912);
@@ -37,6 +38,12 @@
   --border: 1px;
   --depth: 1;
   --noise: 0;
+}
+
+[data-theme="light"] {
+  .hover-bg-primary-light:hover {
+    background-color: var(--custom-primary-light);
+  }
 }
 
 // @plugin "prettier-plugin-tailwindcss";

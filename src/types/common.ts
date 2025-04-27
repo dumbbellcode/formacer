@@ -49,6 +49,18 @@ export const TextInputContextProps: Array<keyof TextInputContext> = [
   "closestText",
 ]
 
+export interface FormProfile {
+  id: string
+  name: string
+  createdAt?: string
+}
+
+export interface Settings {
+  activeProfileId: string | null
+  profiles: Record<string, FormProfile>
+  displayActionIcon: boolean
+}
+
 export enum DETAIL_TYPES {
   ACCURATE = "accurate",
   CREATIVE = "creative",

@@ -18,7 +18,7 @@
     <div class="flex-none">
       <ul class="menu menu-horizontal menu-xs">
         <li>
-          <RouterLink to="/options-page">
+          <RouterLink to="/options-page/settings">
             <i-ph-gear />
           </RouterLink>
         </li>

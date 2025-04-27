@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { DETAIL_TYPES, CreativeDetails } from "@/types/common"
+import { DETAIL_TYPES, CreativeDetails, FormProfile } from "@/types/common"
 import NewTextareaField from "../components/NewTextareaField.vue"
 import { initialCreativeDetailFields } from "../utils"
 
@@ -8,8 +8,12 @@ const newTextareaFieldRef = ref<InstanceType<typeof NewTextareaField> | null>(
   null,
 )
 
+const props = defineProps<{
+  profile: FormProfile
+}>()
+
 const { data: creativeDetails } = useBrowserSyncStorage<CreativeDetails>(
-  DETAIL_TYPES.CREATIVE,
+  `${props.profile.id}-${DETAIL_TYPES.CREATIVE}`,
   {
     fields: initialCreativeDetailFields,
   },

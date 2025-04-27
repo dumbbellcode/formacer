@@ -3,6 +3,7 @@ import {
   AccurateDetailItem,
   AccurateDetails,
   DETAIL_TYPES,
+  FormProfile,
 } from "@/types/common"
 import NewField from "../components/NewField.vue"
 import { initialAccurateDetailFields } from "../utils"
@@ -10,8 +11,12 @@ import { initialAccurateDetailFields } from "../utils"
 const newFieldActive = ref(false)
 const newFieldRef = ref<InstanceType<typeof NewField> | null>(null)
 
+const props = defineProps<{
+  profile: FormProfile
+}>()
+
 const { data: detail } = useBrowserSyncStorage<AccurateDetails>(
-  DETAIL_TYPES.ACCURATE,
+  `${props.profile.id}-${DETAIL_TYPES.ACCURATE}`,
   {
     fields: initialAccurateDetailFields,
   },
@@ -36,6 +41,12 @@ function editField(event: Event, id: string) {
   field.value = input.value
 }
 
+function deleteField(id: string) {
+  const idx = detail.value.fields?.findIndex((field) => field.id === id) ?? -1
+  if (idx < 0) return
+  detail.value.fields?.splice(idx, 1)
+}
+
 function addNewField() {
   if (!newFieldRef.value) {
     return
@@ -44,38 +55,47 @@ function addNewField() {
   detail.value.fields?.push({
     label,
     value,
-    section: section ? section : label,
+    section: section ? section : "Other",
     id: crypto.randomUUID(),
   })
 }
 </script>
 
 <template>
-  <div
-    v-for="(detailItems, section) in basicDetails"
-    :key="section"
-  >
-    <div class="divider divider-end mt-4 mb-0">
-      <span class="text-[8px] font-semibold">{{ section }}</span>
-    </div>
-    <div class="grid grid-cols-2 gap-1">
-      <fieldset
-        v-for="field in detailItems"
-        :key="field.id"
-        class="fieldset"
-      >
-        <legend class="fieldset-legend pt-1 pb-0">
-          {{ field.label }}
-        </legend>
-        <input
-          :id="field.id"
-          type="text"
-          class="input"
-          :value="field.value"
-          :autocomplete="field.autocomplete"
-          @input="editField($event, field.id)"
-        />
-      </fieldset>
+  <div class="space-y-3">
+    <div
+      v-for="(detailItems, section) in basicDetails"
+      :key="section"
+    >
+      <span class="text-[8px] font-semibold block">{{ section }}</span>
+
+      <div class="grid grid-cols-2 gap-1">
+        <fieldset
+          v-for="field in detailItems"
+          :key="field.id"
+          class="fieldset"
+        >
+          <legend class="fieldset-legend pt-1 pb-0">
+            {{ field.label }}
+            <span class="delete-icon">
+              <i-lucide-delete
+                width="1em"
+                height="1em"
+                class="stroke-red-300"
+                @click="deleteField(field.id)"
+              />
+            </span>
+          </legend>
+          <input
+            :id="field.id"
+            type="text"
+            class="input"
+            :value="field.value"
+            :autocomplete="field.autocomplete"
+            @input="editField($event, field.id)"
+          />
+        </fieldset>
+      </div>
     </div>
   </div>
 
@@ -97,3 +117,13 @@ function addNewField() {
     @done="addNewField"
   />
 </template>
+
+<style scoped>
+.delete-icon {
+  display: none; /* Hide the icon by default */
+}
+
+.fieldset-legend:hover .delete-icon {
+  display: inline; /* Show the icon when the legend is hovered */
+}
+</style>

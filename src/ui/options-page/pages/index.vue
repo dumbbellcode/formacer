@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import DetailsForm from "../components/DetailsForm.vue"
 import TextareaDetailsForm from "../components/TextareaDetailsForm.vue"
+import { useSettingsStore } from "@/stores/settings.store"
+const settingsStore = useSettingsStore()
+const profile = {
+  id: settingsStore.activeProfileId ?? "",
+  name: "",
+}
 </script>
 
 <template>
@@ -16,16 +22,17 @@ import TextareaDetailsForm from "../components/TextareaDetailsForm.vue"
       <i-ph-info />
       <span>
         Enter any detail you want to get autofilled here. Details entered here
-        will be used to autofill your forms
+        will be used to autofill your forms. Add new details using the add new
+        button
       </span>
     </div>
 
     <h2 class="mt-4">Autofill Details</h2>
 
-    <DetailsForm />
+    <DetailsForm :profile="profile" />
 
-    <h2 class="mt-4 mb-1">Long Details</h2>
+    <h2 class="mt-4 mb-1">Long Autofill Details</h2>
 
-    <TextareaDetailsForm />
+    <TextareaDetailsForm :profile="profile" />
   </div>
 </template>

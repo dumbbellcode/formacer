@@ -4,6 +4,7 @@ import {
   TextInputContext,
   DETAIL_TYPES,
   CreativeDetails,
+  Settings,
 } from "@/types/common"
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3333"
@@ -12,12 +13,14 @@ const FILL_ACCURATE = `${API_URL}/fill/accurate`
 export async function getAccurateFillData(
   textInputContext: TextInputContext[],
 ) {
+  const settings = await getValueFromStorage<Settings>("settings", "sync")
+  const activeProfileId = settings.activeProfileId ?? "default"
   const userContext = await getValueFromStorage<AccurateDetails>(
-    DETAIL_TYPES.ACCURATE,
+    `${activeProfileId}-${DETAIL_TYPES.ACCURATE}`,
     "sync",
   )
   const userCreativeContext = await getValueFromStorage<CreativeDetails>(
-    DETAIL_TYPES.CREATIVE,
+    `${activeProfileId}-${DETAIL_TYPES.CREATIVE}`,
     "sync",
   )
   const userContextAccurateFill =
@@ -37,8 +40,8 @@ export async function getAccurateFillData(
     userContextCreativeFill,
   )
 
-  console.info("User context", userTotalContext)
-  console.info("Input context", textInputContext)
+  //console.info("User context", userTotalContext)
+  //console.info("Input context", textInputContext)
 
   if (!userTotalContext.length) {
     return {
@@ -68,7 +71,7 @@ export async function getAccurateFillData(
     }
 
     const data = await response.json()
-    console.info("Response Data:", data)
+    // console.info("Response Data:", data)
 
     return {
       success: true,

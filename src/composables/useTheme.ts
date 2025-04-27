@@ -4,7 +4,7 @@ import { useBrowserLocalStorage } from "./useBrowserStorage"
 export function useTheme() {
   const { data: colorSchema } = useBrowserLocalStorage<BasicColorSchema>(
     "mode",
-    "auto",
+    "light",
   )
 
   const isDark = useDark({

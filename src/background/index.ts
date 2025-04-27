@@ -7,6 +7,7 @@ import { getAccurateFillData } from "./service"
 chrome.runtime.onInstalled.addListener(async (opt) => {
   // Check if reason is install or update. Eg: opt.reason === 'install' // If extension is installed.
   // opt.reason === 'update' // If extension is updated.
+
   if (opt.reason === "install") {
     chrome.tabs.create({
       active: true,
@@ -39,6 +40,8 @@ self.onerror = function (message, source, lineno, colno, error) {
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   const tabId = sender.tab?.id
+  console.log("tabId", tabId)
+
   if (msg.action === "openOptionsPage") {
     chrome.runtime.openOptionsPage()
     // sendResponse({status: "Options page opened"});

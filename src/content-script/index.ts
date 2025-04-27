@@ -1,5 +1,5 @@
 import { extractContextFromAllInputs } from "./utils/input-extracter"
-import { ActionEvents } from "@/types/common"
+import { ActionEvents, DETAIL_TYPES, Settings } from "@/types/common"
 import { exit } from "process"
 import ctaHtml from "./cta-container.html?raw"
 import { simulateTyping } from "./utils/typing"
@@ -15,8 +15,6 @@ self.onerror = function (message, source, lineno, colno, error) {
   console.info("Error object: " + error)
 }
 
-console.info("hello world from content-script")
-
 enum CTA_STATE {
   DEFAULT = "default",
   LOADING = "loading",
@@ -26,6 +24,15 @@ enum CTA_STATE {
 
 const container = document.createElement("div")
 container.style = "position: absolute; top: 0; left: 0"
+
+getValueFromStorage<Settings>("settings", "sync").then((setting) => {
+  if (!setting.displayActionIcon) {
+    container.style.display = "none"
+  } else {
+    container.style.display = "block"
+  }
+})
+
 const shadowRoot = container.attachShadow({ mode: "open" })
 shadowRoot.innerHTML = ctaHtml
 document.body.appendChild(container)
@@ -130,7 +137,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (!isSuccessful) {
       displayMessageForSeconds(payload.message)
       setCTAState(CTA_STATE.ERROR)
-      return
+      sendResponse()
+      return true
     }
 
     fillInputInForm(data).then(() => setCTAState(CTA_STATE.SUCCESS))
@@ -162,7 +170,10 @@ async function fillInputInForm(
       typeof item.value === "number"
     ) {
       element.value = (item.value as number).toString()
-    } else if (element instanceof HTMLTextAreaElement) {
+    } else if (
+      element instanceof HTMLTextAreaElement &&
+      item.value !== "null"
+    ) {
       await simulateTyping(element, item.value as string)
     }
   }
