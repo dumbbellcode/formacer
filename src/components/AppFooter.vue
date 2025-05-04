@@ -9,7 +9,7 @@
       <a href="https://github.com/dumbbellcode/formacer">
         <i-carbon-logo-github />
       </a>
-      <a href="https://youtu.be/171wM23qsjk">
+      <a href="https://youtu.be/tmImoc9Nkq0">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"

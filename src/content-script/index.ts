@@ -200,6 +200,6 @@ async function fillInputInForm(
     ) {
       await simulateTyping(element, item.value as string)
     }
-    await sleep(400)
+    await sleep(300)
   }
 }
