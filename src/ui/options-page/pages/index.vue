@@ -21,9 +21,9 @@ import TextareaDetailsForm from "../components/TextareaDetailsForm.vue"
       </span>
     </div>
 
-    <h2 class="mt-4">Autofill Details</h2>
+    <h3 class="mt-4 mb-1">Autofill Details</h3>
     <DetailsForm />
-    <h2 class="mt-4">Long Autofill Details</h2>
+    <h3 class="mt-4 mb-1">Long Autofill Details</h3>
     <TextareaDetailsForm />
   </div>
 </template>

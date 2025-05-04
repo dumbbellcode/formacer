@@ -18,6 +18,7 @@ export interface AccurateDetailItem extends DetailItem {
   placeholder?: string
   section?: string
   autocomplete?: string
+  colSpan?: number
 }
 
 export interface ExtractInputDataResponseItem {

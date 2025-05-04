@@ -58,7 +58,7 @@ const step = ref(1)
           <span>
             Enter short details that you want to get autofilled on websites
             here. Click the 'Add New' button to add custom details you want to
-            autofill. Click Next to skip or proceed.
+            autofill. You can skip this and add details later too. Click Next.
           </span>
         </div>
         <DetailsForm v-if="step === 1" />
@@ -71,7 +71,7 @@ const step = ref(1)
           <i-ph-info />
           <span>
             Enter long details that you want to get autofilled. Click Next to
-            skip or proceed.
+            skip.
           </span>
         </div>
         <TextareaDetailsForm v-if="step === 2" />

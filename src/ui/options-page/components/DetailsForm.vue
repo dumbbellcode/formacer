@@ -25,20 +25,20 @@ function addNewField() {
 </script>
 
 <template>
-  <div class="space-y-3">
+  <div class="space-y-2">
     <div
       v-for="(detailItems, section) in detailsStore.detailsGroupedBySection"
       :key="section"
     >
-      <span class="text-[8px] font-semibold block">{{ section }}</span>
+      <span class="text-[8px] font-semibold block pt-1 text-base-400">{{ section.toUpperCase() }}</span>
 
-      <div class="grid grid-cols-2 gap-1">
+      <div class="grid grid-cols-4 gap-1">
         <fieldset
           v-for="field in detailItems"
           :key="field.id"
-          class="fieldset"
+          :class="['fieldset', `col-span-${field.colSpan ?? 2}`]"
         >
-          <legend class="fieldset-legend pt-1 pb-0">
+          <legend class="fieldset-legend pt-0 pb-0">
             {{ field.label }}
             <span class="delete-icon">
               <i-lucide-delete
@@ -52,7 +52,7 @@ function addNewField() {
           <input
             :id="field.id"
             type="text"
-            class="input"
+            class="input w-full"
             :value="field.value"
             :autocomplete="field.autocomplete"
             @input="editField($event, field.id)"
@@ -64,7 +64,7 @@ function addNewField() {
 
   <button
     v-if="!newFieldActive"
-    class="btn btn-md btn-primary btn-outline mt-2"
+    class="btn btn-md btn-primary btn-outline mt-3"
     @click="newFieldActive = !newFieldActive"
   >
     <i-ph-plus-circle />

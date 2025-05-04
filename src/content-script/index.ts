@@ -22,7 +22,7 @@ enum CTA_STATE {
 }
 
 // TODO: split it into multiple classes
-// Globals 
+// Globals
 let shadowRoot: ShadowRoot | null = null
 // let contentElement: HTMLElement
 // let logoElement: HTMLElement | null = null
@@ -78,9 +78,9 @@ function main() {
     }
   })
 
-  if (!shouldDisplayCTA()) {
-    return
-  }
+  // if (!shouldDisplayCTA()) {
+  //   return
+  // }
 
   shadowRoot = container.attachShadow({ mode: "open" })
   shadowRoot.innerHTML = ctaHtml
@@ -145,7 +145,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   // You can send a response back if needed
   if (action === ActionEvents.EXTRACT_INPUT_DATA_RESPONSE) {
-    console.log('message', message)
     const isSuccessful = message.payload.success
     const data: {
       dataId: string
@@ -177,7 +176,7 @@ async function fillInputInForm(
   }[],
 ) {
   for (const item of data) {
-    if ((item.value ?? null) === null || item.value === 'null') {
+    if ((item.value ?? null) === null || item.value === "null") {
       continue
     }
     const element = document.querySelector(
@@ -196,6 +195,6 @@ async function fillInputInForm(
     ) {
       await simulateTyping(element, item.value as string)
     }
-    await sleep(100)
+    await sleep(400)
   }
 }

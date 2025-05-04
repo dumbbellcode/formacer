@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+document.body.style.fontFamily = 'Poppins'
+</script>
 
 <template>
   <div class="navbar p-2">

@@ -61,7 +61,7 @@ export function extractContextFromInput(
       input,
       elementType,
     )
-    closestText = trimText(closestText)
+    closestText = trimText(closestText).substring(0, 900)
   }
 
   const { tagName, placeholder, title, value, type } = input

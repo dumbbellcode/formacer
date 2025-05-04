@@ -1,4 +1,43 @@
-import { AccurateDetailItem, CreativeDetails, DetailItem } from "@/types/common"
+import { AccurateDetailItem, DetailItem } from "@/types/common"
+
+const personalAddressFields = [
+  {
+    label: "Address",
+    id: "personal-address",
+    section: "Personal Address",
+    autocomplete: "address-line1",
+    colSpan: 4,
+    value: ""
+  },
+  {
+    label: "City",
+    id: "personal-city",
+    section: "Personal Address",
+    autocomplete: "address-level2",
+    value: ""
+  },
+  {
+    label: "State",
+    id: "personal-state",
+    section: "Personal Address",
+    autocomplete: "address-level1",
+    value: ""
+  },
+  {
+    label: "Country",
+    id: "personal-country",
+    section: "Personal Address",
+    autocomplete: "country-name",
+    value: ""
+  },
+  {
+    label: "Zip Code",
+    id: "personal-zip-code",
+    section: "Personal Address",
+    autocomplete: "postal-code",
+    value: ""
+  },
+]
 
 export const initialAccurateDetailFields: AccurateDetailItem[] = [
   {
@@ -29,13 +68,7 @@ export const initialAccurateDetailFields: AccurateDetailItem[] = [
     autocomplete: "tel-national",
     value: "",
   },
-  {
-    label: "Country",
-    id: "country",
-    section: "Contact",
-    autocomplete: "country-name",
-    value: "",
-  },
+  ...personalAddressFields,
   {
     label: "Company",
     id: "company",

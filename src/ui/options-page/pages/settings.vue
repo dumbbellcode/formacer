@@ -12,7 +12,7 @@ const settingsStore = useSettingsStore()
       <div
         class="flex justify-between text-sm hover-bg-primary-light rounded-lg px-1"
       >
-        <div>Display autofill button</div>
+        <div>Display autofill button on web pages</div>
         <div>
           <input
             type="checkbox"

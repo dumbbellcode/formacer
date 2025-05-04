@@ -35,7 +35,7 @@ function handleDone() {
 </script>
 
 <template>
-  <div class="p-1 border-primary rounded-lg bg-base-200">
+  <div class="p-2 border-primary rounded-lg bg-base-200">
     <div class="flex gap-x-1">
       <fieldset class="fieldset">
         <legend class="fieldset-legend">Label</legend>

@@ -4,6 +4,14 @@
       --primary-color: oklch(0.71 0.1032 172.27);
     }
 
+    .cursor-pointer {
+      cursor: pointer !important;
+    }
+
+    .cursor-default {
+      cursor: default !important;
+    }
+
     .zmax {
       z-index: 2147483647;
     }
@@ -94,7 +102,7 @@
         >
           <div
             id="icon-default"
-            class="in-middle"
+            class="in-middle cursor-pointer"
           >
             <svg
               width="1em"
@@ -132,7 +140,7 @@
           </div>
           <div
             id="icon-loading"
-            class="hidden in-middle"
+            class="hidden in-middle cursor-default"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -168,7 +176,7 @@
           </div>
           <div
             id="icon-success"
-            class="hidden in-middle"
+            class="hidden in-middle cursor-pointer"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -186,7 +194,7 @@
           </div>
           <div
             id="icon-error"
-            class="hidden in-middle"
+            class="hidden in-middle cursor-default"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

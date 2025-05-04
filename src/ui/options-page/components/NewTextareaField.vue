@@ -25,7 +25,7 @@ function handleDone() {
 </script>
 
 <template>
-  <div class="p-1 border-primary rounded-lg bg-base-200">
+  <div class="p-2 border-primary rounded-lg bg-base-200">
     <div>
       <fieldset class="fieldset">
         <legend class="fieldset-legend">Label</legend>
@@ -38,7 +38,7 @@ function handleDone() {
         <legend class="fieldset-legend">Description</legend>
         <textarea
           v-model="value"
-          class="textarea w-full! textarea-neutral rounded-lg p-2"
+          class="textarea w-full! rounded-lg p-2"
           rows="5"
         ></textarea>
       </fieldset>

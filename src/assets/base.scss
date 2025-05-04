@@ -1,8 +1,17 @@
 // required for vue-devtools
 @use "/node_modules/vite-plugin-vue-devtools/src/overlay/devtools-overlay.css";
 @use "tailwindcss";
+
+// @import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 @plugin "@tailwindcss/typography";
 @plugin "daisyui";
+
+@theme {
+  // --font-geist-mono: "Geist Mono", monospace;
+  --font-poppins: "Poppins", 'sans-serif'
+}
 
 @plugin "daisyui/theme" {
   name: "light";
@@ -12,6 +21,8 @@
   --color-base-100: oklch(100% 0 0);
   --color-base-200: oklch(98% 0 0);
   --color-base-300: oklch(95% 0 0);
+  --color-base-400: oklch(90% 0 0);
+  --color-base-500: oklch(85% 0 0);
   --color-base-content: oklch(21% 0.006 285.885);
   --color-primary: oklch(0.71 0.1032 172.27);
   --color-primary-content: oklch(93% 0.034 272.788);
@@ -44,6 +55,18 @@
   .hover-bg-primary-light:hover {
     background-color: var(--custom-primary-light);
   }
+}
+
+.col-span-2 {
+  @apply col-span-2;
+}
+
+.col-span-3 {
+  @apply col-span-3;
+}
+
+.col-span-4 {
+  @apply col-span-4;
 }
 
 // @plugin "prettier-plugin-tailwindcss";

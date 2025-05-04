@@ -2,7 +2,7 @@
 export function simulateTyping(
   inputElement: HTMLInputElement | HTMLTextAreaElement,
   text: string,
-  delay = 10,
+  delay = 20,
 ) {
   return new Promise((resolve) => {
     // Focus on the input element first
