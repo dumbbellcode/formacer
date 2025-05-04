@@ -21,7 +21,7 @@ const { data: detail } = useBrowserSyncStorage<AccurateDetails>(
 const basicDetails = computed(() => {
   return (detail.value.fields ?? []).reduce(
     (prev, curr) => {
-      if(!curr.value) return prev
+      if (!curr.value) return prev
       const key = curr.section ?? curr.id
       prev[key] ??= []
       prev[key].push(curr)

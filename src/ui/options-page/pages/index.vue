@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import DetailsForm from "../components/DetailsForm.vue"
 import TextareaDetailsForm from "../components/TextareaDetailsForm.vue"
-
 </script>
 
 <template>

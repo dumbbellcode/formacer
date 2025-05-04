@@ -16,8 +16,11 @@ export async function getAccurateFillData(
 ) {
   const settings = await getValueFromStorage<Settings>("settings", "sync")
   const activeProfileId = settings?.activeProfileId ?? "default"
-  
-  const tokens = await getValueFromStorage<{server: string}>("tokens", "local")
+
+  const tokens = await getValueFromStorage<{ server: string }>(
+    "tokens",
+    "local",
+  )
 
   const userContext = await getValueFromStorage<AccurateDetails>(
     `${activeProfileId}-${DETAIL_TYPES.SHORT}`,
@@ -59,7 +62,7 @@ export async function getAccurateFillData(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${tokens?.server}`
+        Authorization: `Bearer ${tokens?.server}`,
       },
       body: JSON.stringify({
         context: userTotalContext,
@@ -69,8 +72,8 @@ export async function getAccurateFillData(
 
     const statusCode = response.status
     if (!response.ok) {
-      if(statusCode === 401) {
-        chrome.storage.local.remove('tokens')
+      if (statusCode === 401) {
+        chrome.storage.local.remove("tokens")
       }
 
       return {
@@ -87,7 +90,7 @@ export async function getAccurateFillData(
       data,
     }
   } catch (error) {
-    console.info('fetch error', error)
+    console.info("fetch error", error)
     return {
       success: false,
       message: getMessageForStatusCode(503),

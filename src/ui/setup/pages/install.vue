@@ -12,9 +12,7 @@ const step = ref(1)
 </script>
 
 <template>
-  <div
-    class="w-full h-full items-center text-center min-h-screen"
-  >
+  <div class="w-full h-full items-center text-center min-h-screen">
     <h3>Installed! 🚀 Let's set you up !</h3>
     <div
       v-if="!settingsStore.serverToken"
@@ -24,16 +22,14 @@ const step = ref(1)
     </div>
     <div v-else>
       <ul class="steps steps-horizontal">
-        <li :class="['step',{'step-primary': step > 0}]">Details</li>
-        <li :class="['step',{'step-primary': step > 1}]">Long Details</li>
-        <li :class="['step',{'step-primary': step > 2}]">Done !</li>
+        <li :class="['step', { 'step-primary': step > 0 }]">Details</li>
+        <li :class="['step', { 'step-primary': step > 1 }]">Long Details</li>
+        <li :class="['step', { 'step-primary': step > 2 }]">Done !</li>
       </ul>
 
       <PageWrap class="text-left">
         <div class="flex justify-between my-2">
-          <div
-            @click="step = step - 1"
-          >
+          <div @click="step = step - 1">
             <button
               v-if="step > 1"
               class="btn btn-sm my-4"
@@ -42,9 +38,7 @@ const step = ref(1)
               {{ "Back" }}
             </button>
           </div>
-          <div
-            @click="step = step + 1"
-          >
+          <div @click="step = step + 1">
             <button
               v-if="step < 3"
               class="btn btn-sm my-4"
@@ -54,7 +48,6 @@ const step = ref(1)
             </button>
           </div>
         </div>
-      
 
         <div
           v-if="step === 1"
@@ -63,9 +56,9 @@ const step = ref(1)
         >
           <i-ph-info />
           <span>
-            Enter short details that you want to get autofilled on websites here. 
-            Click the 'Add New' button to add custom details you want to autofill. 
-            Click Next to skip or proceed.
+            Enter short details that you want to get autofilled on websites
+            here. Click the 'Add New' button to add custom details you want to
+            autofill. Click Next to skip or proceed.
           </span>
         </div>
         <DetailsForm v-if="step === 1" />
@@ -77,14 +70,14 @@ const step = ref(1)
         >
           <i-ph-info />
           <span>
-            Enter long details that you want to get autofilled. 
-            Click Next to skip or proceed.
+            Enter long details that you want to get autofilled. Click Next to
+            skip or proceed.
           </span>
         </div>
         <TextareaDetailsForm v-if="step === 2" />
         <div v-if="step === 3">
           <div class="flex flex-row items-center py-auto">
-            <div> You will see a  </div>
+            <div>You will see a</div>
             <div class="mx-2">
               <div class="border-1 border-primary rounded-full">
                 <img
@@ -95,9 +88,11 @@ const step = ref(1)
                 />
               </div>
             </div>
-            <div> icon on bottom right of web pages.</div>
+            <div>icon on bottom right of web pages.</div>
           </div>
-          <div class="mt-2"> You're all set. Bookmark the extension & close this page. </div>
+          <div class="mt-2">
+            You're all set. Bookmark the extension & close this page.
+          </div>
         </div>
       </PageWrap>
     </div>

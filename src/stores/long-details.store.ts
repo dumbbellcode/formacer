@@ -1,5 +1,8 @@
 import { AccurateDetails, DETAIL_TYPES } from "@/types/common"
-import { initialAccurateDetailFields, initialCreativeDetailFields } from "@/ui/options-page/utils"
+import {
+  initialAccurateDetailFields,
+  initialCreativeDetailFields,
+} from "@/ui/options-page/utils"
 import { useSettingsStore } from "./settings.store"
 
 export const useLongDetailsStore = defineStore("long-details", () => {

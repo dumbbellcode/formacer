@@ -3,7 +3,7 @@ import { getAuthToken, serverLogin } from "@/utils/auth"
 import { useSettingsStore } from "@/stores/settings.store"
 import { useDetailsStore } from "@/stores/short-details.store"
 const settingsStore = useSettingsStore()
-const shortDetailsStore = useDetailsStore();
+const shortDetailsStore = useDetailsStore()
 const loading = ref(false)
 
 async function initiateAuthFlow() {
@@ -15,16 +15,15 @@ async function initiateAuthFlow() {
     if (!loginData) return
     settingsStore.setGoogleToken(googleToken)
     settingsStore.setServerToken(loginData.token)
-    shortDetailsStore.editField('email', loginData.user.email)
-    shortDetailsStore.editField('firstName', loginData.user.given_name)
-    shortDetailsStore.editField('lastName', loginData.user.family_name)
+    shortDetailsStore.editField("email", loginData.user.email)
+    shortDetailsStore.editField("firstName", loginData.user.given_name)
+    shortDetailsStore.editField("lastName", loginData.user.family_name)
   } catch (e) {
     console.info(e)
   } finally {
     loading.value = false
   }
 }
-
 </script>
 <template>
   <div>
@@ -65,9 +64,7 @@ async function initiateAuthFlow() {
       </svg>
       Login with Google
     </button>
-    <div
-      v-if="loading"
-    >
+    <div v-if="loading">
       <span class="loading loading-spinner text-primary"></span>
     </div>
   </div>

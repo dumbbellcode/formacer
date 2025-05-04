@@ -83,3 +83,15 @@ export function extractContextFromInput(
 
   return filteredData
 }
+
+export function emptyInputElementsCount() {
+  const inputs = document.querySelectorAll("input")
+
+  // Filter and count empty input elements of allowed types
+  const emptyCount = Array.from(inputs).filter(
+    (input) =>
+      allowedInputTypes.includes(input.type) && input.value.trim() === "",
+  ).length
+
+  return emptyCount
+}

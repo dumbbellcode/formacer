@@ -1,10 +1,9 @@
 import { extractContextFromAllInputs } from "./utils/input-extracter"
 import { ActionEvents, DETAIL_TYPES, Settings } from "@/types/common"
-import { exit } from "process"
 import ctaHtml from "./cta-container.html?raw"
 import { simulateTyping } from "./utils/typing"
 import { makeElementDraggable } from "./utils/draggable"
-import { displayForSeconds } from "./utils/common"
+import { displayForSeconds, shouldDisplayCTA, sleep } from "./utils/common"
 import { extractContextFromAllTextarea } from "./utils/textarea-extracter"
 
 self.onerror = function (message, source, lineno, colno, error) {
@@ -22,63 +21,17 @@ enum CTA_STATE {
   ERROR = "error",
 }
 
-const container = document.createElement("div")
-container.style = "position: absolute; top: 0; left: 0"
-
-getValueFromStorage<Settings>("settings", "sync").then((setting) => {
-  if (setting && !setting.displayActionIcon) {
-    container.style.display = "none"
-  } else {
-    container.style.display = "block"
-  }
-})
-
-const shadowRoot = container.attachShadow({ mode: "open" })
-shadowRoot.innerHTML = ctaHtml
-document.body.appendChild(container)
-
-const contentElement = shadowRoot.getElementById("formacer-cta-container")
-const logoElement = shadowRoot.getElementById("formacer-icons-section")
-const ctaElement = shadowRoot.getElementById("icon-default")
-const loadingElement = shadowRoot.getElementById("icon-loading")
-const successElement = shadowRoot.getElementById("icon-success")
-const errorElement = shadowRoot.getElementById("icon-error")
-
-function displayMessageForSeconds(message: string) {
-  const boxSection = shadowRoot.getElementById("box-section")
-  const messageSection = shadowRoot.getElementById("message-section")
-  if (!messageSection || !boxSection || message == null) {
-    return
-  }
-  displayForSeconds(
-    boxSection,
-    2,
-    () => (messageSection.innerText = message),
-    () => (messageSection.innerText = ""),
-  )
-}
-
-if (!contentElement) {
-  console.info("Content element not found")
-  exit(1)
-}
-if (
-  !ctaElement ||
-  !loadingElement ||
-  !successElement ||
-  !errorElement ||
-  !logoElement
-) {
-  console.info("CTA elements not found")
-  exit(1)
-}
-
-makeElementDraggable(
-  contentElement as HTMLElement,
-  shadowRoot.getElementById("formacer-cta-container-drag"),
-)
-
+// TODO: split it into multiple classes
+// Globals 
+let shadowRoot: ShadowRoot | null = null
+// let contentElement: HTMLElement
+// let logoElement: HTMLElement | null = null
+let ctaElement: HTMLElement | null = null
+let loadingElement: HTMLElement | null = null
+let successElement: HTMLElement | null = null
+let errorElement: HTMLElement | null
 let ctaState: CTA_STATE = CTA_STATE.DEFAULT
+
 function setCTAState(state: CTA_STATE) {
   ctaState = state
   const elementMap = {
@@ -98,26 +51,111 @@ function setCTAState(state: CTA_STATE) {
   })
 }
 
-logoElement.addEventListener("click", async () => {
-  if (ctaState === CTA_STATE.LOADING) {
+function displayMessageForSeconds(message: string) {
+  if (!shadowRoot) return
+  const boxSection = shadowRoot.getElementById("box-section")
+  const messageSection = shadowRoot.getElementById("message-section")
+  if (!messageSection || !boxSection || message == null) {
     return
   }
-  setCTAState(CTA_STATE.LOADING)
-
-  const extractedInputData = extractContextFromAllInputs(document).concat(
-    extractContextFromAllTextarea(document),
+  displayForSeconds(
+    boxSection,
+    2,
+    () => (messageSection.innerText = message),
+    () => (messageSection.innerText = ""),
   )
-  if (!extractedInputData || extractedInputData.length < 1) {
-    displayMessageForSeconds("No empty inputs found to fill!")
-    setCTAState(CTA_STATE.ERROR)
+}
+
+function main() {
+  const container = document.createElement("div")
+  container.style = "position: absolute; top: 0; left: 0"
+
+  getValueFromStorage<Settings>("settings", "sync").then((setting) => {
+    if (setting && !setting.displayActionIcon) {
+      container.style.display = "none"
+    } else {
+      container.style.display = "block"
+    }
+  })
+
+  if (!shouldDisplayCTA()) {
     return
   }
 
-  chrome.runtime.sendMessage({
-    action: ActionEvents.EXTRACT_INPUT_DATA,
-    data: extractedInputData,
+  shadowRoot = container.attachShadow({ mode: "open" })
+  shadowRoot.innerHTML = ctaHtml
+  document.body.appendChild(container)
+
+  const contentElement = shadowRoot.getElementById("formacer-cta-container")
+  const logoElement = shadowRoot.getElementById("formacer-icons-section")
+  ctaElement = shadowRoot.getElementById("icon-default")
+  loadingElement = shadowRoot.getElementById("icon-loading")
+  successElement = shadowRoot.getElementById("icon-success")
+  errorElement = shadowRoot.getElementById("icon-error")
+
+  if (!contentElement) {
+    console.info("Content element not found")
+    return
+  }
+  if (
+    !ctaElement ||
+    !loadingElement ||
+    !successElement ||
+    !errorElement ||
+    !logoElement
+  ) {
+    console.info("CTA elements not found")
+    return
+  }
+
+  makeElementDraggable(
+    contentElement as HTMLElement,
+    shadowRoot.getElementById("formacer-cta-container-drag"),
+  )
+
+  function setCTAState(state: CTA_STATE) {
+    ctaState = state
+    const elementMap = {
+      [CTA_STATE.DEFAULT]: ctaElement,
+      [CTA_STATE.LOADING]: loadingElement,
+      [CTA_STATE.ERROR]: errorElement,
+      [CTA_STATE.SUCCESS]: successElement,
+    }
+
+    Object.entries(elementMap).forEach(([key, el]) => {
+      if (!el) return
+      if (key === state) {
+        el.classList.remove("hidden")
+      } else {
+        el.classList.add("hidden")
+      }
+    })
+  }
+
+  logoElement.addEventListener("click", async () => {
+    if (ctaState === CTA_STATE.LOADING) {
+      return
+    }
+    setCTAState(CTA_STATE.LOADING)
+
+    const extractedInputData = extractContextFromAllInputs(document).concat(
+      extractContextFromAllTextarea(document),
+    )
+    if (!extractedInputData || extractedInputData.length < 1) {
+      displayMessageForSeconds("No empty inputs found to fill!")
+      setCTAState(CTA_STATE.ERROR)
+      return
+    }
+
+    chrome.runtime.sendMessage({
+      action: ActionEvents.EXTRACT_INPUT_DATA,
+      data: extractedInputData,
+    })
   })
-})
+}
+
+// Entry point
+main()
 
 // In content script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -126,6 +164,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   // You can send a response back if needed
   if (action === ActionEvents.EXTRACT_INPUT_DATA_RESPONSE) {
+    console.log('message', message)
     const isSuccessful = message.payload.success
     const data: {
       dataId: string
@@ -157,8 +196,8 @@ async function fillInputInForm(
   }[],
 ) {
   for (const item of data) {
-    if ((item.value ?? null) === null) {
-      return
+    if ((item.value ?? null) === null || item.value === 'null') {
+      continue
     }
     const element = document.querySelector(
       `[data-formacer-id="${item.dataId}"]`,
@@ -176,5 +215,6 @@ async function fillInputInForm(
     ) {
       await simulateTyping(element, item.value as string)
     }
+    await sleep(100)
   }
 }

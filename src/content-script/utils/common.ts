@@ -1,3 +1,6 @@
+import { emptyInputElementsCount } from "./input-extracter"
+import { emptyTextareaElementsCount } from "./textarea-extracter"
+
 function isEmpty(value: unknown) {
   return (
     value === null ||
@@ -146,4 +149,12 @@ export function displayForSeconds(
       onClear()
     }
   }, duration * 1000)
+}
+
+export function shouldDisplayCTA(): boolean {
+  return emptyInputElementsCount() > 1 || emptyTextareaElementsCount() > 0
+}
+
+export function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }

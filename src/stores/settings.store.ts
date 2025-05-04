@@ -16,7 +16,7 @@ export const useSettingsStore = defineStore("settings", () => {
 
   const { data: tokens } = useBrowserLocalStorage<Tokens>("tokens", {
     google: "",
-    server: ""
+    server: "",
   })
 
   function toggleDisplayActionIcon() {
@@ -27,11 +27,11 @@ export const useSettingsStore = defineStore("settings", () => {
     settings.value.email = email
   }
 
-  function setGoogleToken (token: string) { 
+  function setGoogleToken(token: string) {
     tokens.value.google = token
   }
 
-  function setServerToken (token: string) {
+  function setServerToken(token: string) {
     tokens.value.server = token
   }
 
@@ -44,7 +44,7 @@ export const useSettingsStore = defineStore("settings", () => {
     activeProfileId: computed(() => settings.value.activeProfileId),
     email: computed(() => settings.value.email),
     googleToken: computed(() => tokens.value.google),
-    serverToken: computed(() => tokens.value.server)
+    serverToken: computed(() => tokens.value.server),
   }
 })
 

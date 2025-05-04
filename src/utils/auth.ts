@@ -38,7 +38,7 @@ interface UserInfoApiResp {
 }
 
 interface ServerLoginResp {
-  token: string,
+  token: string
   user: UserInfoApiResp
 }
 
@@ -67,30 +67,29 @@ export async function fetchUserInfo(
   }
 }
 
-export async function serverLogin(googleAuthToken: string): Promise<ServerLoginResp | null> {
+export async function serverLogin(
+  googleAuthToken: string,
+): Promise<ServerLoginResp | null> {
   try {
     const API_URL = import.meta.env.VITE_API_URL
     const ROUTE = `${API_URL}/api/login`
-    const response = await fetch(
-      ROUTE,
-      {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          googleAccessToken: googleAuthToken,
-        }),
+    const response = await fetch(ROUTE, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    )
-    return await response.json() as ServerLoginResp
+      body: JSON.stringify({
+        googleAccessToken: googleAuthToken,
+      }),
+    })
+    return (await response.json()) as ServerLoginResp
   } catch (error) {
     return null
-  } 
+  }
 }
 
 // Define a type for HTTP status codes
-type HttpStatusCode = 
+type HttpStatusCode =
   | 200 // OK
   | 201 // Created
   | 204 // No Content
@@ -105,11 +104,14 @@ type HttpStatusCode =
 
 // Define the mapping of status codes to messages
 export const StatusCodeMessageMap: Record<number, string> = {
-  401: 'Please log in again',
-  429: 'Too many requests, please try after few seconds',
-  503: 'Server down, please try after sometime'
-};
+  401: "Please log in again",
+  429: "Too many requests, please try after few seconds",
+  503: "Server down, please try after sometime",
+}
 
 export function getMessageForStatusCode(code: number) {
-  return StatusCodeMessageMap[code] ?? 'Something went wrong, please try after sometime'
+  return (
+    StatusCodeMessageMap[code] ??
+    "Something went wrong, please try after sometime"
+  )
 }
