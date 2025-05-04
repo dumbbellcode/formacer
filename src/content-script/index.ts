@@ -113,25 +113,6 @@ function main() {
     shadowRoot.getElementById("formacer-cta-container-drag"),
   )
 
-  function setCTAState(state: CTA_STATE) {
-    ctaState = state
-    const elementMap = {
-      [CTA_STATE.DEFAULT]: ctaElement,
-      [CTA_STATE.LOADING]: loadingElement,
-      [CTA_STATE.ERROR]: errorElement,
-      [CTA_STATE.SUCCESS]: successElement,
-    }
-
-    Object.entries(elementMap).forEach(([key, el]) => {
-      if (!el) return
-      if (key === state) {
-        el.classList.remove("hidden")
-      } else {
-        el.classList.add("hidden")
-      }
-    })
-  }
-
   logoElement.addEventListener("click", async () => {
     if (ctaState === CTA_STATE.LOADING) {
       return
