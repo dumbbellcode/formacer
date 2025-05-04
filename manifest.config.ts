@@ -43,7 +43,7 @@ export default {
   options_page: "src/ui/options-page/index.html",
   offline_enabled: true,
   host_permissions: ["<all_urls>"],
-  permissions: ["storage", "background"],
+  permissions: ["storage", "background", "identity"],
   web_accessible_resources: [
     {
       resources: ["src/ui/setup/index.html"],

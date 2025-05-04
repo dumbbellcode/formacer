@@ -26,7 +26,7 @@ const container = document.createElement("div")
 container.style = "position: absolute; top: 0; left: 0"
 
 getValueFromStorage<Settings>("settings", "sync").then((setting) => {
-  if (!setting.displayActionIcon) {
+  if (setting && !setting.displayActionIcon) {
     container.style.display = "none"
   } else {
     container.style.display = "block"

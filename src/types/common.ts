@@ -56,14 +56,15 @@ export interface FormProfile {
 }
 
 export interface Settings {
-  activeProfileId: string | null
+  activeProfileId: string
   profiles: Record<string, FormProfile>
   displayActionIcon: boolean
+  email: string
 }
 
 export enum DETAIL_TYPES {
-  ACCURATE = "accurate",
-  CREATIVE = "creative",
+  SHORT = "short",
+  LONG = "long",
 }
 
 export enum ActionEvents {

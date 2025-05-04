@@ -4,12 +4,15 @@ import {
   AccurateDetails,
   DETAIL_TYPES,
 } from "@/types/common"
+import { useSettingsStore } from "@/stores/settings.store"
+const settingsStore = useSettingsStore()
 
 function openOptionsPage() {
   chrome.runtime.sendMessage({ action: "openOptionsPage" })
 }
+
 const { data: detail } = useBrowserSyncStorage<AccurateDetails>(
-  `default-${DETAIL_TYPES.ACCURATE}`,
+  `default-${DETAIL_TYPES.SHORT}`,
   {
     fields: [],
   },
@@ -18,6 +21,7 @@ const { data: detail } = useBrowserSyncStorage<AccurateDetails>(
 const basicDetails = computed(() => {
   return (detail.value.fields ?? []).reduce(
     (prev, curr) => {
+      if(!curr.value) return prev
       const key = curr.section ?? curr.id
       prev[key] ??= []
       prev[key].push(curr)
@@ -37,7 +41,13 @@ const needMoreDetails = computed(() => {
   <div>
     <div class="hero">
       <div class="hero-content text-center">
-        <div class="max-w-md">
+        <div v-if="!settingsStore?.serverToken">
+          <LogYouIn />
+        </div>
+        <div
+          v-else
+          class="max-w-md"
+        >
           <div
             class="card bg-base-100 card-sm shadow-sm"
             style="min-width: 20rem !important"

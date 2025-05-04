@@ -11,6 +11,7 @@ declare global {
   const Gumroad: typeof import('../utils/payment/gumroad')['Gumroad']
   const Notification: typeof import('notivue')['Notification']
   const Notivue: typeof import('notivue')['Notivue']
+  const StatusCodeMessageMap: typeof import('../utils/auth')['StatusCodeMessageMap']
   const acceptHMRUpdate: typeof import('pinia')['acceptHMRUpdate']
   const addCheckoutSession: typeof import('../utils/firebase')['addCheckoutSession']
   const appRouter: typeof import('../utils/router/index')['appRouter']
@@ -47,14 +48,18 @@ declare global {
   const effectScope: typeof import('vue')['effectScope']
   const extPay: typeof import('../utils/payment/extPay')['extPay']
   const extendRef: typeof import('@vueuse/core')['extendRef']
+  const fetchUserInfo: typeof import('../utils/auth')['fetchUserInfo']
   const firebaseApp: typeof import('../utils/firebase')['firebaseApp']
   const firebaseConfig: typeof import('../utils/firebase')['firebaseConfig']
   const firestore: typeof import('../utils/firebase')['firestore']
   const functions: typeof import('../utils/firebase')['functions']
   const getActivePinia: typeof import('pinia')['getActivePinia']
+  const getAuthToken: typeof import('../utils/auth')['getAuthToken']
+  const getAuthTokenQuick: typeof import('../utils/auth')['getAuthTokenQuick']
   const getCurrentInstance: typeof import('vue')['getCurrentInstance']
   const getCurrentScope: typeof import('vue')['getCurrentScope']
   const getCustomerPortalLink: typeof import('../utils/firebase')['getCustomerPortalLink']
+  const getMessageForStatusCode: typeof import('../utils/auth')['getMessageForStatusCode']
   const getProductsAndPrices: typeof import('../utils/firebase')['getProductsAndPrices']
   const getSubscription: typeof import('../utils/firebase')['getSubscription']
   const getValueFromStorage: typeof import('../composables/useBrowserStorage')['getValueFromStorage']
@@ -126,6 +131,7 @@ declare global {
   const resolveRef: typeof import('@vueuse/core')['resolveRef']
   const resolveUnref: typeof import('@vueuse/core')['resolveUnref']
   const router: typeof import('../utils/router')['router']
+  const serverLogin: typeof import('../utils/auth')['serverLogin']
   const setActivePinia: typeof import('pinia')['setActivePinia']
   const setMapStoreSuffix: typeof import('pinia')['setMapStoreSuffix']
   const shallowReactive: typeof import('vue')['shallowReactive']
@@ -206,7 +212,7 @@ declare global {
   const useDebounce: typeof import('@vueuse/core')['useDebounce']
   const useDebounceFn: typeof import('@vueuse/core')['useDebounceFn']
   const useDebouncedRefHistory: typeof import('@vueuse/core')['useDebouncedRefHistory']
-  const useDetailsStore: typeof import('../stores/details.store')['useDetailsStore']
+  const useDetailsStore: typeof import('../stores/short-details.store')['useDetailsStore']
   const useDeviceMotion: typeof import('@vueuse/core')['useDeviceMotion']
   const useDeviceOrientation: typeof import('@vueuse/core')['useDeviceOrientation']
   const useDevicePixelRatio: typeof import('@vueuse/core')['useDevicePixelRatio']
@@ -248,6 +254,7 @@ declare global {
   const useLink: typeof import('vue-router')['useLink']
   const useLocalStorage: typeof import('@vueuse/core')['useLocalStorage']
   const useLocale: typeof import('../composables/useLocale')['useLocale']
+  const useLongDetailsStore: typeof import('../stores/long-details.store')['useLongDetailsStore']
   const useMagicKeys: typeof import('@vueuse/core')['useMagicKeys']
   const useManualRefHistory: typeof import('@vueuse/core')['useManualRefHistory']
   const useMediaControls: typeof import('@vueuse/core')['useMediaControls']
@@ -375,6 +382,7 @@ declare module 'vue' {
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly Notification: UnwrapRef<typeof import('notivue')['Notification']>
     readonly Notivue: UnwrapRef<typeof import('notivue')['Notivue']>
+    readonly StatusCodeMessageMap: UnwrapRef<typeof import('../utils/auth')['StatusCodeMessageMap']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('pinia')['acceptHMRUpdate']>
     readonly appRouter: UnwrapRef<typeof import('../utils/router/index')['appRouter']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
@@ -407,9 +415,13 @@ declare module 'vue' {
     readonly eagerComputed: UnwrapRef<typeof import('@vueuse/core')['eagerComputed']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
     readonly extendRef: UnwrapRef<typeof import('@vueuse/core')['extendRef']>
+    readonly fetchUserInfo: UnwrapRef<typeof import('../utils/auth')['fetchUserInfo']>
     readonly getActivePinia: UnwrapRef<typeof import('pinia')['getActivePinia']>
+    readonly getAuthToken: UnwrapRef<typeof import('../utils/auth')['getAuthToken']>
+    readonly getAuthTokenQuick: UnwrapRef<typeof import('../utils/auth')['getAuthTokenQuick']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
+    readonly getMessageForStatusCode: UnwrapRef<typeof import('../utils/auth')['getMessageForStatusCode']>
     readonly getValueFromStorage: UnwrapRef<typeof import('../composables/useBrowserStorage')['getValueFromStorage']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly i18n: UnwrapRef<typeof import('../utils/i18n')['i18n']>
@@ -472,6 +484,7 @@ declare module 'vue' {
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
     readonly resolveRef: UnwrapRef<typeof import('@vueuse/core')['resolveRef']>
     readonly resolveUnref: UnwrapRef<typeof import('@vueuse/core')['resolveUnref']>
+    readonly serverLogin: UnwrapRef<typeof import('../utils/auth')['serverLogin']>
     readonly setActivePinia: UnwrapRef<typeof import('pinia')['setActivePinia']>
     readonly setMapStoreSuffix: UnwrapRef<typeof import('pinia')['setMapStoreSuffix']>
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
@@ -541,7 +554,7 @@ declare module 'vue' {
     readonly useDebounce: UnwrapRef<typeof import('@vueuse/core')['useDebounce']>
     readonly useDebounceFn: UnwrapRef<typeof import('@vueuse/core')['useDebounceFn']>
     readonly useDebouncedRefHistory: UnwrapRef<typeof import('@vueuse/core')['useDebouncedRefHistory']>
-    readonly useDetailsStore: UnwrapRef<typeof import('../stores/details.store')['useDetailsStore']>
+    readonly useDetailsStore: UnwrapRef<typeof import('../stores/short-details.store')['useDetailsStore']>
     readonly useDeviceMotion: UnwrapRef<typeof import('@vueuse/core')['useDeviceMotion']>
     readonly useDeviceOrientation: UnwrapRef<typeof import('@vueuse/core')['useDeviceOrientation']>
     readonly useDevicePixelRatio: UnwrapRef<typeof import('@vueuse/core')['useDevicePixelRatio']>
@@ -581,6 +594,7 @@ declare module 'vue' {
     readonly useLastChanged: UnwrapRef<typeof import('@vueuse/core')['useLastChanged']>
     readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>
     readonly useLocalStorage: UnwrapRef<typeof import('@vueuse/core')['useLocalStorage']>
+    readonly useLongDetailsStore: UnwrapRef<typeof import('../stores/long-details.store')['useLongDetailsStore']>
     readonly useMagicKeys: UnwrapRef<typeof import('@vueuse/core')['useMagicKeys']>
     readonly useManualRefHistory: UnwrapRef<typeof import('@vueuse/core')['useManualRefHistory']>
     readonly useMediaControls: UnwrapRef<typeof import('@vueuse/core')['useMediaControls']>
@@ -599,7 +613,6 @@ declare module 'vue' {
     readonly useObjectUrl: UnwrapRef<typeof import('@vueuse/core')['useObjectUrl']>
     readonly useOffsetPagination: UnwrapRef<typeof import('@vueuse/core')['useOffsetPagination']>
     readonly useOnline: UnwrapRef<typeof import('@vueuse/core')['useOnline']>
-    readonly useOptionsStore: UnwrapRef<typeof import('../stores/options.store')['useOptionsStore']>
     readonly usePageLeave: UnwrapRef<typeof import('@vueuse/core')['usePageLeave']>
     readonly useParallax: UnwrapRef<typeof import('@vueuse/core')['useParallax']>
     readonly useParentElement: UnwrapRef<typeof import('@vueuse/core')['useParentElement']>
@@ -641,7 +654,6 @@ declare module 'vue' {
     readonly useSwipe: UnwrapRef<typeof import('@vueuse/core')['useSwipe']>
     readonly useTemplateRef: UnwrapRef<typeof import('vue')['useTemplateRef']>
     readonly useTemplateRefsList: UnwrapRef<typeof import('@vueuse/core')['useTemplateRefsList']>
-    readonly useTestStore: UnwrapRef<typeof import('../stores/test.store')['useTestStore']>
     readonly useTextDirection: UnwrapRef<typeof import('@vueuse/core')['useTextDirection']>
     readonly useTextSelection: UnwrapRef<typeof import('@vueuse/core')['useTextSelection']>
     readonly useTextareaAutosize: UnwrapRef<typeof import('@vueuse/core')['useTextareaAutosize']>

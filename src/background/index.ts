@@ -40,7 +40,6 @@ self.onerror = function (message, source, lineno, colno, error) {
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   const tabId = sender.tab?.id
-  console.log("tabId", tabId)
 
   if (msg.action === "openOptionsPage") {
     chrome.runtime.openOptionsPage()

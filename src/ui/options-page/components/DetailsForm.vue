@@ -1,50 +1,18 @@
 <script setup lang="ts">
-import {
-  AccurateDetailItem,
-  AccurateDetails,
-  DETAIL_TYPES,
-  FormProfile,
-} from "@/types/common"
 import NewField from "../components/NewField.vue"
-import { initialAccurateDetailFields } from "../utils"
+import { useDetailsStore } from "@/stores/short-details.store"
 
+const detailsStore = useDetailsStore()
 const newFieldActive = ref(false)
 const newFieldRef = ref<InstanceType<typeof NewField> | null>(null)
 
-const props = defineProps<{
-  profile: FormProfile
-}>()
-
-const { data: detail } = useBrowserSyncStorage<AccurateDetails>(
-  `${props.profile.id}-${DETAIL_TYPES.ACCURATE}`,
-  {
-    fields: initialAccurateDetailFields,
-  },
-)
-
-const basicDetails = computed(() => {
-  return (detail.value.fields ?? []).reduce(
-    (prev, curr) => {
-      const key = curr.section ?? curr.id
-      prev[key] ??= []
-      prev[key].push(curr)
-      return prev
-    },
-    {} as Record<string, AccurateDetailItem[]>,
-  )
-})
-
 function editField(event: Event, id: string) {
   const input = event.target as HTMLInputElement
-  const field = detail.value.fields?.find((field) => field.id === id)
-  if (!field) return
-  field.value = input.value
+  detailsStore.editField(id, input.value)
 }
 
 function deleteField(id: string) {
-  const idx = detail.value.fields?.findIndex((field) => field.id === id) ?? -1
-  if (idx < 0) return
-  detail.value.fields?.splice(idx, 1)
+  detailsStore.deleteField(id)
 }
 
 function addNewField() {
@@ -52,19 +20,14 @@ function addNewField() {
     return
   }
   const { label, value, section } = newFieldRef.value
-  detail.value.fields?.push({
-    label,
-    value,
-    section: section ? section : "Other",
-    id: crypto.randomUUID(),
-  })
+  detailsStore.addNewField(label, value, section ? section : "Other")
 }
 </script>
 
 <template>
   <div class="space-y-3">
     <div
-      v-for="(detailItems, section) in basicDetails"
+      v-for="(detailItems, section) in detailsStore.detailsGroupedBySection"
       :key="section"
     >
       <span class="text-[8px] font-semibold block">{{ section }}</span>
@@ -112,7 +75,7 @@ function addNewField() {
     v-if="newFieldActive"
     ref="newFieldRef"
     class="mt-2"
-    :groups="Object.keys(basicDetails)"
+    :groups="Object.keys(detailsStore.detailsGroupedBySection)"
     @cancel="newFieldActive = false"
     @done="addNewField"
   />

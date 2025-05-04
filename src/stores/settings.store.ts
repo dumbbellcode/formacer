@@ -1,21 +1,50 @@
 import { FormProfile, Settings } from "@/types/common"
 import { defineStore } from "pinia"
 
+interface Tokens {
+  google: string
+  server: string
+}
+
 export const useSettingsStore = defineStore("settings", () => {
   const { data: settings } = useBrowserSyncStorage<Settings>("settings", {
     activeProfileId: "default",
     profiles: {},
     displayActionIcon: true,
+    email: "",
+  })
+
+  const { data: tokens } = useBrowserLocalStorage<Tokens>("tokens", {
+    google: "",
+    server: ""
   })
 
   function toggleDisplayActionIcon() {
     settings.value.displayActionIcon = !settings.value.displayActionIcon
   }
 
+  function setEmail(email: string) {
+    settings.value.email = email
+  }
+
+  function setGoogleToken (token: string) { 
+    tokens.value.google = token
+  }
+
+  function setServerToken (token: string) {
+    tokens.value.server = token
+  }
+
   return {
     toggleDisplayActionIcon,
+    setEmail,
+    setGoogleToken,
+    setServerToken,
     displayActionIcon: computed(() => settings.value.displayActionIcon),
     activeProfileId: computed(() => settings.value.activeProfileId),
+    email: computed(() => settings.value.email),
+    googleToken: computed(() => tokens.value.google),
+    serverToken: computed(() => tokens.value.server)
   }
 })
 

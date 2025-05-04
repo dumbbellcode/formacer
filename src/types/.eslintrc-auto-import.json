@@ -366,6 +366,13 @@
     "getValueFromStorage": true,
     "useDetailsStore": true,
     "useFormProfilesStore": true,
-    "useSettingsStore": true
+    "useSettingsStore": true,
+    "getAuthToken": true,
+    "getAuthTokenQuick": true,
+    "fetchUserInfo": true,
+    "useLongDetailsStore": true,
+    "serverLogin": true,
+    "StatusCodeMessageMap": true,
+    "getMessageForStatusCode": true
   }
 }

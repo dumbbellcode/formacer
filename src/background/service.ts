@@ -6,21 +6,25 @@ import {
   CreativeDetails,
   Settings,
 } from "@/types/common"
+import { getMessageForStatusCode } from "@/utils/auth"
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3333"
+const API_URL = import.meta.env.VITE_API_URL
 const FILL_ACCURATE = `${API_URL}/fill/accurate`
 
 export async function getAccurateFillData(
   textInputContext: TextInputContext[],
 ) {
   const settings = await getValueFromStorage<Settings>("settings", "sync")
-  const activeProfileId = settings.activeProfileId ?? "default"
+  const activeProfileId = settings?.activeProfileId ?? "default"
+  
+  const tokens = await getValueFromStorage<{server: string}>("tokens", "local")
+
   const userContext = await getValueFromStorage<AccurateDetails>(
-    `${activeProfileId}-${DETAIL_TYPES.ACCURATE}`,
+    `${activeProfileId}-${DETAIL_TYPES.SHORT}`,
     "sync",
   )
   const userCreativeContext = await getValueFromStorage<CreativeDetails>(
-    `${activeProfileId}-${DETAIL_TYPES.CREATIVE}`,
+    `${activeProfileId}-${DETAIL_TYPES.LONG}`,
     "sync",
   )
   const userContextAccurateFill =
@@ -55,6 +59,7 @@ export async function getAccurateFillData(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${tokens?.server}`
       },
       body: JSON.stringify({
         context: userTotalContext,
@@ -62,26 +67,30 @@ export async function getAccurateFillData(
       }),
     })
 
+    const statusCode = response.status
     if (!response.ok) {
+      if(statusCode === 401) {
+        chrome.storage.local.remove('tokens')
+      }
+
       return {
         success: false,
-        message: "Something went wrong with the connection!",
+        message: getMessageForStatusCode(statusCode),
         error: "Network response was not ok",
       }
     }
 
     const data = await response.json()
-    // console.info("Response Data:", data)
 
     return {
       success: true,
       data,
     }
   } catch (error) {
-    console.error("Error:", error)
+    console.info('fetch error', error)
     return {
       success: false,
-      message: "Something went wrong !",
+      message: getMessageForStatusCode(503),
       error,
     }
   }

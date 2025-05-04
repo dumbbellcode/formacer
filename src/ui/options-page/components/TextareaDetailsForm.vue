@@ -1,29 +1,16 @@
 <script setup lang="ts">
-import { DETAIL_TYPES, CreativeDetails, FormProfile } from "@/types/common"
 import NewTextareaField from "../components/NewTextareaField.vue"
-import { initialCreativeDetailFields } from "../utils"
+import { useLongDetailsStore } from "@/stores/long-details.store"
+const longDetailsStore = useLongDetailsStore()
 
 const newTextareaFieldActive = ref(false)
 const newTextareaFieldRef = ref<InstanceType<typeof NewTextareaField> | null>(
   null,
 )
 
-const props = defineProps<{
-  profile: FormProfile
-}>()
-
-const { data: creativeDetails } = useBrowserSyncStorage<CreativeDetails>(
-  `${props.profile.id}-${DETAIL_TYPES.CREATIVE}`,
-  {
-    fields: initialCreativeDetailFields,
-  },
-)
-
 function editTextareaField(event: Event, id: string) {
   const textarea = event.target as HTMLTextAreaElement
-  const field = creativeDetails.value.fields?.find((field) => field.id === id)
-  if (!field) return
-  field.value = textarea.value
+  longDetailsStore.editField(id, textarea.value)
 }
 
 function addNewTextareaField() {
@@ -31,17 +18,13 @@ function addNewTextareaField() {
     return
   }
   const { label, value } = newTextareaFieldRef.value
-  creativeDetails.value.fields?.push({
-    label,
-    value,
-    id: crypto.randomUUID(),
-  })
+  longDetailsStore.addNewField(label, value)
 }
 </script>
 
 <template>
   <div
-    v-for="detailItem in creativeDetails.fields"
+    v-for="detailItem in longDetailsStore.details"
     :key="detailItem.id"
   >
     <fieldset class="fieldset">
