@@ -7,35 +7,35 @@ const personalAddressFields = [
     section: "Personal Address",
     autocomplete: "address-line1",
     colSpan: 4,
-    value: ""
+    value: "",
   },
   {
     label: "City",
     id: "personal-city",
     section: "Personal Address",
     autocomplete: "address-level2",
-    value: ""
+    value: "",
   },
   {
     label: "State",
     id: "personal-state",
     section: "Personal Address",
     autocomplete: "address-level1",
-    value: ""
+    value: "",
   },
   {
     label: "Country",
     id: "personal-country",
     section: "Personal Address",
     autocomplete: "country-name",
-    value: ""
+    value: "",
   },
   {
     label: "Zip Code",
     id: "personal-zip-code",
     section: "Personal Address",
     autocomplete: "postal-code",
-    value: ""
+    value: "",
   },
 ]
 
@@ -69,13 +69,6 @@ export const initialAccurateDetailFields: AccurateDetailItem[] = [
     value: "",
   },
   ...personalAddressFields,
-  {
-    label: "Company",
-    id: "company",
-    section: "Work",
-    autocomplete: "organization",
-    value: "",
-  },
 ]
 
 export const initialCreativeDetailFields: DetailItem[] = [

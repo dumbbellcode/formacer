@@ -34,7 +34,7 @@ export function makeElementDraggable(
     pos4 = e.clientY
     // set the element's new position:
     elmnt.style.top = elmnt.offsetTop - pos2 + "px"
-    chrome.storage.local.set({'ctaPositionTop':elmnt.style.top.toString()})
+    chrome.storage.local.set({ ctaPositionTop: elmnt.style.top.toString() })
     // Disable horizontal movement
     // elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
   }

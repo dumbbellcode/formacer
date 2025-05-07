@@ -30,7 +30,9 @@ function addNewField() {
       v-for="(detailItems, section) in detailsStore.detailsGroupedBySection"
       :key="section"
     >
-      <span class="text-[8px] font-semibold block pt-1 text-base-400">{{ section.toUpperCase() }}</span>
+      <span class="text-[8px] font-semibold block pt-1 text-base-400">
+        {{ section.toUpperCase() }}
+      </span>
 
       <div class="grid grid-cols-4 gap-1">
         <fieldset

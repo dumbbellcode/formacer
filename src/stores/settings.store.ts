@@ -2,8 +2,8 @@ import { FormProfile, Settings } from "@/types/common"
 import { defineStore } from "pinia"
 
 interface Tokens {
-  google: string
-  server: string
+  google?: string
+  server?: string
 }
 
 export const useSettingsStore = defineStore("settings", () => {
@@ -12,6 +12,7 @@ export const useSettingsStore = defineStore("settings", () => {
     profiles: {},
     displayActionIcon: true,
     email: "",
+    isTosAgreed: false,
   })
 
   const { data: tokens } = useBrowserLocalStorage<Tokens>("tokens", {
@@ -35,16 +36,27 @@ export const useSettingsStore = defineStore("settings", () => {
     tokens.value.server = token
   }
 
+  function clearTokens() {
+    tokens.value = {}
+  }
+
+  function tosAgreed() {
+    settings.value.isTosAgreed = true
+  }
+
   return {
     toggleDisplayActionIcon,
     setEmail,
     setGoogleToken,
     setServerToken,
+    clearTokens,
+    tosAgreed,
     displayActionIcon: computed(() => settings.value.displayActionIcon),
     activeProfileId: computed(() => settings.value.activeProfileId),
     email: computed(() => settings.value.email),
     googleToken: computed(() => tokens.value.google),
     serverToken: computed(() => tokens.value.server),
+    isTosAgreed: computed(() => settings.value.isTosAgreed),
   }
 })
 

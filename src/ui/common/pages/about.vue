@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import RouterLinkUp from "@/components/RouterLinkUp.vue"
+import { YT_PLAYLIST_LINK } from "@/utils/common"
+</script>
+
 <template>
   <div class="h-screen">
     <RouterLinkUp />
@@ -8,15 +13,19 @@
       Formacer is an AI-assisted Chrome autofill extension that helps you fill
       forms instantly with a single button click. You can save all your
       information in the extension once, and the extension takes care of filling
-      it back in any kind of websites.
+      it back in any kind of websites. Learn more about the Formacer on
+      <a :href="YT_PLAYLIST_LINK">this youtube channel playlist</a>
     </p>
 
     <p>
       <b>Developer</b>
       : Sudheer Tripathi
       <br />
-      <b>Contact Email</b>
-      : tripathisudheer604@gmail.com
+      <b>Please provide your valuable feedback here</b>
+      :
+      <a href="mailto:tripathisudheer604@gmail.com?subject=Feedback%20-%20">
+        tripathisudheer604@gmail.com
+      </a>
     </p>
 
     <ul class="list-disc pl-5">

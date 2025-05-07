@@ -1,5 +1,5 @@
 <script setup lang="ts">
-document.body.style.fontFamily = 'Poppins'
+document.body.style.fontFamily = "Poppins"
 </script>
 
 <template>

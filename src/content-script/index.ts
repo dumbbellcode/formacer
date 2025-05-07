@@ -108,9 +108,8 @@ function main() {
     return
   }
 
-  chrome.storage.local.get(['ctaPositionTop'])
-  .then((data) => {
-    contentElement.style.top = data.ctaPositionTop;
+  chrome.storage.local.get(["ctaPositionTop"]).then((data) => {
+    contentElement.style.top = data.ctaPositionTop
   })
 
   makeElementDraggable(

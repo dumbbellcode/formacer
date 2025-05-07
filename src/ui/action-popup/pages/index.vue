@@ -40,7 +40,22 @@ const needMoreDetails = computed(() => {
 <template>
   <div>
     <div class="hero">
-      <div class="hero-content text-center">
+      <div
+        v-if="!settingsStore.isTosAgreed"
+        class="my-20"
+      >
+        Please complete the setup
+        <RouterLink
+          to="/setup/install"
+          class="text-blue-500 hover:underline"
+        >
+          here
+        </RouterLink>
+      </div>
+      <div
+        v-if="settingsStore.isTosAgreed"
+        class="hero-content text-center"
+      >
         <div v-if="!settingsStore?.serverToken">
           <LogYouIn />
         </div>

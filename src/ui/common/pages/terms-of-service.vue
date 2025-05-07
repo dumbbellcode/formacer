@@ -2,99 +2,104 @@
   <div>
     <RouterLinkUp />
 
-    <h1>FORMACER TERMS OF SERVICE</h1>
-    <p><strong>Last Updated: April 21, 2025</strong></p>
+    <h1 class="text-2xl">Formacer Privacy Policy</h1>
+    <p>Last Updated: April 21, 2025</p>
 
-    <h2>ACCEPTANCE OF TERMS</h2>
+    <h2 class="text-xl mt-4">INTRODUCTION</h2>
     <p>
-      By installing, accessing, or using the Formacer Chrome extension
-      ("Extension"), you agree to be bound by these Terms of Service ("Terms").
-      If you do not agree to these Terms, do not install or use the Extension.
+      Welcome to Formacer ("we," "our," or "us"). Formacer is a Chrome extension
+      designed to help users autofill forms across websites. This Privacy Policy
+      explains how we collect, use, disclose, and safeguard your information
+      when you use our Formacer extension.
     </p>
 
-    <h2>DESCRIPTION OF SERVICE</h2>
-    <p>
-      Formacer is a Chrome extension that helps users autofill forms across
-      websites. The Extension is provided "as is" and "as available" without
-      warranties of any kind.
-    </p>
-    <p>
-      Formacer is free and open source software with the following usage
-      limitations:
-    </p>
+    <h2 class="text-xl mt-4">INFORMATION WE COLLECT</h2>
+    <h3 class="text-base">Information You Provide</h3>
     <ul>
-      <li>Each user is limited to 100,000 input tokens per month</li>
       <li>
-        Upon reaching this limit, additional functionality may be restricted
-        until the next monthly cycle
+        We only collect your email address and name to uniquely identify you if
+        you create an account
       </li>
-      <li>Usage is tracked by user account (identified by email)</li>
-    </ul>
-    <p>
-      "Input tokens" refer to the individual form fields processed for autofill
-      purposes. Usage counters reset at the beginning of each calendar month.
-    </p>
-
-    <h2>USER RESPONSIBILITIES</h2>
-    <p>By using Formacer, you agree to:</p>
-    <ul>
-      <li>Provide accurate information when creating profiles</li>
-      <li>Maintain the security of your account credentials</li>
       <li>
-        Use the Extension in compliance with all applicable laws and regulations
+        We do NOT collect any form data you input or save for autofill purposes
       </li>
-      <li>Not use the Extension for any illegal or unauthorized purpose</li>
-      <li>Not attempt to reverse engineer or modify the Extension</li>
     </ul>
 
-    <h2>INTELLECTUAL PROPERTY</h2>
+    <h3 class="text-base mt-2">Information Automatically Collected</h3>
+    <ul>
+      <li>Basic usage statistics for improving extension functionality</li>
+      <li>
+        Error logs for troubleshooting (containing no personal information)
+      </li>
+    </ul>
+
+    <h2 class="text-xl mt-4">HOW WE USE YOUR INFORMATION</h2>
+    <p>We use the limited information we collect to:</p>
+    <ul>
+      <li>Uniquely identify your account if you create one</li>
+      <li>Improve and optimize the extension performance</li>
+      <li>Troubleshoot and address technical issues</li>
+    </ul>
+
+    <h2 class="text-xl mt-4">DATA STORAGE AND SECURITY</h2>
+    <ul>
+      <li>
+        Form data and autofill information is transmitted to our servers
+        temporarily to enable the autofill functionality, but we do not store
+        this information
+      </li>
+      <li>
+        Once the autofill process is complete, the transmitted data is
+        immediately discarded
+      </li>
+      <li>
+        Your email and name (if provided) are stored securely for account
+        identification purposes only
+      </li>
+      <li>
+        We implement appropriate technical and organizational measures to
+        protect your information during transmission and the limited personal
+        information we retain
+      </li>
+    </ul>
+
+    <h2 class="text-xl mt-4">DATA SHARING AND DISCLOSURE</h2>
     <p>
-      The Extension, including all content, features, and functionality, is
-      owned by Formacer and is protected by copyright, trademark, and other
-      intellectual property laws.
+      We do not sell your personal information. The only personal information we
+      collect is your email address and name for account identification. Form
+      data is transmitted to our servers temporarily to enable the autofill
+      functionality but is not stored or shared. We may share your email and
+      name only in the following circumstances:
+    </p>
+    <ul>
+      <li>To comply with legal obligations</li>
+      <li>To protect our rights, privacy, safety, or property</li>
+      <li>
+        With service providers who assist us in operating the extension and who
+        are bound by confidentiality obligations
+      </li>
+    </ul>
+
+    <h2 class="text-xl mt-4">YOUR CHOICES AND RIGHTS</h2>
+    <p>You have the right to:</p>
+    <ul>
+      <li>Access, correct, or delete your personal information</li>
+      <li>Opt out of data synchronization</li>
+      <li>Export your saved data</li>
+      <li>Disable or uninstall the extension at any time</li>
+    </ul>
+
+    <h2 class="text-xl mt-4">UPDATES TO THIS POLICY</h2>
+    <p>
+      We may update this Privacy Policy from time to time. We will notify you of
+      any changes by posting the new Privacy Policy on the Chrome Web Store and
+      within the extension settings.
     </p>
 
-    <h2>LIMITATION OF LIABILITY</h2>
+    <h2 class="text-xl mt-4">CONTACT US</h2>
     <p>
-      To the maximum extent permitted by law, Formacer shall not be liable for
-      any indirect, incidental, special, consequential, or punitive damages
-      resulting from your use or inability to use the Extension.
-    </p>
-
-    <h2>INDEMNIFICATION</h2>
-    <p>
-      You agree to indemnify and hold harmless Formacer and its officers,
-      directors, employees, and agents from any claims, damages, liabilities,
-      costs, or expenses arising from your use of the Extension or violation of
-      these Terms.
-    </p>
-
-    <h2>TERMINATION</h2>
-    <p>
-      We reserve the right to terminate or suspend your access to the Extension
-      at any time, without notice, for conduct that we believe violates these
-      Terms or is harmful to other users of the Extension, us, or third parties,
-      or for any other reason.
-    </p>
-
-    <h2>CHANGES TO TERMS</h2>
-    <p>
-      We may modify these Terms at any time. We will notify you of any changes
-      by posting the new Terms on the Chrome Web Store and within the extension
-      settings. Your continued use of the Extension after any such changes
-      constitutes your acceptance of the new Terms.
-    </p>
-
-    <h2>GOVERNING LAW</h2>
-    <p>
-      These Terms shall be governed by and construed in accordance with the laws
-      of your jurisdiction, without regard to its conflict of law principles.
-    </p>
-
-    <h2>CONTACT US</h2>
-    <p>
-      If you have any questions about these Terms, please contact us at
-      tripathisudheer604@gmail.com.
+      If you have questions or concerns about this Privacy Policy, please
+      contact us at tripathisudheer604 @gmail.com .
     </p>
   </div>
 </template>

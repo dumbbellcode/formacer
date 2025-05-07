@@ -61,6 +61,7 @@ export interface Settings {
   profiles: Record<string, FormProfile>
   displayActionIcon: boolean
   email: string
+  isTosAgreed: boolean
 }
 
 export enum DETAIL_TYPES {

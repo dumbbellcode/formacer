@@ -42,7 +42,7 @@ function addNewTextareaField() {
 
   <button
     v-if="!newTextareaFieldActive"
-    class="btn btn-md btn-primary btn-outline mt-2"
+    class="btn btn-md btn-primary btn-outline mt-3"
     @click="newTextareaFieldActive = !newTextareaFieldActive"
   >
     <i-ph-plus-circle />

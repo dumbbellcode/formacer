@@ -373,6 +373,7 @@
     "useLongDetailsStore": true,
     "serverLogin": true,
     "StatusCodeMessageMap": true,
-    "getMessageForStatusCode": true
+    "getMessageForStatusCode": true,
+    "YT_PLAYLIST_LINK": true
   }
 }

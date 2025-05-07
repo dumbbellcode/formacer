@@ -1,0 +1,24 @@
+<svg
+   viewBox="0 0 24 24"
+   version="1.1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <g
+     fill="none"
+     stroke="#52b69a"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     stroke-width="2.66474"
+     transform="matrix(0.73462442,0,0,0.73462442,0.26537558,0.79612673)">
+    <path d="M 15.656061,9.6618459 V 4.3323692 h -5.329477" id="path1" />
+    <rect
+       width="21.317907"
+       height="15.98843"
+       x="4.9971075"
+       y="9.6618462"
+       rx="2.6647384"
+       />
+    <path d="M 15.603202,9.6618459 V 4.3323692 h 5.329477"/>
+    <path d="m 2.3323692,17.656061 h 2.6647383 m 21.3179065,0 h 2.664739 m -9.326585,-1.332369 v 2.664738 m -7.994215,-2.664738 v 2.664738"/>
+  </g>
+</svg>

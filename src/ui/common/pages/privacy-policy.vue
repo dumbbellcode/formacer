@@ -2,10 +2,10 @@
   <div>
     <RouterLinkUp />
 
-    <h1>Formacer Privacy Policy</h1>
-    <p><strong>Last Updated: April 21, 2025</strong></p>
+    <h1 class="text-2xl">Formacer Privacy Policy</h1>
+    <p>Last Updated: April 21, 2025</p>
 
-    <h2>INTRODUCTION</h2>
+    <h2 class="text-xl mt-4">INTRODUCTION</h2>
     <p>
       Welcome to Formacer ("we," "our," or "us"). Formacer is a Chrome extension
       designed to help users autofill forms across websites. This Privacy Policy
@@ -13,8 +13,8 @@
       when you use our Formacer extension.
     </p>
 
-    <h2>INFORMATION WE COLLECT</h2>
-    <h3>Information You Provide</h3>
+    <h2 class="text-xl mt-4">INFORMATION WE COLLECT</h2>
+    <h3 class="text-base">Information You Provide</h3>
     <ul>
       <li>
         We only collect your email address and name to uniquely identify you if
@@ -25,7 +25,7 @@
       </li>
     </ul>
 
-    <h3>Information Automatically Collected</h3>
+    <h3 class="text-base mt-2">Information Automatically Collected</h3>
     <ul>
       <li>Basic usage statistics for improving extension functionality</li>
       <li>
@@ -33,7 +33,7 @@
       </li>
     </ul>
 
-    <h2>HOW WE USE YOUR INFORMATION</h2>
+    <h2 class="text-xl mt-4">HOW WE USE YOUR INFORMATION</h2>
     <p>We use the limited information we collect to:</p>
     <ul>
       <li>Uniquely identify your account if you create one</li>
@@ -41,7 +41,7 @@
       <li>Troubleshoot and address technical issues</li>
     </ul>
 
-    <h2>DATA STORAGE AND SECURITY</h2>
+    <h2 class="text-xl mt-4">DATA STORAGE AND SECURITY</h2>
     <ul>
       <li>
         Form data and autofill information is transmitted to our servers
@@ -63,7 +63,7 @@
       </li>
     </ul>
 
-    <h2>DATA SHARING AND DISCLOSURE</h2>
+    <h2 class="text-xl mt-4">DATA SHARING AND DISCLOSURE</h2>
     <p>
       We do not sell your personal information. The only personal information we
       collect is your email address and name for account identification. Form
@@ -80,7 +80,7 @@
       </li>
     </ul>
 
-    <h2>YOUR CHOICES AND RIGHTS</h2>
+    <h2 class="text-xl mt-4">YOUR CHOICES AND RIGHTS</h2>
     <p>You have the right to:</p>
     <ul>
       <li>Access, correct, or delete your personal information</li>
@@ -89,17 +89,17 @@
       <li>Disable or uninstall the extension at any time</li>
     </ul>
 
-    <h2>UPDATES TO THIS POLICY</h2>
+    <h2 class="text-xl mt-4">UPDATES TO THIS POLICY</h2>
     <p>
       We may update this Privacy Policy from time to time. We will notify you of
       any changes by posting the new Privacy Policy on the Chrome Web Store and
       within the extension settings.
     </p>
 
-    <h2>CONTACT US</h2>
+    <h2 class="text-xl mt-4">CONTACT US</h2>
     <p>
       If you have questions or concerns about this Privacy Policy, please
-      contact us at tripathisudheer604@gmail.com.
+      contact us at tripathisudheer604 @gmail.com .
     </p>
   </div>
 </template>

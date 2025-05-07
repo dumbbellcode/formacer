@@ -12,6 +12,7 @@ declare global {
   const Notification: typeof import('notivue')['Notification']
   const Notivue: typeof import('notivue')['Notivue']
   const StatusCodeMessageMap: typeof import('../utils/auth')['StatusCodeMessageMap']
+  const YT_PLAYLIST_LINK: typeof import('../utils/common')['YT_PLAYLIST_LINK']
   const acceptHMRUpdate: typeof import('pinia')['acceptHMRUpdate']
   const addCheckoutSession: typeof import('../utils/firebase')['addCheckoutSession']
   const appRouter: typeof import('../utils/router/index')['appRouter']
@@ -383,6 +384,7 @@ declare module 'vue' {
     readonly Notification: UnwrapRef<typeof import('notivue')['Notification']>
     readonly Notivue: UnwrapRef<typeof import('notivue')['Notivue']>
     readonly StatusCodeMessageMap: UnwrapRef<typeof import('../utils/auth')['StatusCodeMessageMap']>
+    readonly YT_PLAYLIST_LINK: UnwrapRef<typeof import('../utils/common')['YT_PLAYLIST_LINK']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('pinia')['acceptHMRUpdate']>
     readonly appRouter: UnwrapRef<typeof import('../utils/router/index')['appRouter']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
