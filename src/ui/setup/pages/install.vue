@@ -3,13 +3,17 @@ import PageWrap from "@/components/PageWrap.vue"
 import { useSettingsStore } from "@/stores/settings.store"
 import DetailsForm from "@/ui/options-page/components/DetailsForm.vue"
 import TextareaDetailsForm from "@/ui/options-page/components/TextareaDetailsForm.vue"
-import { YT_PLAYLIST_LINK } from "@/utils/common"
+import { isDevelopmentEnv, YT_PLAYLIST_LINK } from "@/utils/common"
 
 const settingsStore = useSettingsStore()
 const displayName = __DISPLAY_NAME__
 // const version = __VERSION__
 const agreementDeclined = ref(false)
 const step = ref(1)
+
+if(isDevelopmentEnv()) {
+  settingsStore.setDummyValuesForLocalDev()
+}
 
 function onAgreementDecline() {
   agreementDeclined.value = true

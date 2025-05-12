@@ -44,6 +44,14 @@ export const useSettingsStore = defineStore("settings", () => {
     settings.value.isTosAgreed = true
   }
 
+  function setDummyValuesForLocalDev() {
+    tokens.value = {
+      google: 'dummy',
+      server: 'dummy',
+    }
+    tosAgreed()
+  }
+
   return {
     toggleDisplayActionIcon,
     setEmail,
@@ -51,6 +59,7 @@ export const useSettingsStore = defineStore("settings", () => {
     setServerToken,
     clearTokens,
     tosAgreed,
+    setDummyValuesForLocalDev,
     displayActionIcon: computed(() => settings.value.displayActionIcon),
     activeProfileId: computed(() => settings.value.activeProfileId),
     email: computed(() => settings.value.email),
