@@ -1,4 +1,4 @@
-import { FormProfile, Settings } from "@/types/common"
+import { Settings } from "@/types/common"
 import { defineStore } from "pinia"
 
 interface Tokens {
@@ -6,14 +6,39 @@ interface Tokens {
   server?: string
 }
 
-export const useSettingsStore = defineStore("settings", () => {
-  const { data: settings } = useBrowserSyncStorage<Settings>("settings", {
-    activeProfileId: "default",
-    profiles: {},
-    displayActionIcon: true,
-    email: "",
-    isTosAgreed: false,
+const defaultProfile = {
+  id: "default",
+  name: "Default Profile",
+}
+
+function patchOldData() {
+  const storageKey = "settings"
+  chrome.storage.sync.get([storageKey], (result) => {
+    const settings = result[storageKey] || {}
+    if (
+      typeof settings.profiles === "object" &&
+      !Array.isArray(settings.profiles)
+    ) {
+      settings.profiles = []
+      chrome.storage.local.set({ [storageKey]: settings })
+    }
   })
+}
+
+export const useSettingsStore = defineStore("settings", () => {
+  // Patch when profiles was saved as an empty object
+  patchOldData()
+
+  const { data: settings, promise } = useBrowserSyncStorage<Settings>(
+    "settings",
+    {
+      activeProfileId: defaultProfile.id,
+      profiles: [defaultProfile],
+      displayActionIcon: true,
+      email: "",
+      isTosAgreed: false,
+    },
+  )
 
   const { data: tokens } = useBrowserLocalStorage<Tokens>("tokens", {
     google: "",
@@ -26,6 +51,18 @@ export const useSettingsStore = defineStore("settings", () => {
 
   function setEmail(email: string) {
     settings.value.email = email
+  }
+
+  function addNewProfile(name: string) {
+    const id = crypto.randomUUID()
+    settings.value.profiles.push({
+      id,
+      name,
+    })
+  }
+
+  function setActiveProfileId(id: string) {
+    settings.value.activeProfileId = id
   }
 
   function setGoogleToken(token: string) {
@@ -46,15 +83,22 @@ export const useSettingsStore = defineStore("settings", () => {
 
   function setDummyValuesForLocalDev() {
     tokens.value = {
-      google: 'dummy',
-      server: 'dummy',
+      google: "dummy",
+      server: "dummy",
     }
     tosAgreed()
+  }
+
+  async function resolveActiveProfileId() {
+    return promise.then(() => settings.value.activeProfileId)
   }
 
   return {
     toggleDisplayActionIcon,
     setEmail,
+    setActiveProfileId,
+    resolveActiveProfileId,
+    addNewProfile,
     setGoogleToken,
     setServerToken,
     clearTokens,
@@ -62,10 +106,12 @@ export const useSettingsStore = defineStore("settings", () => {
     setDummyValuesForLocalDev,
     displayActionIcon: computed(() => settings.value.displayActionIcon),
     activeProfileId: computed(() => settings.value.activeProfileId),
+    activeProfileName: computed(() => settings.value.profiles.find(x => x.id === settings.value.activeProfileId)?.name),
     email: computed(() => settings.value.email),
     googleToken: computed(() => tokens.value.google),
     serverToken: computed(() => tokens.value.server),
     isTosAgreed: computed(() => settings.value.isTosAgreed),
+    profiles: computed(() => settings.value.profiles),
   }
 })
 

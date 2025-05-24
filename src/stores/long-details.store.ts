@@ -1,18 +1,24 @@
 import { AccurateDetails, DETAIL_TYPES } from "@/types/common"
-import {
-  initialAccurateDetailFields,
-  initialCreativeDetailFields,
-} from "@/ui/options-page/utils"
-import { useSettingsStore } from "./settings.store"
+import { initialCreativeDetailFields } from "@/ui/options-page/utils"
 
 export const useLongDetailsStore = defineStore("long-details", () => {
-  const settingsStore = useSettingsStore()
-  const { data: longDetails } = useBrowserSyncStorage<AccurateDetails>(
-    `${settingsStore.activeProfileId}-${DETAIL_TYPES.LONG}`,
-    {
-      fields: initialCreativeDetailFields,
-    },
-  )
+  const detailsCache: Record<string, Ref<AccurateDetails>> = {}
+  const profileId = ref("default")
+
+  setActiveProfile(profileId.value)
+
+  function setActiveProfile(activeProfileId: string) {
+    profileId.value = activeProfileId
+    const { data } = useBrowserSyncStorage<AccurateDetails>(
+      `${activeProfileId}-${DETAIL_TYPES.LONG}`,
+      {
+        fields: initialCreativeDetailFields,
+      },
+    )
+    detailsCache[activeProfileId] = data
+  }
+
+  const longDetails = computed(() => detailsCache[profileId.value].value)
 
   function editField(fieldId: string, value: string) {
     const field = longDetails.value.fields?.find(
@@ -38,6 +44,7 @@ export const useLongDetailsStore = defineStore("long-details", () => {
   }
 
   return {
+    setActiveProfile,
     editField,
     deleteField,
     addNewField,

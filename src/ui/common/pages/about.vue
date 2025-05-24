@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import RouterLinkUp from "@/components/RouterLinkUp.vue"
 import { YT_PLAYLIST_LINK } from "@/utils/common"
 </script>
 

@@ -4,16 +4,25 @@ import {
   DETAIL_TYPES,
 } from "@/types/common"
 import { initialAccurateDetailFields } from "@/ui/options-page/utils"
-import { useSettingsStore } from "./settings.store"
 
 export const useDetailsStore = defineStore("short-details", () => {
-  const settingsStore = useSettingsStore()
-  const { data: shortDetails } = useBrowserSyncStorage<AccurateDetails>(
-    `${settingsStore.activeProfileId}-${DETAIL_TYPES.SHORT}`,
-    {
-      fields: initialAccurateDetailFields,
-    },
-  )
+  const profileId = ref("default")
+  const detailsCache: Record<string, Ref<AccurateDetails>> = {}
+  setActiveProfile(profileId.value)
+
+  function setActiveProfile(activeProfileId: string) {
+    profileId.value = activeProfileId
+    const { data } = useBrowserSyncStorage<AccurateDetails>(
+      `${activeProfileId}-${DETAIL_TYPES.SHORT}`,
+      {
+        fields: initialAccurateDetailFields,
+      },
+    )
+
+    detailsCache[activeProfileId] = data
+  }
+
+  const shortDetails = computed(() => detailsCache[profileId.value].value)
 
   function editField(fieldId: string, value: string) {
     const field = shortDetails.value.fields?.find(
@@ -43,6 +52,8 @@ export const useDetailsStore = defineStore("short-details", () => {
     editField,
     deleteField,
     addNewField,
+    setActiveProfile,
+    profileId,
     detailsGroupedBySection: computed(() => {
       return (shortDetails.value.fields ?? []).reduce(
         (prev, curr) => {
@@ -54,5 +65,6 @@ export const useDetailsStore = defineStore("short-details", () => {
         {} as Record<string, AccurateDetailItem[]>,
       )
     }),
+    fields: computed(() => shortDetails.value.fields ?? [])
   }
 })

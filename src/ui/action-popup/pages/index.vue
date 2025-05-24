@@ -1,38 +1,20 @@
 <script setup lang="ts">
-import {
-  AccurateDetailItem,
-  AccurateDetails,
-  DETAIL_TYPES,
-} from "@/types/common"
 import { useSettingsStore } from "@/stores/settings.store"
+import { useDetailsStore  } from "@/stores/short-details.store"
+import ProfileToggle from "@/ui/options-page/components/ProfileToggle.vue"
 const settingsStore = useSettingsStore()
+const detailsStore = useDetailsStore()
+
+settingsStore.resolveActiveProfileId().then((id) => {
+  detailsStore.setActiveProfile(id)
+})
 
 function openOptionsPage() {
   chrome.runtime.sendMessage({ action: "openOptionsPage" })
 }
 
-const { data: detail } = useBrowserSyncStorage<AccurateDetails>(
-  `default-${DETAIL_TYPES.SHORT}`,
-  {
-    fields: [],
-  },
-)
-
-const basicDetails = computed(() => {
-  return (detail.value.fields ?? []).reduce(
-    (prev, curr) => {
-      if (!curr.value) return prev
-      const key = curr.section ?? curr.id
-      prev[key] ??= []
-      prev[key].push(curr)
-      return prev
-    },
-    {} as Record<string, AccurateDetailItem[]>,
-  )
-})
-
 const needMoreDetails = computed(() => {
-  const count = detail.value.fields?.filter((field) => field.value)?.length ?? 0
+  const count = detailsStore.fields.filter((field) => field.value)?.length ?? 0
   return count < 3
 })
 </script>
@@ -69,8 +51,12 @@ const needMoreDetails = computed(() => {
           >
             <div class="card-body text-left">
               <div class="min-h-20 max-h-60 overflow-auto">
+                <ProfileToggle
+                  class="mt-2 mb-4"
+                  :display-add-new-button="false"
+                />
                 <div
-                  v-for="(detailItems, section) in basicDetails"
+                  v-for="(detailItems, section) in detailsStore.detailsGroupedBySection"
                   :key="section"
                 >
                   <span class="text-[8px] font-semibold">{{ section }}</span>

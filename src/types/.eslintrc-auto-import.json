@@ -374,6 +374,9 @@
     "serverLogin": true,
     "StatusCodeMessageMap": true,
     "getMessageForStatusCode": true,
-    "YT_PLAYLIST_LINK": true
+    "YT_PLAYLIST_LINK": true,
+    "isDevelopmentEnv": true,
+    "useProfilesStore": true,
+    "shortDetailsDynamicStore": true
   }
 }

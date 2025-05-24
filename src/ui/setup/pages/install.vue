@@ -11,7 +11,7 @@ const displayName = __DISPLAY_NAME__
 const agreementDeclined = ref(false)
 const step = ref(1)
 
-if(isDevelopmentEnv()) {
+if (isDevelopmentEnv()) {
   settingsStore.setDummyValuesForLocalDev()
 }
 
@@ -117,7 +117,10 @@ function onAgreementDecline() {
             </button>
             <button
               class="btn btn-primary"
-              @click="settingsStore.tosAgreed();step = step + 1"
+              @click="() => {
+                settingsStore.tosAgreed()
+                step = step + 1
+              }"
             >
               Accept
             </button>
@@ -139,7 +142,7 @@ function onAgreementDecline() {
           </div>
 
           <p class="text-xl mb-1">Autofill Details</p>
-          <DetailsForm />
+          <DetailsForm active-profile-id="default" />
           <p class="text-xl mb-1">Long Autofill Details</p>
           <TextareaDetailsForm />
 

@@ -58,7 +58,7 @@ export interface FormProfile {
 
 export interface Settings {
   activeProfileId: string
-  profiles: Record<string, FormProfile>
+  profiles: FormProfile[]
   displayActionIcon: boolean
   email: string
   isTosAgreed: boolean
