@@ -5,6 +5,7 @@ import {
   DETAIL_TYPES,
   CreativeDetails,
   Settings,
+  SelectInputContext,
 } from "@/types/common"
 import { getMessageForStatusCode } from "@/utils/auth"
 
@@ -13,6 +14,7 @@ const FILL_ACCURATE = `${API_URL}/fill/accurate`
 
 export async function getAccurateFillData(
   textInputContext: TextInputContext[],
+  selectContext: SelectInputContext[],
 ) {
   const settings = await getValueFromStorage<Settings>("settings", "sync")
   const activeProfileId = settings?.activeProfileId ?? "default"
@@ -67,6 +69,7 @@ export async function getAccurateFillData(
       body: JSON.stringify({
         context: userTotalContext,
         text_input_context: textInputContext,
+        select_context: selectContext,
       }),
     })
 

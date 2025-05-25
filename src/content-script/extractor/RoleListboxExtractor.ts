@@ -1,6 +1,6 @@
-import { SelectInputContext, UserInputElementContext } from "@/types/common"
+import { SelectInputContext } from "@/types/common"
 import { AbstractElementExtractor } from "./AbstractElementExtractor"
-import { findElements } from "../utils/common"
+import { clickAtElement, findElements, sleep } from "../utils/common"
 import { extractContextFromInput } from "./input"
 
 export class RoleListboxExtractor extends AbstractElementExtractor {
@@ -27,14 +27,26 @@ export class RoleListboxExtractor extends AbstractElementExtractor {
     }
   }
   getAllElements(node: Element): Array<HTMLElement> {
-    return findElements<HTMLSelectElement>(
+    const elem = findElements<HTMLSelectElement>(
       node,
       '[role="listbox"]',
     ) as HTMLSelectElement[]
-  }
 
-  applyAnswer(e: HTMLElement, optionAnswer: string | null) {
+    return elem
+  }
+  async applyAnswer(e: HTMLElement, optionAnswer: string | null) {
     if (!optionAnswer) return
+
+    e.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center',
+        inline: 'center'
+    });
+
+    await sleep(100)
+    clickAtElement(e)
+    await sleep(300)
+
     const options = Array.from(
       e.querySelectorAll('[role="option"]'),
     ) as HTMLElement[]
@@ -43,8 +55,16 @@ export class RoleListboxExtractor extends AbstractElementExtractor {
       const option = options[i]
       if (option.innerText.trim() === optionAnswer.trim()) {
         option.setAttribute("aria-selected", "true")
-        break
+        clickAtElement(option)
+      } else {  
+        option.setAttribute("aria-selectted", "false")
       }
     }
+    await sleep(100)
+    clickAtElement(e)
+  }
+
+  elementMatches(element: Element): boolean {
+    return element.role === "listbox"
   }
 }

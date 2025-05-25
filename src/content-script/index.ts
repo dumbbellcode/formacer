@@ -5,6 +5,8 @@ import { simulateTyping } from "./utils/typing"
 import { makeElementDraggable } from "./utils/draggable"
 import { displayForSeconds, shouldDisplayCTA, sleep } from "./utils/common"
 import { extractContextFromAllTextarea } from "./extractor/textarea"
+import { SelectExtractor } from "./extractor/SelectExtractor"
+import { RoleListboxExtractor } from "./extractor/RoleListboxExtractor"
 
 self.onerror = function (message, source, lineno, colno, error) {
   console.info("Error: " + message)
@@ -21,6 +23,8 @@ enum CTA_STATE {
   ERROR = "error",
 }
 
+const selectExtractor = new SelectExtractor()
+const roleListboxExtractor = new RoleListboxExtractor()
 // TODO: split it into multiple classes
 // Globals
 let shadowRoot: ShadowRoot | null = null
@@ -123,10 +127,16 @@ function main() {
     }
     setCTAState(CTA_STATE.LOADING)
 
-    const extractedInputData = extractContextFromAllInputs(document).concat(
-      extractContextFromAllTextarea(document),
-    )
-    if (!extractedInputData || extractedInputData.length < 1) {
+    const extractedInputData =
+      extractContextFromAllInputs(document).concat(
+        extractContextFromAllTextarea(document),
+      ) ?? []
+
+    const extractedSelectData = selectExtractor
+      .getContextForAll(document)
+      .concat(roleListboxExtractor.getContextForAll(document))
+
+    if (extractedInputData.length < 1 && extractedSelectData.length < 1) {
       displayMessageForSeconds("No empty inputs found to fill!")
       setCTAState(CTA_STATE.ERROR)
       return
@@ -134,7 +144,10 @@ function main() {
 
     chrome.runtime.sendMessage({
       action: ActionEvents.EXTRACT_INPUT_DATA,
-      data: extractedInputData,
+      data: {
+        textInputContext: extractedInputData,
+        selectContext: extractedSelectData,
+      },
     })
   })
 }
@@ -186,6 +199,9 @@ async function fillInputInForm(
     const element = document.querySelector(
       `[data-formacer-id="${item.dataId}"]`,
     )
+    if (!element) {
+      continue
+    }
     if (element instanceof HTMLInputElement && typeof item.value === "string") {
       await simulateTyping(element, item.value as string)
     } else if (
@@ -193,11 +209,18 @@ async function fillInputInForm(
       typeof item.value === "number"
     ) {
       element.value = (item.value as number).toString()
-    } else if (
-      element instanceof HTMLTextAreaElement &&
-      item.value !== "null"
-    ) {
+    } else if (element instanceof HTMLTextAreaElement) {
       await simulateTyping(element, item.value as string)
+    } else if (selectExtractor.elementMatches(element)) {
+      selectExtractor.applyAnswer(
+        element as HTMLSelectElement,
+        item.value as string,
+      )
+    } else if (roleListboxExtractor.elementMatches(element)) {
+      await roleListboxExtractor.applyAnswer(
+        element as HTMLElement,
+        item.value as string,
+      )
     }
     await sleep(300)
   }

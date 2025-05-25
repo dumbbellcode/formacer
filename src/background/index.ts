@@ -1,7 +1,11 @@
 // Sample code if using extensionpay.com
 // import { extPay } from '@/utils/payment/extPay'
 // extPay.startBackground()
-import { ActionEvents, TextInputContext } from "@/types/common"
+import {
+  ActionEvents,
+  SelectInputContext,
+  TextInputContext,
+} from "@/types/common"
 import { getAccurateFillData } from "./service"
 
 chrome.runtime.onInstalled.addListener(async (opt) => {
@@ -47,8 +51,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 
   if (msg.action === ActionEvents.EXTRACT_INPUT_DATA) {
-    const inputContext: TextInputContext[] = msg.data
-    getAccurateFillData(inputContext).then((response) => {
+    const textInputContext: TextInputContext[] = msg.data.textInputContext
+    const selectContext: SelectInputContext[] = msg.data.selectContext
+    getAccurateFillData(textInputContext, selectContext).then((response) => {
       chrome.tabs.sendMessage(
         tabId as number,
         {

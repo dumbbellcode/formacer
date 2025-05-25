@@ -2,7 +2,7 @@ import { UserInputElementContext } from "@/types/common"
 import { applyUUIDToElementAndContext } from "../utils/common"
 
 export abstract class AbstractElementExtractor {
-  protected getContextForAll(
+  public getContextForAll(
     node: Element | Document,
   ): Array<UserInputElementContext> {
     const elements = this.getAllElements(node)
@@ -14,4 +14,5 @@ export abstract class AbstractElementExtractor {
   }
   abstract getContext(e: HTMLElement): UserInputElementContext
   abstract getAllElements(node: Element | Document): Array<HTMLElement>
+  abstract elementMatches(element: Element): boolean
 }

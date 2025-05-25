@@ -29,6 +29,7 @@ export class SelectExtractor extends AbstractElementExtractor {
   applyAnswer(elem: HTMLSelectElement, optionAnswer: string | null) {
     if (!optionAnswer) return
     // Iterate through the options of the select element
+    let index = -1
     for (let i = 0; i < elem.options.length; i++) {
       const option = elem.options[i]
 
@@ -36,8 +37,21 @@ export class SelectExtractor extends AbstractElementExtractor {
       if (option.innerText.trim() === optionAnswer.trim()) {
         // Select the matching option
         option.selected = true // Set the select element's value
+        index = i
         break // Exit the loop once the match is found
       }
     }
+
+
+    elem.selectedIndex = index
+    const event = new Event('change', { 
+        bubbles: true,  // Allow event to bubble up the DOM tree
+        cancelable: true  // Allow event to be cancelable
+    });
+    elem.dispatchEvent(event);
+  }
+
+  elementMatches(element: Element): boolean {
+    return element.tagName.toLowerCase() === "select"
   }
 }

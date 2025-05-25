@@ -1,6 +1,7 @@
 import { UserInputElementContext } from "@/types/common"
 import { emptyInputElementsCount } from "../extractor/input"
 import { emptyTextareaElementsCount } from "../extractor/textarea"
+import { clickAtPosition } from "./typing"
 
 function isEmpty(value: unknown) {
   return (
@@ -50,6 +51,14 @@ export function createElementFromHTML(htmlString: string) {
   return div
 }
 
+export function clickAtElement(e: HTMLElement) {
+  const r = e.getBoundingClientRect()
+  const x = r.left + r.width / 2
+  const y = r.top + r.height / 2
+  clickAtPosition(x, y)
+}
+
+
 export const UserInputElements = {
   nativeInputs: "input:not([role])",
   textareas: "textarea:not([role])",
@@ -88,10 +97,12 @@ export function findElements<T>(
   if (onlyVisible) {
     elements = elements.filter((e) => e instanceof Element && isNodeVisible(e))
   }
-  if (onlyEmpty) {
-    const hasValueProp = (e: unknown) =>
-      e instanceof HTMLTextAreaElement || e instanceof HTMLInputElement
-    elements = elements.filter((e) => hasValueProp(e) && isEmpty(e.value))
+  const hasValueProp = (e: unknown) =>
+    e instanceof HTMLTextAreaElement || e instanceof HTMLInputElement
+  if (onlyEmpty && hasValueProp) {
+    elements = elements.filter(
+      (e) => !hasValueProp(e) || (hasValueProp(e) && isEmpty(e.value)),
+    )
   }
   return elements as T[]
 }
@@ -120,37 +131,49 @@ export function findClosestLabelInParentTreeWithSingleInputUnderIt(
 
 export function findAllTextInParentTreeWithSingleUserInputUnderIt(
   node: HTMLElement | null,
+  sourceInputNode?: Element,
 ): string | null {
   if (!node) {
     return null
   }
+
+  // At level 0 in DFS call
+  if (!sourceInputNode) {
+    sourceInputNode = node
+  }
+
   const allInputTypesSelector = Object.values(UserInputElements).join(",")
   const inputCount = node.querySelectorAll(allInputTypesSelector).length
   if (inputCount > 1) {
     return null
   }
-  const text = trimText(node.innerText, " ")
+  const text = trimText(getVisibleText(node, sourceInputNode), " ")
   const wordCount = countWords(text)
   // TODO: add memoization optimization, max search limit
   // The first if check is to save some iterations
   if (wordCount > 50) {
     return text
   }
-  const answerFromParent = findAllTextInParentTreeWithSingleUserInputUnderIt(node.parentElement)
+  const answerFromParent = findAllTextInParentTreeWithSingleUserInputUnderIt(
+    node.parentElement,
+    sourceInputNode,
+  )
   return answerFromParent ? answerFromParent : text
 }
 
-function getVisibleText(node: Element): string {
+function getVisibleText(node: Element, sourceInputNode: Element): string {
   if (!isNodeVisible(node)) return ""
+  if (node.isSameNode(sourceInputNode)) return ""
 
   let text = ""
   // Handle text nodes directly under this element
   for (const childNode of Array.from(node.childNodes)) {
     if (childNode.nodeType === Node.TEXT_NODE) {
-      text += childNode.textContent ?? ""
+      const value = childNode.textContent
+      text = value ? text + ` ${value},` : ""
     } else if (childNode.nodeType === Node.ELEMENT_NODE) {
       // Recursively get text from visible child elements
-      text += getVisibleText(childNode as Element)
+      text += getVisibleText(childNode as Element, sourceInputNode)
     }
   }
 

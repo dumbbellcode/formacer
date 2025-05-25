@@ -108,3 +108,20 @@ function getKeyCode(char: string) {
     return specialChars[char] || "Unidentified"
   }
 }
+
+export function clickAtPosition(x: number, y: number) {
+  // Create a new mouse event
+  const clickEvent = new MouseEvent("click", {
+    view: window,
+    bubbles: true,
+    cancelable: true,
+    clientX: x,
+    clientY: y,
+  })
+
+  // Dispatch the event to the element at the specified coordinates
+  const element = document.elementFromPoint(x, y)
+  if (element) {
+    element.dispatchEvent(clickEvent)
+  }
+}
