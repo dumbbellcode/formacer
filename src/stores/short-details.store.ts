@@ -65,6 +65,6 @@ export const useDetailsStore = defineStore("short-details", () => {
         {} as Record<string, AccurateDetailItem[]>,
       )
     }),
-    fields: computed(() => shortDetails.value.fields ?? [])
+    fields: computed(() => shortDetails.value.fields ?? []),
   }
 })

@@ -4,10 +4,10 @@ import { useDetailsStore } from "@/stores/short-details.store"
 import { useLongDetailsStore } from "@/stores/long-details.store"
 
 const props = defineProps({
-    displayAddNewButton: {
-        type: Boolean,
-        default: true,
-    },
+  displayAddNewButton: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const store = useSettingsStore()
@@ -29,7 +29,6 @@ function setSelectedProfileAsActive() {
   detailsStore.setActiveProfile(selectedProfileId.value)
   longDetailsStore.setActiveProfile(selectedProfileId.value)
 }
-
 </script>
 
 <template>

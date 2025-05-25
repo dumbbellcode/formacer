@@ -106,7 +106,12 @@ export const useSettingsStore = defineStore("settings", () => {
     setDummyValuesForLocalDev,
     displayActionIcon: computed(() => settings.value.displayActionIcon),
     activeProfileId: computed(() => settings.value.activeProfileId),
-    activeProfileName: computed(() => settings.value.profiles.find(x => x.id === settings.value.activeProfileId)?.name),
+    activeProfileName: computed(
+      () =>
+        settings.value.profiles.find(
+          (x) => x.id === settings.value.activeProfileId,
+        )?.name,
+    ),
     email: computed(() => settings.value.email),
     googleToken: computed(() => tokens.value.google),
     serverToken: computed(() => tokens.value.server),

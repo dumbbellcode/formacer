@@ -4,6 +4,7 @@ import {
   findAllTextInParentTreeWithSingleUserInputUnderIt,
   findElements,
   trimText,
+  applyUUIDToElementAndContext,
 } from "../utils/common"
 
 const allowedInputTypes = [
@@ -27,23 +28,31 @@ export function extractContextFromAllInputs(
 
   return textInputs.map((ti) => {
     const context = extractContextFromInput(ti)
-
-    // Add a unique data-formacer-id attribute to the input element
-    const uniqueId = `formacer-${crypto.randomUUID()}`
-    context.dataId = uniqueId
-    ti.setAttribute("data-formacer-id", uniqueId)
-
+    applyUUIDToElementAndContext(ti, context)
     return context
   })
 }
 
 export function extractContextFromInput(
-  input: HTMLInputElement | HTMLTextAreaElement,
-  elementType: "input" | "textarea" = "input",
+  input:
+    | HTMLInputElement
+    | HTMLTextAreaElement
+    | HTMLSelectElement
+    | HTMLElement,
 ): TextInputContext {
-  const allLabels = input.labels
-  let label = allLabels?.length ? allLabels[0].textContent : ""
-  label = trimText(label)
+  const hasPlaceHolder =
+    input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement
+
+  const hasLabels = hasPlaceHolder || input instanceof HTMLSelectElement
+
+  let label = null
+
+  if (hasLabels) {
+    const allLabels = input.labels
+    label = allLabels?.length ? allLabels[0].textContent : ""
+    label = trimText(label)
+  }
+
   let closestLabel: string | null = null
   let closestText: string | null = null
 
@@ -60,17 +69,17 @@ export function extractContextFromInput(
     closestText = findAllTextInParentTreeWithSingleUserInputUnderIt(input)
   }
 
-  if(closestText) {
+  if (closestText) {
     closestText.substring(0, 900)
   }
 
-  const { tagName, placeholder, title, value, type } = input
+  const { tagName, title } = input
   const data = {
     tagName,
-    type,
-    placeholder,
+    type: hasLabels ? input.type : null,
+    placeholder: hasPlaceHolder ? input.placeholder : null,
     title,
-    value,
+    value: hasLabels ? input.value : null,
     label,
     closestLabel,
     closestText,

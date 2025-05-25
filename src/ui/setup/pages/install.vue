@@ -117,10 +117,12 @@ function onAgreementDecline() {
             </button>
             <button
               class="btn btn-primary"
-              @click="() => {
-                settingsStore.tosAgreed()
-                step = step + 1
-              }"
+              @click="
+                () => {
+                  settingsStore.tosAgreed()
+                  step = step + 1
+                }
+              "
             >
               Accept
             </button>

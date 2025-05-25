@@ -1,3 +1,4 @@
+import { UserInputElementContext } from "@/types/common"
 import { emptyInputElementsCount } from "../extractor/input"
 import { emptyTextareaElementsCount } from "../extractor/textarea"
 
@@ -39,7 +40,7 @@ export function trimText(text: string | null, replaceWith: string = " ") {
 }
 
 function countWords(str: string) {
-  return str.trim().split(/\s+/).length;
+  return str.trim().split(/\s+/).length
 }
 
 export function createElementFromHTML(htmlString: string) {
@@ -50,8 +51,8 @@ export function createElementFromHTML(htmlString: string) {
 }
 
 export const UserInputElements = {
-  nativeInputs: 'input:not([role])',
-  textareas: 'textarea:not([role])',
+  nativeInputs: "input:not([role])",
+  textareas: "textarea:not([role])",
   ariaTextbox: '[role="textbox"]',
   ariaCheckbox: '[role="checkbox"]',
   ariaRadio: '[role="radio"]',
@@ -63,9 +64,19 @@ export const UserInputElements = {
   // contentEditable: '[contenteditable="true"], [contenteditable=""]'
 }
 
+export function applyUUIDToElementAndContext(
+  e: HTMLElement,
+  context: UserInputElementContext,
+) {
+  // Add a unique data-formacer-id attribute to the input element
+  const uniqueId = `formacer-${crypto.randomUUID()}`
+  context.dataId = uniqueId
+  e.setAttribute("data-formacer-id", uniqueId)
+}
+
 export function findElements<T>(
   node: Element | Document,
-  type: "input" | "textarea",
+  type: "input" | "textarea" | "select" | '[role="listbox"]',
   filterCallback: ((e: T) => boolean) | null = null,
   onlyVisible: boolean = true,
   onlyEmpty: boolean = true,
@@ -109,23 +120,24 @@ export function findClosestLabelInParentTreeWithSingleInputUnderIt(
 
 export function findAllTextInParentTreeWithSingleUserInputUnderIt(
   node: HTMLElement | null,
-) {
+): string | null {
   if (!node) {
     return null
   }
-  const allInputTypesSelector = Object.values(UserInputElements).join(',')
+  const allInputTypesSelector = Object.values(UserInputElements).join(",")
   const inputCount = node.querySelectorAll(allInputTypesSelector).length
   if (inputCount > 1) {
     return null
   }
-  const text = trimText(node.innerText, ', ')
+  const text = trimText(node.innerText, " ")
   const wordCount = countWords(text)
   // TODO: add memoization optimization, max search limit
   // The first if check is to save some iterations
-  if (wordCount > 50 || !node.parentElement) {
+  if (wordCount > 50) {
     return text
   }
-  return findAllTextInParentTreeWithSingleUserInputUnderIt(node.parentElement)
+  const answerFromParent = findAllTextInParentTreeWithSingleUserInputUnderIt(node.parentElement)
+  return answerFromParent ? answerFromParent : text
 }
 
 function getVisibleText(node: Element): string {

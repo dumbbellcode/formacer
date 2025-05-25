@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useSettingsStore } from "@/stores/settings.store"
-import { useDetailsStore  } from "@/stores/short-details.store"
+import { useDetailsStore } from "@/stores/short-details.store"
 import ProfileToggle from "@/ui/options-page/components/ProfileToggle.vue"
 const settingsStore = useSettingsStore()
 const detailsStore = useDetailsStore()
@@ -56,7 +56,9 @@ const needMoreDetails = computed(() => {
                   :display-add-new-button="false"
                 />
                 <div
-                  v-for="(detailItems, section) in detailsStore.detailsGroupedBySection"
+                  v-for="(
+                    detailItems, section
+                  ) in detailsStore.detailsGroupedBySection"
                   :key="section"
                 >
                   <span class="text-[8px] font-semibold">{{ section }}</span>

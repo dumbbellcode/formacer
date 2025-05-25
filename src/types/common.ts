@@ -27,16 +27,23 @@ export interface ExtractInputDataResponseItem {
 }
 
 // From content script
-export interface TextInputContext {
+export interface UserInputElementContext {
   dataId?: string
   tagName?: string
-  type?: string
-  placeholder?: string
   title?: string
   value?: string
+  type?: string
   label?: string
   closestLabel?: string
   closestText?: string
+}
+
+export interface SelectInputContext extends UserInputElementContext {
+  options: string[]
+}
+
+export interface TextInputContext extends UserInputElementContext {
+  placeholder?: string
 }
 
 export const TextInputContextProps: Array<keyof TextInputContext> = [
