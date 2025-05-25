@@ -1,7 +1,7 @@
 import { TextInputContext } from "@/types/common"
 import {
   findClosestLabelInParentTreeWithSingleInputUnderIt,
-  findClosestTextInParentTreeWithSingleInputUnderIt,
+  findAllTextInParentTreeWithSingleUserInputUnderIt,
   findElements,
   trimText,
 } from "./common"
@@ -57,11 +57,11 @@ export function extractContextFromInput(
 
   // If closest label not found, search closest text
   if (!closestLabel) {
-    closestText = findClosestTextInParentTreeWithSingleInputUnderIt(
-      input,
-      elementType,
-    )
-    closestText = trimText(closestText).substring(0, 900)
+    closestText = findAllTextInParentTreeWithSingleUserInputUnderIt(input)
+  }
+
+  if(closestText) {
+    closestText.substring(0, 900)
   }
 
   const { tagName, placeholder, title, value, type } = input

@@ -33,9 +33,13 @@ export function isNodeVisible(e: Element): boolean {
   })
 }
 
-export function trimText(text: string | null) {
+export function trimText(text: string | null, replaceWith: string = " ") {
   if (!text) return ""
-  return text.replace(/\s+/g, " ").trim()
+  return text.replace(/\s+/g, replaceWith).trim()
+}
+
+function countWords(str: string) {
+  return str.trim().split(/\s+/).length;
 }
 
 export function createElementFromHTML(htmlString: string) {
@@ -43,6 +47,20 @@ export function createElementFromHTML(htmlString: string) {
   div.innerHTML = htmlString.trim()
   // Change this to div.childNodes to support multiple top-level nodes.
   return div
+}
+
+export const UserInputElements = {
+  nativeInputs: 'input:not([role])',
+  textareas: 'textarea:not([role])',
+  ariaTextbox: '[role="textbox"]',
+  ariaCheckbox: '[role="checkbox"]',
+  ariaRadio: '[role="radio"]',
+  ariaCombobox: '[role="combobox"]',
+  ariaListbox: '[role="listbox"]',
+  // ariaSpinbutton: '[role="spinbutton"]',
+  // ariaSlider: '[role="slider"]',
+  ariaSearchbox: '[role="searchbox"]',
+  // contentEditable: '[contenteditable="true"], [contenteditable=""]'
 }
 
 export function findElements<T>(
@@ -89,24 +107,25 @@ export function findClosestLabelInParentTreeWithSingleInputUnderIt(
   return label
 }
 
-export function findClosestTextInParentTreeWithSingleInputUnderIt(
+export function findAllTextInParentTreeWithSingleUserInputUnderIt(
   node: HTMLElement | null,
-  elementType: "input" | "textarea" = "input",
 ) {
   if (!node) {
     return null
   }
-  const inputCount = node.querySelectorAll(elementType).length
+  const allInputTypesSelector = Object.values(UserInputElements).join(',')
+  const inputCount = node.querySelectorAll(allInputTypesSelector).length
   if (inputCount > 1) {
     return null
   }
-  const text = (node.textContent ?? "").replace(/\s+/g, " ").trim()
+  const text = trimText(node.innerText, ', ')
+  const wordCount = countWords(text)
   // TODO: add memoization optimization, max search limit
   // The first if check is to save some iterations
-  if (text.length > 5 && getVisibleText(node).length > 5) {
+  if (wordCount > 50 || !node.parentElement) {
     return text
   }
-  return findClosestTextInParentTreeWithSingleInputUnderIt(node.parentElement)
+  return findAllTextInParentTreeWithSingleUserInputUnderIt(node.parentElement)
 }
 
 function getVisibleText(node: Element): string {
