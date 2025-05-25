@@ -1,6 +1,6 @@
 import { TextInputContext } from "../types"
-import { findElements } from "./common"
-import { extractContextFromInput } from "./input-extracter"
+import { findElements } from "../utils/common"
+import { extractContextFromInput } from "./input"
 
 export function extractContextFromAllTextarea(
   node: Element | Document,

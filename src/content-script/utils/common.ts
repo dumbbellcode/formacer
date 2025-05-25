@@ -1,5 +1,5 @@
-import { emptyInputElementsCount } from "./input-extracter"
-import { emptyTextareaElementsCount } from "./textarea-extracter"
+import { emptyInputElementsCount } from "../extractor/input"
+import { emptyTextareaElementsCount } from "../extractor/textarea"
 
 function isEmpty(value: unknown) {
   return (

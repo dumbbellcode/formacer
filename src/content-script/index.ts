@@ -1,10 +1,10 @@
-import { extractContextFromAllInputs } from "./utils/input-extracter"
+import { extractContextFromAllInputs } from "./extractor/input"
 import { ActionEvents, DETAIL_TYPES, Settings } from "@/types/common"
 import ctaHtml from "./cta-container.html?raw"
 import { simulateTyping } from "./utils/typing"
 import { makeElementDraggable } from "./utils/draggable"
 import { displayForSeconds, shouldDisplayCTA, sleep } from "./utils/common"
-import { extractContextFromAllTextarea } from "./utils/textarea-extracter"
+import { extractContextFromAllTextarea } from "./extractor/textarea"
 
 self.onerror = function (message, source, lineno, colno, error) {
   console.info("Error: " + message)

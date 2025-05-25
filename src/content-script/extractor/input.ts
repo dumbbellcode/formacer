@@ -4,7 +4,7 @@ import {
   findAllTextInParentTreeWithSingleUserInputUnderIt,
   findElements,
   trimText,
-} from "./common"
+} from "../utils/common"
 
 const allowedInputTypes = [
   "number",
