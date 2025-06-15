@@ -73,7 +73,9 @@ function displayMessageForSeconds(message: string) {
 
 function main() {
   const container = document.createElement("div")
-  container.style = "position: absolute; top: 0; left: 0"
+  container.style.position = "absolute"
+  container.style.top = "0"
+  container.style.left = "0"
 
   getValueFromStorage<Settings>("settings", "sync").then((setting) => {
     if (setting && !setting.displayActionIcon) {

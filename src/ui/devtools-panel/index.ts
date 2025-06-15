@@ -6,10 +6,6 @@ import { createApp } from "vue"
 import App from "./app.vue"
 import "./index.scss"
 
-appRouter.addRoute({
-  path: "/",
-  redirect: "/devtools-panel",
-})
 
 const app = createApp(App).use(i18n).use(notivue).use(pinia).use(appRouter)
 
