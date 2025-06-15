@@ -2,6 +2,7 @@ import { UserInputElementContext } from "@/types/common"
 import { emptyInputElementsCount } from "../extractor/input"
 import { emptyTextareaElementsCount } from "../extractor/textarea"
 import { clickAtPosition } from "./typing"
+import { computeAccessibleDescription, computeAccessibleName } from "dom-accessibility-api"
 
 function isEmpty(value: unknown) {
   return (
@@ -51,7 +52,7 @@ export function createElementFromHTML(htmlString: string) {
   return div
 }
 
-export function clickAtElement(e: HTMLElement) {
+export function clickAtElement(e: Element) {
   const r = e.getBoundingClientRect()
   const x = r.left + r.width / 2
   const y = r.top + r.height / 2
@@ -211,4 +212,83 @@ export function shouldDisplayCTA(): boolean {
 
 export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+export const OptionRoles = {
+  OPTION: '[role="option"]',
+  CHECKBOX: '[role="checkbox"]',
+  RADIO: '[role="radio"]'
+}
+
+export const Roles = {
+  ...OptionRoles
+}
+
+const OptionTypeSelectionAttributeMap: Record<string,string> = {
+  [OptionRoles.OPTION]: "aria-selected",
+  [OptionRoles.CHECKBOX]: "aria-checked",
+  [OptionRoles.RADIO]: "aria-checked"
+}
+
+export function extractAriaOptions (
+  e: Element, 
+  optionsSelector: keyof typeof OptionTypeSelectionAttributeMap,
+): string[] {
+  const optionElements = Array.from(e.querySelectorAll(optionsSelector)) as HTMLElement[]
+
+  return optionElements
+    .filter((o) => !(o.getAttribute("aria-disabled") === "true"))
+    .map((o) => { 
+      const accessibleName = computeAccessibleName(o)
+      const accessibleDescription = computeAccessibleDescription(o)
+      return o.innerText?.trim() || 
+      accessibleName || 
+      accessibleDescription
+    })
+}
+
+export async function applyAriaOptions (
+  e: Element, 
+  optionsSelector: keyof typeof OptionTypeSelectionAttributeMap, 
+  answers: string[]
+) {
+  await sleep(100)
+  clickAtElement(e)
+  await sleep(300)
+
+  const options = Array.from(e.querySelectorAll(optionsSelector)) as HTMLElement[]
+  const selectionAttribute = OptionTypeSelectionAttributeMap[optionsSelector]
+  // Iterate through the options of the select element
+  for (let i = 0; i < options.length; i++) {
+    const option = options[i]
+    const accessibleName = computeAccessibleName(option)
+    const accessibleDescription = computeAccessibleDescription(option)
+
+    const optionText = option.innerText?.trim() || 
+    accessibleName || 
+    accessibleDescription
+
+    const selectionAttributeVal = 
+      option.getAttribute(selectionAttribute) ?? ''
+    const selectionAttributeIsAlreadyTrue = [true, 'true'].includes(selectionAttributeVal)
+
+    console.log({
+      optionText, 
+      answers, 
+      selectionAttribute,
+      selectionAttributeVal, selectionAttributeIsAlreadyTrue,
+      includes: answers.includes(optionText)
+     })
+    if (answers.includes(optionText) && !selectionAttributeIsAlreadyTrue) {
+      option.setAttribute(selectionAttribute, "true")
+      console.info('clicking on', option)
+      clickAtElement(option)
+    }
+    
+    if(!answers.includes(optionText)){  
+      option.setAttribute(selectionAttribute, "false")
+    }
+  }
+  await sleep(100)
+  clickAtElement(e)
 }

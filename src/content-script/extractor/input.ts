@@ -6,6 +6,8 @@ import {
   trimText,
   applyUUIDToElementAndContext,
 } from "../utils/common"
+import { computeAccessibleName } from "dom-accessibility-api"
+import { computeAccessibleDescription } from "dom-accessibility-api"
 
 const allowedInputTypes = [
   "number",
@@ -31,6 +33,23 @@ export function extractContextFromAllInputs(
     applyUUIDToElementAndContext(ti, context)
     return context
   })
+}
+
+export function extractContextFromAriaInput(
+  e: HTMLElement,
+): TextInputContext {
+  const accessibleName = computeAccessibleName(e)
+  const accessibleDescription = computeAccessibleDescription(e)
+  const context = extractContextFromInput(e)
+
+  if (!context.label) {
+    context.label = accessibleName
+  }
+
+  if (!context.closestText) {
+    context.closestText = accessibleDescription
+  }
+  return context
 }
 
 export function extractContextFromInput(

@@ -38,6 +38,10 @@ export interface UserInputElementContext {
   closestText?: string
 }
 
+/**
+ * Select input context can be for a radiogroup or select dropdown or checkbox group.
+ * It's the responsibility of backend to get correct answers based on tagName.
+ */
 export interface SelectInputContext extends UserInputElementContext {
   options: string[]
 }

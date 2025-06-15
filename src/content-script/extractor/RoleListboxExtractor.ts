@@ -1,31 +1,20 @@
 import { SelectInputContext } from "@/types/common"
 import { AbstractElementExtractor } from "./AbstractElementExtractor"
-import { clickAtElement, findElements, sleep } from "../utils/common"
-import { extractContextFromInput } from "./input"
+import { applyAriaOptions, extractAriaOptions, findElements, Roles } from "../utils/common"
+import { extractContextFromAriaInput } from "./input"
 
 export class RoleListboxExtractor extends AbstractElementExtractor {
   getContext(e: HTMLElement): SelectInputContext {
-    const optionElements = Array.from(
-      e.querySelectorAll('[role="option"]'),
-    ) as HTMLElement[]
-
-    const options = optionElements
-      .filter(
-        (o) =>
-          !(
-            o.hasAttribute("aria-disabled") &&
-            o.getAttribute("aria-disabled") === "true"
-          ),
-      )
-      .map((o) => o.getAttribute("data-value") || o.innerText?.trim())
-
-    const context = extractContextFromInput(e)
+    const options = extractAriaOptions(e, Roles.OPTION)
+    const context = extractContextFromAriaInput(e)
 
     return {
       ...context,
       options,
+      tagName: 'select'
     }
   }
+
   getAllElements(node: Element): Array<HTMLElement> {
     const elem = findElements<HTMLSelectElement>(
       node,
@@ -34,6 +23,7 @@ export class RoleListboxExtractor extends AbstractElementExtractor {
 
     return elem
   }
+
   async applyAnswer(e: HTMLElement, optionAnswer: string | null) {
     if (!optionAnswer) return
 
@@ -43,25 +33,7 @@ export class RoleListboxExtractor extends AbstractElementExtractor {
         inline: 'center'
     });
 
-    await sleep(100)
-    clickAtElement(e)
-    await sleep(300)
-
-    const options = Array.from(
-      e.querySelectorAll('[role="option"]'),
-    ) as HTMLElement[]
-    // Iterate through the options of the select element
-    for (let i = 0; i < options.length; i++) {
-      const option = options[i]
-      if (option.innerText.trim() === optionAnswer.trim()) {
-        option.setAttribute("aria-selected", "true")
-        clickAtElement(option)
-      } else {  
-        option.setAttribute("aria-selectted", "false")
-      }
-    }
-    await sleep(100)
-    clickAtElement(e)
+    applyAriaOptions(e, Roles.OPTION, [optionAnswer])
   }
 
   elementMatches(element: Element): boolean {

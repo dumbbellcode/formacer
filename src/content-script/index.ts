@@ -7,6 +7,7 @@ import { displayForSeconds, shouldDisplayCTA, sleep } from "./utils/common"
 import { extractContextFromAllTextarea } from "./extractor/textarea"
 import { SelectExtractor } from "./extractor/SelectExtractor"
 import { RoleListboxExtractor } from "./extractor/RoleListboxExtractor"
+import { applyGroupNodeAnswer, extractAllGroupContext, isRoleGroupNode } from "./extractor/RoleGroupExtractor"
 
 self.onerror = function (message, source, lineno, colno, error) {
   console.info("Error: " + message)
@@ -112,6 +113,8 @@ function main() {
     return
   }
 
+  //console.log(extractAllGroupContext(document))
+
   chrome.storage.local.get(["ctaPositionTop"]).then((data) => {
     contentElement.style.top = data.ctaPositionTop
   })
@@ -135,6 +138,7 @@ function main() {
     const extractedSelectData = selectExtractor
       .getContextForAll(document)
       .concat(roleListboxExtractor.getContextForAll(document))
+      .concat(extractAllGroupContext(document))
 
     if (extractedInputData.length < 1 && extractedSelectData.length < 1) {
       displayMessageForSeconds("No empty inputs found to fill!")
@@ -202,7 +206,12 @@ async function fillInputInForm(
     if (!element) {
       continue
     }
-    if (element instanceof HTMLInputElement && typeof item.value === "string") {
+    const isRoleGroup = isRoleGroupNode(element)
+
+    if (isRoleGroup && typeof item.value === "string") {
+      const options = item.value.split('|')
+      applyGroupNodeAnswer(element, options)
+    } else if (element instanceof HTMLInputElement && typeof item.value === "string") {
       await simulateTyping(element, item.value as string)
     } else if (
       element instanceof HTMLInputElement &&
