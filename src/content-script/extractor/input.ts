@@ -35,9 +35,7 @@ export function extractContextFromAllInputs(
   })
 }
 
-export function extractContextFromAriaInput(
-  e: HTMLElement,
-): TextInputContext {
+export function extractContextFromAriaInput(e: HTMLElement): TextInputContext {
   const accessibleName = computeAccessibleName(e)
   const accessibleDescription = computeAccessibleDescription(e)
   const context = extractContextFromInput(e)

@@ -42,13 +42,12 @@ export class SelectExtractor extends AbstractElementExtractor {
       }
     }
 
-
     elem.selectedIndex = index
-    const event = new Event('change', { 
-        bubbles: true,  // Allow event to bubble up the DOM tree
-        cancelable: true  // Allow event to be cancelable
-    });
-    elem.dispatchEvent(event);
+    const event = new Event("change", {
+      bubbles: true, // Allow event to bubble up the DOM tree
+      cancelable: true, // Allow event to be cancelable
+    })
+    elem.dispatchEvent(event)
   }
 
   elementMatches(element: Element): boolean {

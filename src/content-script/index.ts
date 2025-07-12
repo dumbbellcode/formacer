@@ -6,8 +6,11 @@ import { makeElementDraggable } from "./utils/draggable"
 import { displayForSeconds, shouldDisplayCTA, sleep } from "./utils/common"
 import { extractContextFromAllTextarea } from "./extractor/textarea"
 import { SelectExtractor } from "./extractor/SelectExtractor"
-import { RoleListboxExtractor } from "./extractor/RoleListboxExtractor"
-import { applyGroupNodeAnswer, extractAllGroupContext, isRoleGroupNode } from "./extractor/RoleGroupExtractor"
+import {
+  applyGroupNodeAnswer,
+  extractAllGroupContext,
+  isRoleGroupNode,
+} from "./extractor/RoleGroupExtractor"
 
 self.onerror = function (message, source, lineno, colno, error) {
   console.info("Error: " + message)
@@ -25,7 +28,6 @@ enum CTA_STATE {
 }
 
 const selectExtractor = new SelectExtractor()
-const roleListboxExtractor = new RoleListboxExtractor()
 // TODO: split it into multiple classes
 // Globals
 let shadowRoot: ShadowRoot | null = null
@@ -139,7 +141,6 @@ function main() {
 
     const extractedSelectData = selectExtractor
       .getContextForAll(document)
-      .concat(roleListboxExtractor.getContextForAll(document))
       .concat(extractAllGroupContext(document))
 
     if (extractedInputData.length < 1 && extractedSelectData.length < 1) {
@@ -210,10 +211,18 @@ async function fillInputInForm(
     }
     const isRoleGroup = isRoleGroupNode(element)
 
+    console.log({
+      isRoleGroup,
+      element,
+    })
+
     if (isRoleGroup && typeof item.value === "string") {
-      const options = item.value.split('|')
+      const options = item.value.split("|")
       applyGroupNodeAnswer(element, options)
-    } else if (element instanceof HTMLInputElement && typeof item.value === "string") {
+    } else if (
+      element instanceof HTMLInputElement &&
+      typeof item.value === "string"
+    ) {
       await simulateTyping(element, item.value as string)
     } else if (
       element instanceof HTMLInputElement &&
@@ -225,11 +234,6 @@ async function fillInputInForm(
     } else if (selectExtractor.elementMatches(element)) {
       selectExtractor.applyAnswer(
         element as HTMLSelectElement,
-        item.value as string,
-      )
-    } else if (roleListboxExtractor.elementMatches(element)) {
-      await roleListboxExtractor.applyAnswer(
-        element as HTMLElement,
         item.value as string,
       )
     }

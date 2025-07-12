@@ -6,7 +6,6 @@ import { createApp } from "vue"
 import App from "./app.vue"
 import "./index.scss"
 
-
 const app = createApp(App).use(i18n).use(notivue).use(pinia).use(appRouter)
 
 app.mount("#app")

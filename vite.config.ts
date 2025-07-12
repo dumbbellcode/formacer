@@ -88,7 +88,6 @@ export default defineConfig({
       compositionOnly: true,
     }),
 
-
     // https://github.com/posva/unplugin-vue-router
     VueRouter({
       dts: "src/types/typed-router.d.ts",
