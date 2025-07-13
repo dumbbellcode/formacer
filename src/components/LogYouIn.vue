@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { getAuthToken, serverLogin } from "@/utils/auth"
+import { getAuthToken } from "@/utils/auth"
 import { useSettingsStore } from "@/stores/settings.store"
-import { useDetailsStore } from "@/stores/short-details.store"
 const settingsStore = useSettingsStore()
-const shortDetailsStore = useDetailsStore()
 const loading = ref(false)
 
 async function initiateAuthFlow() {
@@ -11,13 +9,7 @@ async function initiateAuthFlow() {
     loading.value = true
     const googleToken = await getAuthToken()
     if (!googleToken) return
-    const loginData = await serverLogin(googleToken)
-    if (!loginData) return
     settingsStore.setGoogleToken(googleToken)
-    settingsStore.setServerToken(loginData.token)
-    shortDetailsStore.editField("email", loginData.user.email)
-    shortDetailsStore.editField("firstName", loginData.user.given_name)
-    shortDetailsStore.editField("lastName", loginData.user.family_name)
   } catch (e) {
     console.info(e)
   } finally {
@@ -28,7 +20,7 @@ async function initiateAuthFlow() {
 <template>
   <div>
     <button
-      v-if="!settingsStore.serverToken && !loading"
+      v-if="!settingsStore.googleToken && !loading"
       className="btn bg-white text-black border-[#e5e5e5]"
       @click="initiateAuthFlow"
     >

@@ -73,6 +73,7 @@ export interface Settings {
   displayActionIcon: boolean
   email: string
   isTosAgreed: boolean
+  llmApiKey: string
 }
 
 export enum DETAIL_TYPES {

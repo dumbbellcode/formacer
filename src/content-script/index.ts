@@ -1,9 +1,9 @@
 import { extractContextFromAllInputs } from "./extractor/input"
-import { ActionEvents, DETAIL_TYPES, Settings } from "@/types/common"
+import { ActionEvents, Settings } from "@/types/common"
 import ctaHtml from "./cta-container.html?raw"
 import { simulateTyping } from "./utils/typing"
 import { makeElementDraggable } from "./utils/draggable"
-import { displayForSeconds, shouldDisplayCTA, sleep } from "./utils/common"
+import { displayForSeconds, sleep } from "./utils/common"
 import { extractContextFromAllTextarea } from "./extractor/textarea"
 import { SelectExtractor } from "./extractor/SelectExtractor"
 import {

@@ -22,6 +22,25 @@ const settingsStore = useSettingsStore()
           />
         </div>
       </div>
+      <div
+        class="flex flex-col md:flex-row justify-between text-sm hover-bg-primary-light rounded-lg px-1 mt-4"
+      >
+        <div class="mb-2 md:mb-0">
+          <div>Gemini API Key</div>
+        </div>
+        <div>
+          <input
+            type="text"
+            class="input input-bordered input-sm w-full"
+            :value="settingsStore.llmApiKey"
+            @input="
+              settingsStore.setLlmApiKey(
+                ($event.target as HTMLInputElement).value,
+              )
+            "
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
