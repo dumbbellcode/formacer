@@ -30,15 +30,11 @@ function onAgreementDecline() {
     >
       You've been logged out because you declined the data privacy notice.
       <br />
-      The extension cannot operate without sending the data to servers
-      temporarily,
-      <br />
-      which enables AI to fill forms smartly and correctly. You can find more
-      about the extension on
+      The extension cannot operate without your explicit consent to use the Gemini API for filling forms smartly and correctly. You can find more about the extension on
       <a :href="YT_PLAYLIST_LINK">this youtube channel</a>
     </div>
     <div
-      v-if="!settingsStore.serverToken"
+      v-if="!settingsStore.googleToken"
       class="text-center mt-20"
     >
       <LogYouIn />
@@ -79,15 +75,14 @@ function onAgreementDecline() {
           <div class="divider"></div>
           <ul class="list-disc pl-5 space-y-2">
             <li>
-              Temporarily sends the data you provide to our servers to enable
-              the autofill functionality
+              Uses Google's Gemini API to fill forms, which means your data is shared with Google.
             </li>
             <li>
-              Does not collect or permanently store your personal information
+              Does not collect or store your personal information.
             </li>
             <li>
               Only processes the data you explicitly provide for autofill
-              purposes
+              purposes.
             </li>
           </ul>
           <p class="mt-3">Your data is encrypted during transmission.</p>

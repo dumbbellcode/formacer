@@ -7,7 +7,14 @@ import {
   Settings,
   SelectInputContext,
 } from "@/types/common"
-import { getMessageForStatusCode } from "@/utils/auth"
+import {
+  buildMultiSelectInputDataExtractionPrompt,
+  buildSingleSelectInputDataExtractionPrompt,
+  buildTextInputDataExtractionPrompt,
+  wrapContext,
+} from "./services/prompts"
+import { AccurateExtractResult } from "./services/types"
+import Llmservice from "./services/llm"
 
 const API_URL = import.meta.env.VITE_API_URL
 const FILL_ACCURATE = `${API_URL}/fill/accurate`
@@ -18,12 +25,7 @@ export async function getAccurateFillData(
 ) {
   const settings = await getValueFromStorage<Settings>("settings", "sync")
   const activeProfileId = settings?.activeProfileId ?? "default"
-
-  const tokens = await getValueFromStorage<{ server: string }>(
-    "tokens",
-    "local",
-  )
-
+  const llmApiKey = settings.llmApiKey
   const userContext = await getValueFromStorage<AccurateDetails>(
     `${activeProfileId}-${DETAIL_TYPES.SHORT}`,
     "sync",
@@ -49,8 +51,12 @@ export async function getAccurateFillData(
     userContextCreativeFill,
   )
 
-  //console.info("User context", userTotalContext)
-  //console.info("Input context", textInputContext)
+  if (!llmApiKey) {
+    return {
+      success: false,
+      message: "Please add your Gemini API key from settings",
+    }
+  }
 
   if (!userTotalContext.length) {
     return {
@@ -59,45 +65,90 @@ export async function getAccurateFillData(
     }
   }
 
-  try {
-    const response = await fetch(FILL_ACCURATE, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${tokens?.server}`,
+
+  const llmService = new Llmservice(llmApiKey)
+  const extractedData = await passContextAndGetAnswers(
+    llmService,
+    userTotalContext,
+    textInputContext,
+    selectContext,
+  )
+
+  return {
+    success: true,
+    data: extractedData,
+  }
+}
+
+// LLMs cooking
+async function passContextAndGetAnswers(
+  llmService: Llmservice,
+  userContext: { label: string; value: string }[],
+  textInputContext: TextInputContext[],
+  selectContext: SelectInputContext[],
+) {
+  const contextPrompt = wrapContext(userContext)
+  let result: AccurateExtractResult[] = []
+
+  if (textInputContext.length) {
+    const textPrompt = buildTextInputDataExtractionPrompt(
+      contextPrompt,
+      textInputContext,
+    )
+    const schema: object = [
+      {
+        dataId: "abc-uuid",
+        value: "answer or null",
       },
-      body: JSON.stringify({
-        context: userTotalContext,
-        text_input_context: textInputContext,
-        select_context: selectContext,
-      }),
-    })
+    ]
+    const promptResult =
+      (await llmService.getResultWithSchema(textPrompt, schema)) ?? []
+    result = result.concat(promptResult as AccurateExtractResult[])
+  }
 
-    const statusCode = response.status
-    if (!response.ok) {
-      if (statusCode === 401) {
-        chrome.storage.local.remove("tokens")
-      }
-
-      return {
-        success: false,
-        message: getMessageForStatusCode(statusCode),
-        error: "Network response was not ok",
-      }
-    }
-
-    const data = await response.json()
-
-    return {
-      success: true,
-      data,
-    }
-  } catch (error) {
-    console.info("fetch error", error)
-    return {
-      success: false,
-      message: getMessageForStatusCode(503),
-      error,
+  const singleSelectContext = []
+  const multiSelectContext = []
+  const singleSelectTags = ["option", "radio"]
+  for (const ctx of selectContext) {
+    if (singleSelectTags.includes(ctx.tagName ?? "")) {
+      singleSelectContext.push(ctx)
+    } else {
+      multiSelectContext.push(ctx)
     }
   }
+
+  if (singleSelectContext.length) {
+    const selectPrompt = buildSingleSelectInputDataExtractionPrompt(
+      contextPrompt,
+      singleSelectContext,
+    )
+    const schema: object = [
+      {
+        dataId: "abc-uuid",
+        value: "correct option",
+      },
+    ]
+    const promptResult =
+      (await llmService.getResultWithSchema(selectPrompt, schema)) ?? []
+    result = result.concat(promptResult as AccurateExtractResult[])
+  }
+
+  if (multiSelectContext.length) {
+    const selectPrompt = buildMultiSelectInputDataExtractionPrompt(
+      contextPrompt,
+      multiSelectContext,
+    )
+    const schema: object = [
+      {
+        dataId: "abc-uuid",
+        value: "correct option 1 | correct option 2",
+      },
+    ]
+
+    const promptResult =
+      (await llmService.getResultWithSchema(selectPrompt, schema)) ?? []
+    result = result.concat(promptResult as AccurateExtractResult[])
+  }
+
+  return result.filter((v) => v)
 }

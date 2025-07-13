@@ -38,7 +38,7 @@ const needMoreDetails = computed(() => {
         v-if="settingsStore.isTosAgreed"
         class="hero-content text-center"
       >
-        <div v-if="!settingsStore?.serverToken">
+        <div v-if="!settingsStore?.googleToken">
           <LogYouIn />
         </div>
         <div

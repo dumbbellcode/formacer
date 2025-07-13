@@ -37,10 +37,7 @@ interface UserInfoApiResp {
   email: string
 }
 
-interface ServerLoginResp {
-  token: string
-  user: UserInfoApiResp
-}
+
 
 export async function fetchUserInfo(
   token: string,
@@ -67,26 +64,7 @@ export async function fetchUserInfo(
   }
 }
 
-export async function serverLogin(
-  googleAuthToken: string,
-): Promise<ServerLoginResp | null> {
-  try {
-    const API_URL = import.meta.env.VITE_API_URL
-    const ROUTE = `${API_URL}/api/login`
-    const response = await fetch(ROUTE, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        googleAccessToken: googleAuthToken,
-      }),
-    })
-    return (await response.json()) as ServerLoginResp
-  } catch (error) {
-    return null
-  }
-}
+
 
 // Define a type for HTTP status codes
 type HttpStatusCode =
