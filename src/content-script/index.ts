@@ -211,11 +211,6 @@ async function fillInputInForm(
     }
     const isRoleGroup = isRoleGroupNode(element)
 
-    console.log({
-      isRoleGroup,
-      element,
-    })
-
     if (isRoleGroup && typeof item.value === "string") {
       const options = item.value.split("|")
       applyGroupNodeAnswer(element, options)

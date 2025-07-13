@@ -9,7 +9,7 @@ const settingsStore = useSettingsStore()
 const displayName = __DISPLAY_NAME__
 // const version = __VERSION__
 const agreementDeclined = ref(false)
-const step = ref(1)
+const step = ref(3)
 
 if (isDevelopmentEnv()) {
   settingsStore.setDummyValuesForLocalDev()
@@ -131,10 +131,7 @@ function onAgreementDecline() {
           >
             <i-ph-info />
             <span>
-              Enter short details that you want to get autofilled on websites
-              here. Click the 'Add New' button to add custom details you want to
-              autofill. You can skip this and add details later too. Click Next.
-              All fields are optional.
+              Feel free to skip this 🤷‍♀️. You can create your own fields and the extension will take care of filling them.
             </span>
           </div>
 
@@ -155,23 +152,18 @@ function onAgreementDecline() {
         </div>
 
         <div v-if="step === 3">
-          <div class="flex flex-row items-center py-auto">
-            <div>You will see a</div>
-            <div class="mx-2">
-              <div class="border-1 border-primary rounded-full">
-                <img
-                  src="@assets/logo.svg"
-                  alt="logo"
-                  :width="24"
-                  class="m-1!"
-                />
-              </div>
-            </div>
-            <div>icon on bottom right of web pages.</div>
-          </div>
-          <div class="mt-2">
-            You're all set. Bookmark the extension & close this page.
-          </div>
+          <GeminiApiKeyInput v-model="settingsStore.llmApiKey" />
+          <p class="mt-8">
+            Click on
+            <img
+              src="@assets/logo.svg"
+              alt="logo"
+              :width="24"
+              :height="24"
+              class="inline-block !my-0"
+            />
+            icon on bottom right of web pages to autofill forms. You're all set. Bookmark the extension & close this page.
+          </p>
         </div>
       </PageWrap>
     </div>

@@ -11,6 +11,7 @@ declare module 'vue' {
     AppFooter: typeof import('./../components/AppFooter.vue')['default']
     AppHeader: typeof import('./../components/AppHeader.vue')['default']
     DisplayError: typeof import('./../components/state/DisplayError.vue')['default']
+    GeminiApiKeyInput: typeof import('./../components/GeminiApiKeyInput.vue')['default']
     ICarbonLogoGithub: typeof import('~icons/carbon/logo-github')['default']
     ILucideDelete: typeof import('~icons/lucide/delete')['default']
     IPhArrowLeft: typeof import('~icons/ph/arrow-left')['default']

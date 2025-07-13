@@ -1,5 +1,7 @@
 import { Settings } from "@/types/common"
 import { defineStore } from "pinia"
+import LlmService from "@/background/services/llm"
+import { debounce } from "@/utils/common"
 
 interface Tokens {
   google?: string
@@ -37,6 +39,7 @@ export const useSettingsStore = defineStore("settings", () => {
       email: "",
       isTosAgreed: false,
       llmApiKey: "",
+      llmApiKeyIsValid: null
     },
   )
 
@@ -68,8 +71,6 @@ export const useSettingsStore = defineStore("settings", () => {
     tokens.value.google = token
   }
 
-  
-
   function clearTokens() {
     tokens.value = {}
   }
@@ -78,9 +79,20 @@ export const useSettingsStore = defineStore("settings", () => {
     settings.value.isTosAgreed = true
   }
 
-  function setLlmApiKey(apiKey: string) {
+  const validateAndSetLlmApiKey = debounce(async (apiKey: string) => {
+    if (!apiKey) {
+      settings.value.llmApiKey = ""
+      settings.value.llmApiKeyIsValid = null
+      return
+    }
     settings.value.llmApiKey = apiKey
-  }
+    const isValid = await LlmService.validateApiKey(apiKey)
+    if (isValid) {
+      settings.value.llmApiKeyIsValid = true
+    } else {
+      settings.value.llmApiKeyIsValid = false
+    }
+  }, 300)
 
   function setDummyValuesForLocalDev() {
     tokens.value = {
@@ -102,7 +114,7 @@ export const useSettingsStore = defineStore("settings", () => {
     setGoogleToken,
     clearTokens,
     tosAgreed,
-    setLlmApiKey,
+    validateAndSetLlmApiKey,
     setDummyValuesForLocalDev,
     displayActionIcon: computed(() => settings.value.displayActionIcon),
     activeProfileId: computed(() => settings.value.activeProfileId),
@@ -116,6 +128,7 @@ export const useSettingsStore = defineStore("settings", () => {
     googleToken: computed(() => tokens.value.google),
     isTosAgreed: computed(() => settings.value.isTosAgreed),
     llmApiKey: computed(() => settings.value.llmApiKey),
+    llmApiKeyIsValid: computed(() => settings.value.llmApiKeyIsValid),
     profiles: computed(() => settings.value.profiles),
   }
 })

@@ -377,6 +377,7 @@
     "YT_PLAYLIST_LINK": true,
     "isDevelopmentEnv": true,
     "useProfilesStore": true,
-    "shortDetailsDynamicStore": true
+    "shortDetailsDynamicStore": true,
+    "debounce": true
   }
 }

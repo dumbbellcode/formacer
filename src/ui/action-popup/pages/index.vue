@@ -42,6 +42,18 @@ const needMoreDetails = computed(() => {
           <LogYouIn />
         </div>
         <div
+          v-else-if="!settingsStore.llmApiKey || !settingsStore.llmApiKeyIsValid"
+          class="text-center my-20"
+        >
+          <p>Please add your Gemini API key in the settings to enable AI autofill.</p>
+          <RouterLink
+            to="/options-page/settings"
+            class="text-blue-500 hover:underline"
+          >
+            Go to Settings
+          </RouterLink>
+        </div>
+        <div
           v-else
           class="max-w-md"
         >

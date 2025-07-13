@@ -74,6 +74,7 @@ export interface Settings {
   email: string
   isTosAgreed: boolean
   llmApiKey: string
+  llmApiKeyIsValid: boolean | null
 }
 
 export enum DETAIL_TYPES {
