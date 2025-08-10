@@ -9,7 +9,7 @@ const settingsStore = useSettingsStore()
 const displayName = __DISPLAY_NAME__
 // const version = __VERSION__
 const agreementDeclined = ref(false)
-const step = ref(3)
+const step = ref(1)
 
 if (isDevelopmentEnv()) {
   settingsStore.setDummyValuesForLocalDev()
@@ -35,13 +35,7 @@ function onAgreementDecline() {
       about the extension on
       <a :href="YT_PLAYLIST_LINK">this youtube channel</a>
     </div>
-    <div
-      v-if="!settingsStore.googleToken"
-      class="text-center mt-20"
-    >
-      <LogYouIn />
-    </div>
-    <div v-else>
+    <div>
       <ul class="steps steps-horizontal">
         <li :class="['step', { 'step-primary': step > 0 }]">Notice</li>
         <li :class="['step', { 'step-primary': step > 1 }]">
