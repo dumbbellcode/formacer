@@ -23,7 +23,7 @@ const settingsStore = useSettingsStore()
         </div>
       </div>
       <div>
-        <GeminiApiKeyInput v-model="settingsStore.llmApiKey"/>
+        <GeminiApiKeyInput />
       </div>
     </div>
   </div>

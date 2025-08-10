@@ -1,7 +1,5 @@
 import { Settings } from "@/types/common"
 import { defineStore } from "pinia"
-import LlmService from "@/background/services/llm"
-import { debounce } from "@/utils/common"
 
 interface Tokens {
   google?: string
@@ -39,7 +37,7 @@ export const useSettingsStore = defineStore("settings", () => {
       email: "",
       isTosAgreed: false,
       llmApiKey: "",
-      llmApiKeyIsValid: null
+      llmApiKeyIsValid: false,
     },
   )
 
@@ -79,20 +77,13 @@ export const useSettingsStore = defineStore("settings", () => {
     settings.value.isTosAgreed = true
   }
 
-  const validateAndSetLlmApiKey = debounce(async (apiKey: string) => {
-    if (!apiKey) {
-      settings.value.llmApiKey = ""
-      settings.value.llmApiKeyIsValid = null
-      return
-    }
+  function setLlmApiKey(apiKey: string) {
     settings.value.llmApiKey = apiKey
-    const isValid = await LlmService.validateApiKey(apiKey)
-    if (isValid) {
-      settings.value.llmApiKeyIsValid = true
-    } else {
-      settings.value.llmApiKeyIsValid = false
-    }
-  }, 300)
+  }
+
+  function setLlmApiKeyIsValid(isValid: boolean) {
+    settings.value.llmApiKeyIsValid = isValid
+  }
 
   function setDummyValuesForLocalDev() {
     tokens.value = {
@@ -114,8 +105,9 @@ export const useSettingsStore = defineStore("settings", () => {
     setGoogleToken,
     clearTokens,
     tosAgreed,
-    validateAndSetLlmApiKey,
     setDummyValuesForLocalDev,
+    setLlmApiKey,
+    setLlmApiKeyIsValid,
     displayActionIcon: computed(() => settings.value.displayActionIcon),
     activeProfileId: computed(() => settings.value.activeProfileId),
     activeProfileName: computed(

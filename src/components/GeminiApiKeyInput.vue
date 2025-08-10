@@ -1,8 +1,23 @@
 <script setup lang="ts">
 import { useSettingsStore } from "@/stores/settings.store"
-
+import LlmService from "@/background/services/llm"
+import { debounce } from "@/utils/common"
 const settingsStore = useSettingsStore()
+const loading = ref(false)
 
+const debouncedValidation = debounce(async (key: string) => {
+  loading.value = true
+  settingsStore.setLlmApiKeyIsValid(false)
+  const isValid = await LlmService.validateApiKey(key)
+  settingsStore.setLlmApiKeyIsValid(isValid)
+  loading.value = false
+}, 300)
+
+function llmApiKeyChanged(event: Event) {
+  const key = (event.target as HTMLInputElement).value
+  settingsStore.setLlmApiKey(key) // Updates immediately
+  debouncedValidation(key) // Debounced validation
+}
 </script>
 
 <template>
@@ -21,30 +36,37 @@ const settingsStore = useSettingsStore()
     <div>
       <input
         type="text"
-        class="input input-bordered input-sm max-w-md"
         :value="settingsStore.llmApiKey"
-        @input="settingsStore.validateAndSetLlmApiKey(($event.target as HTMLInputElement).value)"
+        class="input input-bordered input-sm max-w-md"
+        @input="llmApiKeyChanged"
       />
     </div>
     <div
-      v-if="settingsStore.llmApiKeyIsValid === false"
+      v-if="loading"
+      class="text-xs"
+    >
+      Validating api key ... wait ...
+    </div>
+    <div
+      v-else-if="settingsStore.llmApiKeyIsValid === false"
       class="text-error text-xs mt-1"
     >
       API key is invalid :(
+      <div
+        class="text-xs text-gray-500"
+      >
+        Go to
+        <a href="https://aistudio.google.com/apikey">
+          https://aistudio.google.com/apikey
+        </a>
+        and click on 'Create API Key'
+      </div>
     </div>
     <div
-      v-if="settingsStore.llmApiKeyIsValid"
+      v-else
       class="text-success text-xs mt-1"
     >
       Valid key, awesome :)
-    </div>
-    <div
-      v-if="!settingsStore.llmApiKeyIsValid"
-      class="text-xs text-gray-500"
-    >
-      Go to
-      <a href="https://aistudio.google.com/apikey"> https://aistudio.google.com/apikey </a>
-      and click on 'Create API Key'
     </div>
   </div>
 </template>

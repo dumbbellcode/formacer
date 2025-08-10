@@ -9,9 +9,9 @@ export default class Llmservice {
   constructor(apiKey: string) {
     this.genAI = new GoogleGenerativeAI(apiKey)
     // For text-only input, use the gemini-pro model
-    this.textModel = this.genAI.getGenerativeModel({model: MODEL})
+    this.textModel = this.genAI.getGenerativeModel({ model: MODEL })
     // For JSON output, we'll use the same model and guide it with the prompt
-    this.jsonModel = this.genAI.getGenerativeModel({model: MODEL})
+    this.jsonModel = this.genAI.getGenerativeModel({ model: MODEL })
   }
 
   static async validateApiKey(apiKey: string): Promise<boolean> {

@@ -37,8 +37,6 @@ interface UserInfoApiResp {
   email: string
 }
 
-
-
 export async function fetchUserInfo(
   token: string,
 ): Promise<UserInfoApiResp | null> {
@@ -63,8 +61,6 @@ export async function fetchUserInfo(
     return null
   }
 }
-
-
 
 // Define a type for HTTP status codes
 type HttpStatusCode =

@@ -30,7 +30,9 @@ function onAgreementDecline() {
     >
       You've been logged out because you declined the data privacy notice.
       <br />
-      The extension cannot operate without your explicit consent to use the Gemini API for filling forms smartly and correctly. You can find more about the extension on
+      The extension cannot operate without your explicit consent to use the
+      Gemini API for filling forms smartly and correctly. You can find more
+      about the extension on
       <a :href="YT_PLAYLIST_LINK">this youtube channel</a>
     </div>
     <div
@@ -75,11 +77,10 @@ function onAgreementDecline() {
           <div class="divider"></div>
           <ul class="list-disc pl-5 space-y-2">
             <li>
-              Uses Google's Gemini API to fill forms, which means your data is shared with Google.
+              Uses Google's Gemini API to fill forms, which means your data is
+              shared with Google.
             </li>
-            <li>
-              Does not collect or store your personal information.
-            </li>
+            <li>Does not collect or store your personal information.</li>
             <li>
               Only processes the data you explicitly provide for autofill
               purposes.
@@ -131,7 +132,8 @@ function onAgreementDecline() {
           >
             <i-ph-info />
             <span>
-              Feel free to skip this 🤷‍♀️. You can create your own fields and the extension will take care of filling them.
+              Feel free to skip this 🤷‍♀️. You can create your own fields and the
+              extension will take care of filling them.
             </span>
           </div>
 
@@ -162,7 +164,8 @@ function onAgreementDecline() {
               :height="24"
               class="inline-block !my-0"
             />
-            icon on bottom right of web pages to autofill forms. You're all set. Bookmark the extension & close this page.
+            icon on bottom right of web pages to autofill forms. You're all set.
+            Bookmark the extension & close this page.
           </p>
         </div>
       </PageWrap>
