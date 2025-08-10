@@ -1,10 +1,12 @@
 # Formacer
 
 ## Description
-Formacer is a Chrome extension designed to enhance your browsing experience by intelligently autofilling forms across various websites. It leverages Google's Gemini AI to make smart autofill decisions based on the data you provide, ensuring a seamless and efficient form-filling process. Emphasizing user privacy, Formacer ensures that all your form data remains securely on your local machine and is never collected or stored by the extension itself.
+Your personal form filling AI Agent. Formacer is a privacy-focused Chrome extension that uses a Gemini AI to intelligently autofill forms across websites, keeping all your data securely on your local machine.
 
 <div align="center">
-  <iframe width="640" height="360" src="https://www.youtube.com/embed/tmImoc9Nkq0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: 8px;"></iframe>
+  <a href="https://www.youtube.com/watch?v=tmImoc9Nkq0">
+    <img src="src/assets/formacer-autofill-demo.gif" alt="Formacer Autofill Demo" width="320" height="180">
+  </a>
 </div>
 
 ## Installation
