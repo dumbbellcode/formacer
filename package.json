@@ -101,7 +101,7 @@
     "build:chrome-dev": "cross-env NODE_ENV=production vite build --mode development -c vite.chrome.config.ts",
     "build:chrome": "cross-env NODE_ENV=production vite build --mode production -c vite.chrome.config.ts",
     "build:firefox": "cross-env NODE_ENV=production vite build -c vite.firefox.config.ts",
-    "dev": "npm run dev:chrome",
+    "dev": "npm run build:chrome-dev",
     "dev:chrome": "cross-env NODE_ENV=development vite -c vite.chrome.config.ts",
     "dev:firefox": "cross-env NODE_ENV=development vite build --mode development --watch -c vite.firefox.config.ts",
     "format": "prettier --write .",
