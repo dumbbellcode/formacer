@@ -11,13 +11,18 @@ import {
   extractAllGroupContext,
   isRoleGroupNode,
 } from "./extractor/RoleGroupExtractor"
+import { Logger, LogLevel } from '../utils/logger'
+
+Logger.setLevel(LogLevel.DEBUG)
 
 self.onerror = function (message, source, lineno, colno, error) {
-  console.info("Error: " + message)
-  console.info("Source: " + source)
-  console.info("Line: " + lineno)
-  console.info("Column: " + colno)
-  console.info("Error object: " + error)
+  Logger.error("An error occured", {
+    message,
+    source,
+    lineno,
+    colno,
+    error
+  })
 }
 
 enum CTA_STATE {
@@ -87,10 +92,6 @@ function main() {
     }
   })
 
-  // if (!shouldDisplayCTA()) {
-  //   return
-  // }
-
   shadowRoot = container.attachShadow({ mode: "open" })
   shadowRoot.innerHTML = ctaHtml
   document.body.appendChild(container)
@@ -102,8 +103,9 @@ function main() {
   successElement = shadowRoot.getElementById("icon-success")
   errorElement = shadowRoot.getElementById("icon-error")
 
+  Logger.info("Shadow root established")
   if (!contentElement) {
-    console.info("Content element not found")
+    Logger.info("Content element not found")
     return
   }
   if (
@@ -113,11 +115,9 @@ function main() {
     !errorElement ||
     !logoElement
   ) {
-    console.info("CTA elements not found")
+    Logger.info("CTA elements not found")
     return
   }
-
-  //console.log(extractAllGroupContext(document))
 
   chrome.storage.local.get(["ctaPositionTop"]).then((data) => {
     contentElement.style.top = data.ctaPositionTop
@@ -134,14 +134,21 @@ function main() {
     }
     setCTAState(CTA_STATE.LOADING)
 
-    const extractedInputData =
-      extractContextFromAllInputs(document).concat(
-        extractContextFromAllTextarea(document),
-      ) ?? []
+    const inputContexts = extractContextFromAllInputs(document);
+    const textareaContexts = extractContextFromAllTextarea(document);
+    const selectContexts = selectExtractor.getContextForAll(document);                
+    const groupSelectContexts = extractAllGroupContext(document)
 
-    const extractedSelectData = selectExtractor
-      .getContextForAll(document)
-      .concat(extractAllGroupContext(document))
+    Logger.debug({
+      inputContexts,
+      textareaContexts,
+      selectContexts,
+      groupSelectContexts
+    })
+
+    const extractedInputData =inputContexts.concat(textareaContexts) ?? []
+    const extractedSelectData = selectContexts
+      .concat(groupSelectContexts)
 
     if (extractedInputData.length < 1 && extractedSelectData.length < 1) {
       displayMessageForSeconds("No empty inputs found to fill!")

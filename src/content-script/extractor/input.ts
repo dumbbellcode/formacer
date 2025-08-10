@@ -8,6 +8,7 @@ import {
 } from "../utils/common"
 import { computeAccessibleName } from "dom-accessibility-api"
 import { computeAccessibleDescription } from "dom-accessibility-api"
+import { Logger } from "../../utils/logger"
 
 const allowedInputTypes = [
   "number",
