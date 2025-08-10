@@ -36,9 +36,6 @@ export default {
       matches: ["*://*/*"],
     },
   ],
-  side_panel: {
-    default_path: "src/ui/side-panel/index.html",
-  },
   options_page: "src/ui/options-page/index.html",
   offline_enabled: true,
   host_permissions: ["<all_urls>"],
