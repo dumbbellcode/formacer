@@ -5,12 +5,12 @@ import { simulateTyping } from "./utils/typing"
 import { makeElementDraggable } from "./utils/draggable"
 import { displayForSeconds, sleep } from "./utils/common"
 import { extractContextFromAllTextarea } from "./extractor/textarea"
-import { SelectExtractor } from "./extractor/SelectExtractor"
+import { SelectExtractor } from "./extractor/select-extractor"
 import {
   applyGroupNodeAnswer,
   extractAllGroupContext,
   isRoleGroupNode,
-} from "./extractor/RoleGroupExtractor"
+} from "./extractor/role-group-extractor"
 import { Logger, LogLevel } from '../utils/logger'
 
 Logger.setLevel(LogLevel.DEBUG)

@@ -1,5 +1,5 @@
 import { SelectInputContext, UserInputElementContext } from "@/types/common"
-import { AbstractElementExtractor } from "./AbstractElementExtractor"
+import { AbstractElementExtractor } from "./abstract-element-extractor"
 import { findElements } from "../utils/common"
 import { extractContextFromInput } from "./input"
 

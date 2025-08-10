@@ -1,4 +1,5 @@
 import { GenerativeModel, GoogleGenerativeAI } from "@google/generative-ai"
+import { Logger } from 'src/utils/logger'
 
 const MODEL = "gemini-2.5-flash"
 export default class Llmservice {
@@ -70,13 +71,13 @@ export default class Llmservice {
       const result = await this.textModel.generateContent(message)
       const response = await result.response
 
-      console.log({
+      Logger.debug({
         question: message,
         response: response.text(),
       })
       return response.text()
     } catch (error) {
-      console.error("Failed to generate text from model:", error)
+      Logger.error("Failed to generate text from model:", error)
       return ""
     }
   }
