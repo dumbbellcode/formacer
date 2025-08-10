@@ -9,6 +9,8 @@ declare global {
   const $t: typeof import('vue-i18n')['$t']
   const EffectScope: typeof import('vue')['EffectScope']
   const Gumroad: typeof import('../utils/payment/gumroad')['Gumroad']
+  const LogLevel: typeof import('../utils/logger')['LogLevel']
+  const Logger: typeof import('../utils/logger')['Logger']
   const Notification: typeof import('notivue')['Notification']
   const Notivue: typeof import('notivue')['Notivue']
   const StatusCodeMessageMap: typeof import('../utils/auth')['StatusCodeMessageMap']
@@ -377,6 +379,9 @@ declare global {
   // @ts-ignore
   export type { Component, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
+  // @ts-ignore
+  export type { LogLevel, Logger } from '../utils/logger'
+  import('../utils/logger')
 }
 
 // for vue template auto import
@@ -385,6 +390,8 @@ declare module 'vue' {
   interface GlobalComponents {}
   interface ComponentCustomProperties {
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
+    readonly LogLevel: UnwrapRef<typeof import('../utils/logger')['LogLevel']>
+    readonly Logger: UnwrapRef<typeof import('../utils/logger')['Logger']>
     readonly Notification: UnwrapRef<typeof import('notivue')['Notification']>
     readonly Notivue: UnwrapRef<typeof import('notivue')['Notivue']>
     readonly StatusCodeMessageMap: UnwrapRef<typeof import('../utils/auth')['StatusCodeMessageMap']>

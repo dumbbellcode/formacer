@@ -17,59 +17,29 @@
     <h3 class="text-base">Information You Provide</h3>
     <ul>
       <li>
-        We only collect your email address and name to uniquely identify you if
-        you create an account
+        We do NOT collect any form data you input or save for autofill purposes,
+        all the data stays on your machine in chrome.
       </li>
-      <li>
-        We do NOT collect any form data you input or save for autofill purposes
-      </li>
-    </ul>
-
-    <h3 class="text-base mt-2">Information Automatically Collected</h3>
-    <ul>
-      <li>Basic usage statistics for improving extension functionality</li>
-      <li>
-        Error logs for troubleshooting (containing no personal information)
-      </li>
-    </ul>
-
-    <h2 class="text-xl mt-4">HOW WE USE YOUR INFORMATION</h2>
-    <p>We use the limited information we collect to:</p>
-    <ul>
-      <li>Uniquely identify your account if you create one</li>
-      <li>Improve and optimize the extension performance</li>
-      <li>Troubleshoot and address technical issues</li>
     </ul>
 
     <h2 class="text-xl mt-4">DATA STORAGE AND SECURITY</h2>
     <ul>
       <li>
-        Form data and autofill information is transmitted to our servers
-        temporarily to enable the autofill functionality, but we do not store
-        this information
+        Form data is stored in your chrome extension's storage and 
+        Google's Gemini API is used to make decisions of what data to fill
       </li>
       <li>
-        Once the autofill process is complete, the transmitted data is
-        immediately discarded
-      </li>
-      <li>
-        Your email and name (if provided) are stored securely for account
-        identification purposes only
+        All that data stays on your machine. 
       </li>
       <li>
         We implement appropriate technical and organizational measures to
-        protect your information during transmission and the limited personal
-        information we retain
+        protect your information during transmission.
       </li>
     </ul>
 
     <h2 class="text-xl mt-4">DATA SHARING AND DISCLOSURE</h2>
     <p>
-      We do not sell your personal information. The only personal information we
-      collect is your email address and name for account identification. Form
-      data is transmitted to our servers temporarily to enable the autofill
-      functionality but is not stored or shared. We may share your email and
-      name only in the following circumstances:
+      We do not store any kind of information filled in the extension.
     </p>
     <ul>
       <li>To comply with legal obligations</li>
@@ -85,7 +55,6 @@
     <ul>
       <li>Access, correct, or delete your personal information</li>
       <li>Opt out of data synchronization</li>
-      <li>Export your saved data</li>
       <li>Disable or uninstall the extension at any time</li>
     </ul>
 

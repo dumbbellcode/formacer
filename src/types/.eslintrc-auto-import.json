@@ -378,6 +378,8 @@
     "isDevelopmentEnv": true,
     "useProfilesStore": true,
     "shortDetailsDynamicStore": true,
-    "debounce": true
+    "debounce": true,
+    "LogLevel": true,
+    "Logger": true
   }
 }

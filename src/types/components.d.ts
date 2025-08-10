@@ -10,6 +10,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./../components/AppFooter.vue')['default']
     AppHeader: typeof import('./../components/AppHeader.vue')['default']
+    AuthAuthGuard: typeof import('./../components/auth/AuthGuard.vue')['default']
     DisplayError: typeof import('./../components/state/DisplayError.vue')['default']
     GeminiApiKeyInput: typeof import('./../components/GeminiApiKeyInput.vue')['default']
     ICarbonLogoGithub: typeof import('~icons/carbon/logo-github')['default']
