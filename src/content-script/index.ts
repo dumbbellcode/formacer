@@ -11,9 +11,7 @@ import {
   extractAllGroupContext,
   isRoleGroupNode,
 } from "./extractor/role-group-extractor"
-import { Logger, LogLevel } from '../utils/logger'
-
-Logger.setLevel(LogLevel.DEBUG)
+import { Logger } from '../utils/logger'
 
 self.onerror = function (message, source, lineno, colno, error) {
   Logger.error("An error occured", {
@@ -139,7 +137,7 @@ function main() {
     const selectContexts = selectExtractor.getContextForAll(document);                
     const groupSelectContexts = extractAllGroupContext(document)
 
-    Logger.debug({
+    Logger.debug('extracted-data', {
       inputContexts,
       textareaContexts,
       selectContexts,

@@ -51,7 +51,11 @@ export default class Llmservice {
         text = text.substring("```json".length).trim()
         text = text.substring(0, text.length - "```".length).trim()
       }
-      return JSON.parse(text)
+      const ans = JSON.parse(text)
+
+      Logger.debug('llm-interation',{query: message, schema, answer: ans})
+
+      return ans
     } catch (error) {
       console.error(
         "Failed to generate or parse JSON from model output:",
@@ -71,7 +75,7 @@ export default class Llmservice {
       const result = await this.textModel.generateContent(message)
       const response = await result.response
 
-      Logger.debug({
+      Logger.debug('llm-interation',{
         question: message,
         response: response.text(),
       })

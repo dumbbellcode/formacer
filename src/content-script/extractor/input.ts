@@ -8,7 +8,6 @@ import {
 } from "../utils/common"
 import { computeAccessibleName } from "dom-accessibility-api"
 import { computeAccessibleDescription } from "dom-accessibility-api"
-import { Logger } from "../../utils/logger"
 
 const allowedInputTypes = [
   "number",
@@ -63,18 +62,24 @@ export function extractContextFromInput(
 
   const hasLabels = hasPlaceHolder || input instanceof HTMLSelectElement
 
-  let label = null
+  let label: string | null = null
 
   if (hasLabels) {
     const allLabels = input.labels
     label = allLabels?.length ? allLabels[0].textContent : ""
     label = trimText(label)
   }
+  
+  // If label not directly found, search aria-label
+  if (!label && input.getAttribute('aria-label')) {
+    label = input.getAttribute('aria-label')
+    label = trimText(label)
+  }
 
   let closestLabel: string | null = null
   let closestText: string | null = null
 
-  // If label not directly found, search closest label
+  // If label still not found, search closest label
   if (!label) {
     closestLabel =
       findClosestLabelInParentTreeWithSingleInputUnderIt(input)?.textContent ??
