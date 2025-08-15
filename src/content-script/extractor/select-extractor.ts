@@ -1,7 +1,7 @@
 import { SelectInputContext, UserInputElementContext } from "@/types/common"
 import { AbstractElementExtractor } from "./abstract-element-extractor"
 import { findElements } from "../utils/common"
-import { extractContextFromInput } from "./input"
+import { extractBaseContext } from "./context-utils"
 
 export class SelectExtractor extends AbstractElementExtractor {
   getContext(e: HTMLSelectElement): SelectInputContext {
@@ -13,7 +13,7 @@ export class SelectExtractor extends AbstractElementExtractor {
       .filter((o) => !o.disabled)
       .map((o) => o.innerText)
 
-    const context = extractContextFromInput(e)
+    const context = extractBaseContext(e)
 
     return {
       ...context,
@@ -52,5 +52,10 @@ export class SelectExtractor extends AbstractElementExtractor {
 
   elementMatches(element: Element): boolean {
     return element.tagName.toLowerCase() === "select"
+  }
+
+  isElementEmpty(element: HTMLElement): boolean {
+    const selectElement = element as HTMLSelectElement
+    return !selectElement.value || selectElement.value.trim() === ""
   }
 }

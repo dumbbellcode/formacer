@@ -52,9 +52,7 @@ function llmApiKeyChanged(event: Event) {
       class="text-error text-xs mt-1"
     >
       API key is invalid :(
-      <div
-        class="text-xs text-gray-500"
-      >
+      <div class="text-xs text-gray-500">
         Go to
         <a href="https://aistudio.google.com/apikey">
           https://aistudio.google.com/apikey

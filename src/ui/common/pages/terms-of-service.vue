@@ -25,12 +25,10 @@
     <h2 class="text-xl mt-4">DATA STORAGE AND SECURITY</h2>
     <ul>
       <li>
-        Form data is stored in your chrome extension's storage and 
-        Google's Gemini API is used to make decisions of what data to fill
+        Form data is stored in your chrome extension's storage and Google's
+        Gemini API is used to make decisions of what data to fill
       </li>
-      <li>
-        All that data stays on your machine. 
-      </li>
+      <li>All that data stays on your machine.</li>
       <li>
         We implement appropriate technical and organizational measures to
         protect your information during transmission.
@@ -38,9 +36,7 @@
     </ul>
 
     <h2 class="text-xl mt-4">DATA SHARING AND DISCLOSURE</h2>
-    <p>
-      We do not store any kind of information filled in the extension.
-    </p>
+    <p>We do not store any kind of information filled in the extension.</p>
     <ul>
       <li>To comply with legal obligations</li>
       <li>To protect our rights, privacy, safety, or property</li>

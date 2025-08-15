@@ -1,6 +1,7 @@
 # Formacer
 
 ## Description
+
 Your personal form filling AI Agent. Formacer is a privacy-focused Chrome extension that uses a Gemini AI to intelligently autofill forms across websites, keeping all your data securely on your local machine.
 
 <div align="center">
@@ -25,6 +26,7 @@ Step 2: Load Extension in Chrome
 Go to `chrome://extensions/` in your Chrome browser, enable "Developer mode" (usually a toggle in the top right), click `Load Unpacked`, and select the `dist/chrome` directory from your project.
 
 ## Features
+
 - **Intelligent Autofill:** Utilizes Google's Gemini AI for smart and accurate form autofill decisions. The type of inputs the extension can autofill covered range from text inputs, paragraph inputs, dropdown selections, radio buttons, checkboxes and much more.
 - **Privacy-Focused:** All form data is stored locally on your machine; no personal data is collected or stored by the extension.
 - **Profile Management:** Allows users to manage different profiles for various autofill scenarios.
@@ -62,3 +64,4 @@ Go to `chrome://extensions/` in your Chrome browser, enable "Developer mode" (us
 ├── tailwind.config.cjs     # Tailwind CSS configuration
 ├── vite.config.ts          # Vite build configuration
 └── README.md               # Project README
+```

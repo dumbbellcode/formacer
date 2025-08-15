@@ -47,8 +47,8 @@ const needMoreDetails = computed(() => {
                     <span class="text-[8px] font-semibold">{{ section }}</span>
                     <div>
                       <span
-                        v-for="field in detailItems.filter(
-                          (f) => f.value.trim(),
+                        v-for="field in detailItems.filter((f) =>
+                          f.value.trim(),
                         )"
                         :key="field.id"
                         class="block"

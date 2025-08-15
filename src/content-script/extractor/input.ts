@@ -1,13 +1,7 @@
 import { TextInputContext } from "@/types/common"
-import {
-  findClosestLabelInParentTreeWithSingleInputUnderIt,
-  findAllTextInParentTreeWithSingleUserInputUnderIt,
-  findElements,
-  trimText,
-  applyUUIDToElementAndContext,
-} from "../utils/common"
-import { computeAccessibleName } from "dom-accessibility-api"
-import { computeAccessibleDescription } from "dom-accessibility-api"
+import { findElements } from "../utils/common"
+import { AbstractElementExtractor } from "./abstract-element-extractor"
+import { extractBaseContext, extractAriaContext } from "./context-utils"
 
 const allowedInputTypes = [
   "number",
@@ -19,35 +13,43 @@ const allowedInputTypes = [
   "month",
 ]
 
+export class InputExtractor extends AbstractElementExtractor {
+  getContext(input: HTMLElement): TextInputContext {
+    return extractContextFromInput(input)
+  }
+
+  getAllElements(node: Element | Document): Array<HTMLElement> {
+    const textInputs = findElements(node, "input", (i: HTMLInputElement) =>
+      allowedInputTypes.includes(i.type),
+    ) as HTMLInputElement[]
+
+    console.info("Inputs found:", textInputs.length)
+    return textInputs
+  }
+
+  elementMatches(element: Element): boolean {
+    const inputElement = element as HTMLInputElement
+    return (
+      element.tagName.toLowerCase() === "input" &&
+      allowedInputTypes.includes(inputElement.type)
+    )
+  }
+
+  isElementEmpty(element: HTMLElement): boolean {
+    const inputElement = element as HTMLInputElement
+    return !inputElement.value || inputElement.value.trim() === ""
+  }
+}
+
 export function extractContextFromAllInputs(
   node: Element | Document,
 ): TextInputContext[] {
-  const textInputs = findElements(node, "input", (i: HTMLInputElement) =>
-    allowedInputTypes.includes(i.type),
-  ) as HTMLInputElement[]
-
-  console.info("Inputs found:", textInputs.length)
-
-  return textInputs.map((ti) => {
-    const context = extractContextFromInput(ti)
-    applyUUIDToElementAndContext(ti, context)
-    return context
-  })
+  const extractor = new InputExtractor()
+  return extractor.getContextForAll(node) as TextInputContext[]
 }
 
 export function extractContextFromAriaInput(e: HTMLElement): TextInputContext {
-  const accessibleName = computeAccessibleName(e)
-  const accessibleDescription = computeAccessibleDescription(e)
-  const context = extractContextFromInput(e)
-
-  if (!context.label) {
-    context.label = accessibleName
-  }
-
-  if (!context.closestText) {
-    context.closestText = accessibleDescription
-  }
-  return context
+  return extractAriaContext(e)
 }
 
 export function extractContextFromInput(
@@ -57,73 +59,10 @@ export function extractContextFromInput(
     | HTMLSelectElement
     | HTMLElement,
 ): TextInputContext {
-  const hasPlaceHolder =
-    input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement
-
-  const hasLabels = hasPlaceHolder || input instanceof HTMLSelectElement
-
-  let label: string | null = null
-
-  if (hasLabels) {
-    const allLabels = input.labels
-    label = allLabels?.length ? allLabels[0].textContent : ""
-    label = trimText(label)
-  }
-  
-  // If label not directly found, search aria-label
-  if (!label && input.getAttribute('aria-label')) {
-    label = input.getAttribute('aria-label')
-    label = trimText(label)
-  }
-
-  let closestLabel: string | null = null
-  let closestText: string | null = null
-
-  // If label still not found, search closest label
-  if (!label) {
-    closestLabel =
-      findClosestLabelInParentTreeWithSingleInputUnderIt(input)?.textContent ??
-      null
-    closestLabel = trimText(closestLabel)
-  }
-
-  // If closest label not found, search closest text
-  if (!closestLabel) {
-    closestText = findAllTextInParentTreeWithSingleUserInputUnderIt(input)
-  }
-
-  if (closestText) {
-    closestText.substring(0, 900)
-  }
-
-  const { tagName, title } = input
-  const data = {
-    tagName,
-    type: hasLabels ? input.type : null,
-    placeholder: hasPlaceHolder ? input.placeholder : null,
-    title,
-    value: hasLabels ? input.value : null,
-    label,
-    closestLabel,
-    closestText,
-  }
-  const filteredData = Object.fromEntries(
-    Object.entries(data).filter(
-      ([key, value]) => value !== null && value !== "",
-    ),
-  )
-
-  return filteredData
+  return extractBaseContext(input)
 }
 
 export function emptyInputElementsCount() {
-  const inputs = document.querySelectorAll("input")
-
-  // Filter and count empty input elements of allowed types
-  const emptyCount = Array.from(inputs).filter(
-    (input) =>
-      allowedInputTypes.includes(input.type) && input.value.trim() === "",
-  ).length
-
-  return emptyCount
+  const extractor = new InputExtractor()
+  return extractor.getEmptyElementsCount()
 }

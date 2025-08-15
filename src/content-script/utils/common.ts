@@ -165,6 +165,41 @@ export function findAllTextInParentTreeWithSingleUserInputUnderIt(
   return answerFromParent ? answerFromParent : text
 }
 
+export function findAllTextBetweenPreviousInputAndCurrentInputNode(
+  node: HTMLElement | null,
+  sourceInputNode?: Element,
+) {
+  if (!node) {
+    return null
+  }
+  // At level 0 in DFS call
+  if (!sourceInputNode) {
+    sourceInputNode = node
+  }
+  const allInputTypesSelector = Object.values(UserInputElements).join(",")
+  const inputCount = node.querySelectorAll(allInputTypesSelector).length
+  if (inputCount < 2) {
+    return findAllTextBetweenPreviousInputAndCurrentInputNode(
+      node.parentElement,
+      sourceInputNode,
+    )
+  }
+
+  let text: string | null = ""
+  for (const child of Array.from(node.children)) {
+    const input = child.querySelector(allInputTypesSelector)
+    if (!input) {
+      text += getVisibleText(child, sourceInputNode)
+    } else if (input && !input.isSameNode(sourceInputNode)) {
+      text = ""
+    } else if (input && input.isSameNode(sourceInputNode)) {
+      break
+    }
+  }
+
+  return text ? text : null
+}
+
 function getVisibleText(node: Element, sourceInputNode: Element): string {
   if (!isNodeVisible(node)) return ""
   if (node.isSameNode(sourceInputNode)) return ""

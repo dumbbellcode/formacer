@@ -12,7 +12,14 @@ export abstract class AbstractElementExtractor {
       return context
     })
   }
+
+  public getEmptyElementsCount(): number {
+    const elements = this.getAllElements(document)
+    return elements.filter((element) => this.isElementEmpty(element)).length
+  }
+
   abstract getContext(e: HTMLElement): UserInputElementContext
   abstract getAllElements(node: Element | Document): Array<HTMLElement>
   abstract elementMatches(element: Element): boolean
+  abstract isElementEmpty(element: HTMLElement): boolean
 }

@@ -1,5 +1,5 @@
 import { GenerativeModel, GoogleGenerativeAI } from "@google/generative-ai"
-import { Logger } from 'src/utils/logger'
+import { Logger } from "src/utils/logger"
 
 const MODEL = "gemini-2.5-flash"
 export default class Llmservice {
@@ -53,7 +53,7 @@ export default class Llmservice {
       }
       const ans = JSON.parse(text)
 
-      Logger.debug('llm-interation',{query: message, schema, answer: ans})
+      Logger.debug("llm-interation", { query: message, schema, answer: ans })
 
       return ans
     } catch (error) {
@@ -75,7 +75,7 @@ export default class Llmservice {
       const result = await this.textModel.generateContent(message)
       const response = await result.response
 
-      Logger.debug('llm-interation',{
+      Logger.debug("llm-interation", {
         question: message,
         response: response.text(),
       })

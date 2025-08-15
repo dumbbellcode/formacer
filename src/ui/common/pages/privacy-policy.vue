@@ -38,20 +38,18 @@
     <h2 class="text-xl mt-4">DATA STORAGE AND SECURITY</h2>
     <ul>
       <li>
-        The form data you fill is shared with Google's Gemini AI
-        to take autofill decisions, hence all the data stays on your Google account
+        The form data you fill is shared with Google's Gemini AI to take
+        autofill decisions, hence all the data stays on your Google account
       </li>
       <li>
         We implement appropriate technical and organizational measures to
-        protect your information during transmission and we
-        do not retain any personal information
+        protect your information during transmission and we do not retain any
+        personal information
       </li>
     </ul>
 
     <h2 class="text-xl mt-4">DATA SHARING AND DISCLOSURE</h2>
-    <p>
-      We do not store or sell your personal information
-    </p>
+    <p>We do not store or sell your personal information</p>
 
     <h2 class="text-xl mt-4">YOUR CHOICES AND RIGHTS</h2>
     <p>You have the right to:</p>

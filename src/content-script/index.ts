@@ -11,7 +11,7 @@ import {
   extractAllGroupContext,
   isRoleGroupNode,
 } from "./extractor/role-group-extractor"
-import { Logger } from '../utils/logger'
+import { Logger } from "../utils/logger"
 
 self.onerror = function (message, source, lineno, colno, error) {
   Logger.error("An error occured", {
@@ -19,7 +19,7 @@ self.onerror = function (message, source, lineno, colno, error) {
     source,
     lineno,
     colno,
-    error
+    error,
   })
 }
 
@@ -132,21 +132,20 @@ function main() {
     }
     setCTAState(CTA_STATE.LOADING)
 
-    const inputContexts = extractContextFromAllInputs(document);
-    const textareaContexts = extractContextFromAllTextarea(document);
-    const selectContexts = selectExtractor.getContextForAll(document);                
+    const inputContexts = extractContextFromAllInputs(document)
+    const textareaContexts = extractContextFromAllTextarea(document)
+    const selectContexts = selectExtractor.getContextForAll(document)
     const groupSelectContexts = extractAllGroupContext(document)
 
-    Logger.debug('extracted-data', {
+    Logger.debug("extracted-data", {
       inputContexts,
       textareaContexts,
       selectContexts,
-      groupSelectContexts
+      groupSelectContexts,
     })
 
-    const extractedInputData =inputContexts.concat(textareaContexts) ?? []
-    const extractedSelectData = selectContexts
-      .concat(groupSelectContexts)
+    const extractedInputData = inputContexts.concat(textareaContexts) ?? []
+    const extractedSelectData = selectContexts.concat(groupSelectContexts)
 
     if (extractedInputData.length < 1 && extractedSelectData.length < 1) {
       displayMessageForSeconds("No empty inputs found to fill!")

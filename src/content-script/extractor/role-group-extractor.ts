@@ -4,7 +4,7 @@ import {
   extractAriaOptions,
   Roles,
 } from "../utils/common"
-import { extractContextFromAriaInput } from "./input"
+import { extractAriaContext } from "./context-utils"
 
 export type GroupType = "radio" | "checkbox" | "option"
 const GroupTypeOptionSelector: Record<GroupType, string> = {
@@ -84,7 +84,7 @@ export function extractGroupContext(group: HTMLElement) {
 
   const optionSelector = GroupTypeOptionSelector[groupType]
   const options = extractAriaOptions(group, optionSelector)
-  const context = extractContextFromAriaInput(group)
+  const context = extractAriaContext(group)
   context.tagName = groupType?.toLowerCase()
   return {
     ...context,
