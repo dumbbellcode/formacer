@@ -130,6 +130,15 @@ function main() {
     if (ctaState === CTA_STATE.LOADING) {
       return
     }
+    // After the extension is reloaded/updated, content scripts already injected
+    // into open tabs are orphaned and lose access to `chrome.runtime`.
+    if (!chrome.runtime?.id) {
+      displayMessageForSeconds(
+        "Formacer was updated. Please refresh this page to continue.",
+      )
+      setCTAState(CTA_STATE.ERROR)
+      return
+    }
     setCTAState(CTA_STATE.LOADING)
 
     const inputContexts = extractContextFromAllInputs(document)

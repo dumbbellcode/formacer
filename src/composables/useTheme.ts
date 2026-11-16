@@ -13,7 +13,9 @@ export function useTheme() {
       // load initial value
       colorSchema.value = mode
       defaultHandler(mode)
-      document.body.setAttribute("data-theme", mode)
+      // Apply on <html> so the whole viewport (not just the body's content
+      // height) uses the selected theme's background.
+      document.documentElement.setAttribute("data-theme", mode)
     },
   })
 

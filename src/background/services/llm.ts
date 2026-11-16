@@ -1,26 +1,34 @@
-import { GenerativeModel, GoogleGenerativeAI } from "@google/generative-ai"
+import { GoogleGenAI, ThinkingLevel } from "@google/genai"
 import { Logger } from "src/utils/logger"
 
-const MODEL = "gemini-2.5-flash"
+const MODEL = "gemini-3.8-flash"
+// Form filling is mostly matching saved details to field labels, so deep
+// reasoning isn't needed; minimal thinking keeps responses fast.
+const THINKING_CONFIG = { thinkingLevel: ThinkingLevel.MINIMAL }
 export default class Llmservice {
-  private genAI: GoogleGenerativeAI
-  private textModel: GenerativeModel
-  private jsonModel: GenerativeModel
+  private genAI: GoogleGenAI
 
   constructor(apiKey: string) {
-    this.genAI = new GoogleGenerativeAI(apiKey)
-    // For text-only input, use the gemini-pro model
-    this.textModel = this.genAI.getGenerativeModel({ model: MODEL })
-    // For JSON output, we'll use the same model and guide it with the prompt
-    this.jsonModel = this.genAI.getGenerativeModel({ model: MODEL })
+    this.genAI = new GoogleGenAI({
+      apiKey,
+      // SDK default is 5 attempts with up to 60s backoff, which can leave the
+      // user waiting for minutes. Keep retries short so failures surface fast.
+      httpOptions: {
+        timeout: 60_000,
+        retryOptions: { attempts: 3, initialDelay: 1, maxDelay: 5 },
+      },
+    })
   }
 
   static async validateApiKey(apiKey: string): Promise<boolean> {
     try {
-      const genAI = new GoogleGenerativeAI(apiKey)
-      const model = genAI.getGenerativeModel({ model: MODEL })
-      // Make a simple, low-cost call to validate the key
-      await model.generateContent("ping !")
+      const genAI = new GoogleGenAI({
+        apiKey,
+        httpOptions: { timeout: 10_000, retryOptions: { attempts: 1 } },
+      })
+      // Fetching model metadata authenticates the key (and confirms the model
+      // is available) without running a generation, so it returns quickly.
+      await genAI.models.get({ model: MODEL })
       return true
     } catch (error) {
       console.error("API Key validation failed:", error)
@@ -42,11 +50,16 @@ export default class Llmservice {
     const fullPrompt = `${message}. Please provide the output in the following JSON format: ${schemaHint}. Do not include any additional text or explanations, only the JSON object.`
 
     try {
-      const result = await this.jsonModel.generateContent(fullPrompt)
-      const response = await result.response
-      let text = response.text()
-      // Attempt to extract pure JSON by stripping markdown code block
-      text = text.trim()
+      const response = await this.genAI.models.generateContent({
+        model: MODEL,
+        contents: fullPrompt,
+        config: {
+          responseMimeType: "application/json",
+          thinkingConfig: THINKING_CONFIG,
+        },
+      })
+      let text = (response.text ?? "").trim()
+      // Defensive: strip a markdown code block if the model still adds one
       if (text.startsWith("```json") && text.endsWith("```")) {
         text = text.substring("```json".length).trim()
         text = text.substring(0, text.length - "```".length).trim()
@@ -72,14 +85,18 @@ export default class Llmservice {
    */
   async getResult(message: string): Promise<string> {
     try {
-      const result = await this.textModel.generateContent(message)
-      const response = await result.response
+      const response = await this.genAI.models.generateContent({
+        model: MODEL,
+        contents: message,
+        config: { thinkingConfig: THINKING_CONFIG },
+      })
+      const text = response.text ?? ""
 
       Logger.debug("llm-interation", {
         question: message,
-        response: response.text(),
+        response: text,
       })
-      return response.text()
+      return text
     } catch (error) {
       Logger.error("Failed to generate text from model:", error)
       return ""

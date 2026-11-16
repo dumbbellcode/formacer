@@ -34,18 +34,32 @@ function llmApiKeyChanged(event: Event) {
       </div>
     </div>
     <div>
-      <input
-        type="text"
-        :value="settingsStore.llmApiKey"
-        class="input input-bordered input-sm max-w-md"
-        @input="llmApiKeyChanged"
-      />
+      <label
+        class="input input-bordered input-sm max-w-md flex items-center gap-2 transition-opacity"
+        :class="{ 'opacity-70': loading }"
+      >
+        <input
+          type="text"
+          :value="settingsStore.llmApiKey"
+          class="grow"
+          :aria-busy="loading"
+          @input="llmApiKeyChanged"
+        />
+        <span
+          v-if="loading"
+          class="loading loading-spinner loading-xs text-primary"
+          aria-hidden="true"
+        />
+      </label>
     </div>
     <div
       v-if="loading"
-      class="text-xs"
+      class="flex items-center gap-2 text-xs text-base-content/70 mt-1"
+      role="status"
+      aria-live="polite"
     >
-      Validating api key ... wait ...
+      <span class="loading loading-dots loading-xs" />
+      Checking your API key with Gemini…
     </div>
     <div
       v-else-if="settingsStore.llmApiKeyIsValid === false"
